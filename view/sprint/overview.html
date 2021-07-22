@@ -77,9 +77,10 @@
         const container_unregistered_collaborators = document.getElementById(
           'container_unregistered_collaborators'
         )
-        let config = Config.from_session_storage()
+        const config = Config.from_session_storage()
         const sprints = config._sprints
-        initialize(sprints)
+        initialize()
+
         function append_table_row_for_sprint(sprint, index) {
             const row = document.getElementById('template_sprint_row').content.cloneNode(true)
             const startDate = new Date(sprint.from)
@@ -92,7 +93,7 @@
             container_sprints.appendChild(row)
         }
 
-        function initialize(sprints) {
+        function initialize() {
             config.sprints.forEach((sprint, index) => {
                 append_table_row_for_sprint(sprint, index)
             })
