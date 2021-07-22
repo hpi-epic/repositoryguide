@@ -59,7 +59,6 @@
                         <a class="nav-link"
                            href="./overview.html"
                            id="button_navigate_teams"
-                           onclick="config.to_session_storage()"
                         >
                             Teams
                         </a>
@@ -68,7 +67,6 @@
                         <a class="nav-link"
                            href="../settings.html"
                            id="button_navigate_settings"
-                           onclick="config.to_session_storage()"
                         >
                             <i class="fa fa-cogs" aria-hidden="true"></i>
                             Settings
@@ -144,9 +142,11 @@
             )
             let config = Config.from_session_storage()
 
-            document
-                .getElementById('button_navigate_teams')
-                .addEventListener('click', (event) => event.preventDefault())
+            document.getElementById("button_navigate_home").addEventListener('click', () => config.to_session_storage())
+            document.getElementById("button_navigate_teams").addEventListener('click', event => event.preventDefault())
+            document.getElementById("button_navigate_settings").addEventListener('click', () => config.to_session_storage())
+            document.getElementById("button_back").addEventListener('click', () => config.to_session_storage())
+
             document
                 .getElementById('button_load_teams_from_github')
                 .addEventListener('click', async () => {
