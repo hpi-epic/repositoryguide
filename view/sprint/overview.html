@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Sprints</title>
+
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+    </head>
+    <body>
+        <template id="template_sprint_row">
+            <tr class="d-flex">
+                <td class="col-4" id="text_name"></td>
+                <td class="col-3" id="text_from"></td>
+                <td class="col-3" id="text_to"></td>
+                <td class="col-2">
+                    <a id="link_detail_page" class="btn btn-outline-secondary" onclick="alert('Not yet implemented')"
+                        >Edit</a
+                    >
+                </td>
+            </tr>
+        </template>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <div class="navbar-brand">Agile Metrics</div>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../home.html" id="button_navigate_home"
+                            ><i class="fa fa-home" aria-hidden="true"></i> Home</a
+                        >
+                    </li>
+                    <li>
+                        <a class="nav-link" href="../team/overview.html" id="button_navigate_teams"
+                            >Teams</a
+                        >
+                    </li>
+                    <li>
+                        <a class="nav-link active" href="overview.html" id="button_navigate_sprints"
+                        >Sprints</a
+                        >
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="card container">
+            <div class="card-header">
+                <h3>Sprints</h3>
+            </div>
+            <div class="form-group card-body">
+                <table class="table">
+                    <thead>
+                        <tr class="d-flex">
+                            <th class="col-4" scope="col">Name</th>
+                            <th class="col-3" scope="col">From</th>
+                            <th class="col-3" scope="col">To</th>
+                            <th class="col-2" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="container_sprints"></tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+
+    <script type="module">
+        import Config from '../../config.js'
+
+        const container_sprints = document.getElementById('container_sprints')
+        const container_unregistered_collaborators = document.getElementById(
+          'container_unregistered_collaborators'
+        )
+        let config = Config.from_session_storage()
+        const sprints = config._sprints
+        initialize(sprints)
+        function append_table_row_for_sprint(sprint, index) {
+            const row = document.getElementById('template_sprint_row').content.cloneNode(true)
+            const startDate = new Date(sprint.from)
+            const endDate = new Date(sprint.to)
+
+            row.getElementById('text_name').innerHTML = `Sprint ${index + 1}`
+            row.getElementById('text_from').innerHTML = getDateString(endDate)
+            row.getElementById('text_to').innerHTML = getDateString(startDate)
+
+            container_sprints.appendChild(row)
+        }
+
+        function initialize(sprints) {
+            config.sprints.forEach((sprint, index) => {
+                append_table_row_for_sprint(sprint, index)
+            })
+        }
+
+        function getDateString(date) {
+            return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
+        }
+    </script>
+</html>
