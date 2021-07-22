@@ -2,12 +2,13 @@ import {
     get_issue_sizes,
     get_issue_buckets_fixed_interval,
     get_pull_request_closing_times,
-    get_pull_request_closing_time_buckets
+    get_pull_request_closing_time_buckets,
+    get_commit_times
 } from './data_functions.js'
 
 import BarChart from './visualizations/bar_chart.js'
 import StackedBarChart from './visualizations/stacked_bar_chart.js'
-// import MultipleLineChart from './visualizations/multiple_line_chart.js'
+import Heatmap from './visualizations/heatmap.js'
 
 export default class Config {
     constructor() {
@@ -139,6 +140,9 @@ export default class Config {
     }
 
     get chart_class() {
+        if (this.metric_index === 4) {
+            return Heatmap
+        }
         if (this.sprint_segmented) {
             return StackedBarChart
         }
@@ -163,6 +167,8 @@ export default class Config {
                 return get_issue_sizes
             case 3:
                 return get_issue_buckets_fixed_interval
+            case 4:
+                return get_commit_times
             default:
                 return () => {}
         }
