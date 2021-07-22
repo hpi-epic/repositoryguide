@@ -7,10 +7,6 @@ export default class Heatmap extends MetricChart {
         super(parameters)
     }
 
-    _construct_chart_plugins() {
-        return []
-    }
-
     _construct_chart_options() {
         return {
             layout: {
@@ -72,7 +68,6 @@ export default class Heatmap extends MetricChart {
                     }
                 },
                 y: {
-                    position: 'right',
                     min: 0,
                     max: 6,
                     ticks: {
@@ -113,7 +108,6 @@ export default class Heatmap extends MetricChart {
     _construct_chart_datasets() {
         return [
             {
-                // type matrix
                 label: 'Commit times',
                 type: 'matrix',
                 data: this.data,

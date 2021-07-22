@@ -176,7 +176,7 @@ async function issues_filtered_by_team(config, issues, team) {
 
 async function get_commits(auth, owner, project) {
     return octokit(auth).paginate('GET /repos/{owner}/{repo}/commits', {
-        owner,
+        owner: owner,
         repo: project,
         state: 'all',
         per_page: PER_PAGE
