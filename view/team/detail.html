@@ -30,14 +30,32 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="../home.html" id="button_navigate_home"
-                            ><i class="fa fa-home" aria-hidden="true"></i> Home</a
+                        <a class="nav-link"
+                           href="../home.html"
+                           id="button_navigate_home"
                         >
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            Home
+                        </a>
                     </li>
-                    <li>
-                        <a class="nav-link" href="overview.html" id="button_navigate_teams"
-                            >Teams</a
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="./overview.html"
+                           id="button_navigate_teams"
+                           onclick="config.to_session_storage()"
                         >
+                            Teams
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="../settings.html"
+                           id="button_navigate_settings"
+                           onclick="config.to_session_storage()"
+                        >
+                            <i class="fa fa-cogs" aria-hidden="true"></i>
+                            Settings
+                        </a>
                     </li>
                 </ul>
             </div>
