@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+    </head>
+    <body>
+        <template id="template_member_row">
+            <tr class="d-flex">
+                <td class="col-10" id="text_member_name"></td>
+                <td class="col-2">
+                    <button id="button_remove_member" class="btn btn-outline-secondary">Remove</button>
+                </td>
+            </tr>
+        </template>
+
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <div class="navbar-brand">Agile Metrics</div>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../home.html" id="button_navigate_home"
+                            ><i class="fa fa-home" aria-hidden="true"></i> Home</a
+                        >
+                    </li>
+                    <li>
+                        <a class="nav-link" href="overview.html" id="button_navigate_teams"
+                            >Teams</a
+                        >
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="card container">
+            <div class="form-group card-body">
+                <h3>General Information:</h3>
+                <table class="table">
+                    <tbody>
+                        <tr class="d-flex">
+                            <th class="col-6" scope="row">Team name:</th>
+                            <td class="col-6" id="text_team_name"></td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-6" scope="row">Team label:</th>
+                            <td class="col-6" id="text_team_label"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Members:</h3>
+                <table class="table">
+                    <thead>
+                        <tr class="d-flex">
+                            <th class="col-10" scope="col">Name</th>
+                            <th class="col-2" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="container_members"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <br />
+
+        <a class="btn btn-outline-secondary" id="button_back" href="javascript:history.back()">Back</a>
+
+        <script type="module">
+            import Config from '../../config.js'
+            import {
+                get_parameters,
+                remove_children
+            } from '../../utils.js'
+
+            const parameters = get_parameters(window.location.href)
+            const config = Config.from_session_storage()
+            const team = config.teams[parseInt(parameters.index)]
+
+            const container_members = document.getElementById('container_members')
+
+            document.getElementById('text_team_name').innerHTML = team.name
+            document.getElementById('text_team_label').innerHTML = team.label
+
+            function initialize_member_list() {
+                team.members.forEach((member, index) => {
+                    const row = document
+                        .getElementById('template_member_row')
+                        .content.cloneNode(true)
+
+                    row.getElementById('text_member_name').innerHTML = member.name
+
+                    const button_remove = row.getElementById('button_remove_member')
+                    button_remove.addEventListener('click', function () {
+                        if (
+                            confirm(
+                                `Are you sure you want to remove ${member.name} from this team?`
+                            )
+                        ) {
+                            team.members.splice(index, 1)
+                            remove_children(container_members)
+                            initialize_member_list()
+                            config.to_session_storage()
+                        }
+                    })
+
+                    container_members.appendChild(row)
+                })
+            }
+
+            initialize_member_list()
+        </script>
+    </body>
+</html>
