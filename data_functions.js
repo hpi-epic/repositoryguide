@@ -174,6 +174,15 @@ async function issues_filtered_by_team(config, issues, team) {
     ).then((results) => issues.filter((_, index) => results[index]))
 }
 
+async function get_commits(auth, owner, project) {
+    return octokit(auth).paginate('GET /repos/{owner}/{repo}/commits', {
+        owner,
+        repo: project,
+        state: 'all',
+        per_page: PER_PAGE
+    })
+}
+
 // ------------------- public interface ------------------- //
 
 export async function get_teams(config) {
@@ -367,4 +376,39 @@ export async function get_unregistered_collaborators(config) {
     return collaborators.filter(
         (collaborator) => !registered_collaborator_ids.includes(collaborator.id)
     )
+}
+
+export async function get_commit_times(config) {
+    const commits = await get_commits(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+    const timeSlots = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+    commits.forEach((commit) => {
+        const commit_date = new Date(commit.commit.committer.date)
+        const day = (commit_date.getDay() + 7 - 1) % 7
+        const hour = commit_date.getHours()
+        timeSlots[day][hour] += 1
+    })
+    const data = []
+    for (let day = 0; day < 7; day += 1) {
+        for (let hour = 0; hour < 24; hour++) {
+            const myObj = {
+                x: hour,
+                y: day,
+                v: timeSlots[day][hour]
+            }
+            data.push(myObj)
+        }
+    }
+    return data
 }
