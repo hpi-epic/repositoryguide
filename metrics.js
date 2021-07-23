@@ -2,7 +2,8 @@ export const metrics = [
     'Pull request closing times',
     'Pull request closing times in buckets',
     'Issue sizes',
-    'Issue sizes in buckets'
+    'Issue sizes in buckets',
+    'Commit times'
 ]
 
 // TODO: improve
