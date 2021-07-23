@@ -1,5 +1,7 @@
 # RepositoryGuide
 
+An application that helps with analyzing your team's GitHub repository
+
 ## Installation
 
 1. Clone the repository: ```git@github.com:hpi-epic/repositoryguide.git``` and go into the repository folder
