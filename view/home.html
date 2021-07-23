@@ -57,10 +57,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link"
-                           href="home.html"
-                           id="button_navigate_home"
-                        >
+                        <a class="nav-link" href="home.html" id="button_navigate_home">
                             <i class="fa fa-home" aria-hidden="true"></i>
                             Home
                         </a>
@@ -72,6 +69,16 @@
                            onclick="config.to_session_storage()"
                         >
                             Teams
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                          class="nav-link"
+                          href="sprint/overview.html"
+                          id="button_navigate_sprint"
+                          onclick="config.to_session_storage()"
+                        >
+                            Sprints
                         </a>
                     </li>
                 </ul>
@@ -131,7 +138,13 @@
                             id="input_segmented_by_sprints"
                             type="checkbox"
                         />
-                        <button class="btn btn-outline-secondary" id="button_edit_sprints">Edit sprints</button>
+                        <a
+                            class="btn btn-outline-secondary"
+                            href="sprint/overview.html"
+                            onclick="store_config_in_session_storage(config)"
+                        >
+                            View sprints
+                        </a>
                     </div>
                 </div>
 
@@ -153,13 +166,20 @@
                         <select class="form-control" id="select_team">
                             <option disabled selected value="none">-- Select a team --</option>
                         </select>
-                        <a class="btn btn-outline-secondary" href="team/overview.html" onclick="config.to_session_storage()">Edit teams</a>
+                        <a
+                            class="btn btn-outline-secondary"
+                            href="team/overview.html"
+                            onclick="config.to_session_storage()"
+                            >View teams</a
+                        >
                     </div>
                 </div>
 
                 <br />
 
-                <button class="form-control btn btn-outline-primary" id="button_submit">Apply</button>
+                <button class="form-control btn btn-outline-primary" id="button_submit">
+                    Apply
+                </button>
             </div>
         </div>
 
@@ -191,7 +211,6 @@
                 repository: document.getElementById('input_repository'),
                 metric: document.getElementById('select_metric'),
                 segmented_by_sprints: document.getElementById('input_segmented_by_sprints'),
-                edit_sprints: document.getElementById('button_edit_sprints'),
                 filtered_by_teams: document.getElementById('input_filtered_by_teams'),
                 team: document.getElementById('select_team'),
                 submit: document.getElementById('button_submit')
@@ -241,12 +260,6 @@
 
             inputs.segmented_by_sprints.addEventListener('change', () => {
                 config.sprint_segmented = inputs.segmented_by_sprints.checked
-            })
-
-            inputs.edit_sprints.addEventListener('click', () => {
-                alert(
-                    'Editing the sprints is currently not implemented. Please edit the config file directly'
-                )
             })
 
             inputs.filtered_by_teams.addEventListener('change', () => {
