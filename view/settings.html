@@ -14,6 +14,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
         rel="stylesheet"
     />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
 <body>
 
@@ -63,16 +64,26 @@
     </div>
     <div class="form-group card-body">
         <div class="input-group">
-            <label for="input_config_file">Load config file:</label>
-            <input
-                accept=".json"
-                class="form-control-inline"
-                id="input_config_file"
-                type="file"
-            />
-            <button class="btn btn-outline-secondary" id="button_download_config">
-                Download config
-            </button>
+            <table class="table">
+                <tbody>
+                    <tr class="d-flex">
+                        <td class="col-10">
+                            <label for="input_config_file">Load config file:</label>
+                            <input
+                                accept=".json"
+                                class="form-control-inline"
+                                id="input_config_file"
+                                type="file"
+                            />
+                        </td>
+                        <td class="col-2">
+                            <button class="btn btn-outline-secondary" id="button_download_config" style="float: right">
+                                Download config
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <br />
@@ -91,6 +102,7 @@
     </div>
 </div>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script type="module">
     import Config from '../config.js'
 
@@ -112,6 +124,14 @@
         Config.from_file(event.target.files[0], (_config) => {
             config = _config
             initialize(config)
+            Toastify({
+                text: "Config successfully loaded",
+                duration: 3000,
+                gravity: 'top',
+                position: 'center',
+                backgroundColor: "MediumSeaGreen",
+                stopOnFocus: true,
+            }).showToast();
         })
     )
 
