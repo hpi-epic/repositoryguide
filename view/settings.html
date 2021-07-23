@@ -22,25 +22,31 @@
     <div class="collapse navbar-collapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link"
-                   href="home.html"
-                   id="button_navigate_home"
-                >
+                <a class="nav-link" href="/repositoryguide/view/home.html" id="button_navigate_home">
                     <i class="fa fa-home" aria-hidden="true"></i>
                     Home
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link"
-                   href="team/overview.html"
+                   href="/repositoryguide/view/team/overview.html"
                    id="button_navigate_teams"
                 >
                     Teams
                 </a>
             </li>
+            <li class="nav-item">
+                <a
+                    class="nav-link"
+                    href="/repositoryguide/view/sprint/overview.html"
+                    id="button_navigate_sprint"
+                >
+                    Sprints
+                </a>
+            </li>
             <li class="nav-item active">
                 <a class="nav-link"
-                   href="settings.html"
+                   href="/repositoryguide/view/settings.html"
                    id="button_navigate_settings"
                 >
                     <i class="fa fa-cogs" aria-hidden="true"></i>
@@ -99,6 +105,7 @@
 
     document.getElementById("button_navigate_home").addEventListener('click', () => config.to_session_storage())
     document.getElementById("button_navigate_teams").addEventListener('click', () => config.to_session_storage())
+    document.getElementById("button_navigate_sprint").addEventListener('click', () => config.to_session_storage())
     document.getElementById("button_navigate_settings").addEventListener('click', event => event.preventDefault())
 
     inputs.input_config_file.addEventListener("change", (event) =>
