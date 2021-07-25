@@ -18,14 +18,9 @@
     <body>
         <template id="template_sprint_row">
             <tr class="d-flex">
-                <td class="col-4" id="text_name"></td>
+                <td class="col-6" id="text_name"></td>
                 <td class="col-3" id="text_from"></td>
                 <td class="col-3" id="text_to"></td>
-                <td class="col-2">
-                    <a id="link_detail_page" class="btn btn-outline-secondary" onclick="alert('Not yet implemented')"
-                        >Edit</a
-                    >
-                </td>
             </tr>
         </template>
         <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
@@ -76,10 +71,9 @@
                 <table class="table">
                     <thead>
                         <tr class="d-flex">
-                            <th class="col-4" scope="col">Name</th>
+                            <th class="col-6" scope="col">Name</th>
                             <th class="col-3" scope="col">From</th>
                             <th class="col-3" scope="col">To</th>
-                            <th class="col-2" scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="container_sprints"></tbody>
@@ -92,9 +86,7 @@
         import Config from '../../config.js'
 
         const container_sprints = document.getElementById('container_sprints')
-        const container_unregistered_collaborators = document.getElementById(
-          'container_unregistered_collaborators'
-        )
+
         const config = Config.from_session_storage()
         const sprints = config._sprints
         initialize()
@@ -110,8 +102,8 @@
             const endDate = new Date(sprint.to)
 
             row.getElementById('text_name').innerHTML = `Sprint ${index + 1}`
-            row.getElementById('text_from').innerHTML = getDateString(endDate)
-            row.getElementById('text_to').innerHTML = getDateString(startDate)
+            row.getElementById('text_from').innerHTML = getDateString(startDate)
+            row.getElementById('text_to').innerHTML = getDateString(endDate)
 
             container_sprints.appendChild(row)
         }
