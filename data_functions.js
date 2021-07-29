@@ -470,6 +470,6 @@ export async function get_commit_times(config) {
         }))
     }
 
-    data.push(construct_heatmap_data(commits))
+    data.push({ label: 'Sprint 0', value: construct_heatmap_data(commits) })
     return data
 }
