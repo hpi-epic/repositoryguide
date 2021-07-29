@@ -181,9 +181,8 @@ async function get_commits(auth, owner, project) {
     })
 }
 
-function commits_filtered_by_team(commits, team) {
+function find_commits_for_team(commits, team) {
     const team_ids = team.members.map((member) => member.id)
-    debugger
     return commits.filter((commit) => {
         if (commit.committer) {
             return team_ids.includes(commit.committer.id)
@@ -211,7 +210,7 @@ function get_commits_per_timeSlot(commits) {
     return timeSlots
 }
 
-function construct_heatmap_data(timeSlots) {
+function construct_heatmap_objects_array(timeSlots) {
     const data = []
     for (let day = 0; day < 7; day += 1) {
         for (let hour = 0; hour < 24; hour++) {
@@ -224,6 +223,11 @@ function construct_heatmap_data(timeSlots) {
         }
     }
     return data
+}
+
+function construct_heatmap_data(commits) {
+    const commit_counts_in_timeSlots = get_commits_per_timeSlot(commits)
+    return construct_heatmap_objects_array(commit_counts_in_timeSlots)
 }
 
 // ------------------- public interface ------------------- //
@@ -422,7 +426,7 @@ export async function get_unregistered_collaborators(config) {
 }
 
 export async function get_commit_times(config) {
-    let data1 = []
+    const data = []
     let commits = await get_commits(
         config.github_access_token,
         config.organization,
@@ -430,7 +434,7 @@ export async function get_commit_times(config) {
     )
 
     if (config.team_filtered) {
-        commits = commits_filtered_by_team(commits, config.teams[config.team_index])
+        commits = find_commits_for_team(commits, config.teams[config.team_index])
     }
 
     if (config.sprint_segmented) {
@@ -460,14 +464,12 @@ export async function get_commit_times(config) {
             }
         }
 
-        data1 = Object.keys(commit_groups).map((key) =>
-            construct_pull_request_buckets(commit_groups[key])
-        )
-    } else {
-        data1 = construct_pull_request_buckets(commits)
-        sort_descending_by_value(data1)
+        return Object.keys(commit_groups).map((sprint) => ({
+            label: `Sprint ${sprint}`,
+            value: construct_heatmap_data(commit_groups[sprint])
+        }))
     }
 
-    const timeSlots = get_commits_per_timeSlot(commits)
-    return construct_heatmap_data(timeSlots)
+    data.push(construct_heatmap_data(commits))
+    return data
 }
