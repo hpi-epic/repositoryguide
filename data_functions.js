@@ -5,7 +5,6 @@ import { paginateRest } from 'https://cdn.skypack.dev/@octokit/plugin-paginate-r
 import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
 
 // ------------------- Metrices ------------------- //
-
 import {
     buckets,
     issue_size,
@@ -15,7 +14,6 @@ import {
 } from './metrics.js'
 
 // ------------------- helper functions ------------------- //
-
 import { get_max, get_min, sort_descending_by_value } from './utils.js'
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
@@ -181,6 +179,55 @@ async function get_commits(auth, owner, project) {
         state: 'all',
         per_page: PER_PAGE
     })
+}
+
+function find_commits_for_team(commits, team) {
+    const team_ids = team.members.map((member) => member.id)
+    return commits.filter((commit) => {
+        if (commit.committer) {
+            return team_ids.includes(commit.committer.id)
+        }
+        return false
+    })
+}
+
+function get_commits_per_timeSlot(commits) {
+    const timeSlots = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+    commits.forEach((commit) => {
+        const commit_date = new Date(commit.commit.committer.date)
+        const day = (commit_date.getDay() + 7 - 1) % 7
+        const hour = commit_date.getHours()
+        timeSlots[day][hour] += 1
+    })
+    return timeSlots
+}
+
+function construct_heatmap_objects_array(timeSlots) {
+    const data = []
+    for (let day = 0; day < 7; day += 1) {
+        for (let hour = 0; hour < 24; hour++) {
+            const myObj = {
+                x: hour,
+                y: day,
+                v: timeSlots[day][hour]
+            }
+            data.push(myObj)
+        }
+    }
+    return data
+}
+
+function construct_heatmap_data(commits) {
+    const commit_counts_in_timeSlots = get_commits_per_timeSlot(commits)
+    return construct_heatmap_objects_array(commit_counts_in_timeSlots)
 }
 
 // ------------------- public interface ------------------- //
@@ -379,36 +426,50 @@ export async function get_unregistered_collaborators(config) {
 }
 
 export async function get_commit_times(config) {
-    const commits = await get_commits(
+    const data = []
+    let commits = await get_commits(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    const timeSlots = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ]
-    commits.forEach((commit) => {
-        const commit_date = new Date(commit.commit.committer.date)
-        const day = (commit_date.getDay() + 7 - 1) % 7
-        const hour = commit_date.getHours()
-        timeSlots[day][hour] += 1
-    })
-    const data = []
-    for (let day = 0; day < 7; day += 1) {
-        for (let hour = 0; hour < 24; hour++) {
-            const myObj = {
-                x: hour,
-                y: day,
-                v: timeSlots[day][hour]
-            }
-            data.push(myObj)
-        }
+
+    if (config.team_filtered) {
+        commits = find_commits_for_team(commits, config.teams[config.team_index])
     }
+
+    if (config.sprint_segmented) {
+        const commit_groups = {}
+        config.sprints.forEach((sprint, index) => {
+            commit_groups[index] = []
+        })
+        commit_groups['not within sprint'] = []
+
+        for (let commit_index = 0; commit_index < commits.length; commit_index++) {
+            const commit = commits[commit_index]
+            let found = false
+
+            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
+                const sprint = config.sprints[sprint_index]
+                const closed_date = Date.parse(commit.commit.author.date)
+
+                if (sprint.from <= closed_date && closed_date < sprint.to) {
+                    commit_groups[sprint_index].push(commit)
+                    found = true
+                    break
+                }
+            }
+
+            if (!found) {
+                commit_groups['not within sprint'].push(commit)
+            }
+        }
+
+        return Object.keys(commit_groups).map((sprint) => ({
+            label: `Sprint ${sprint}`,
+            value: construct_heatmap_data(commit_groups[sprint])
+        }))
+    }
+
+    data.push({ label: 'Sprint 0', value: construct_heatmap_data(commits) })
     return data
 }
