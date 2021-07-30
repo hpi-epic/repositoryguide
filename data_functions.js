@@ -5,7 +5,6 @@ import { paginateRest } from 'https://cdn.skypack.dev/@octokit/plugin-paginate-r
 import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
 
 // ------------------- Metrices ------------------- //
-
 import {
     buckets,
     issue_size,
@@ -15,7 +14,6 @@ import {
 } from './metrics.js'
 
 // ------------------- helper functions ------------------- //
-
 import { get_max, get_min, sort_descending_by_value } from './utils.js'
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
@@ -397,6 +395,43 @@ export async function get_commit_times(config) {
         const commit_date = new Date(commit.commit.committer.date)
         const day = (commit_date.getDay() + 7 - 1) % 7
         const hour = commit_date.getHours()
+        timeSlots[day][hour] += 1
+    })
+    const data = []
+    for (let day = 0; day < 7; day += 1) {
+        for (let hour = 0; hour < 24; hour++) {
+            const myObj = {
+                x: hour,
+                y: day,
+                v: timeSlots[day][hour]
+            }
+            data.push(myObj)
+        }
+    }
+    return data
+}
+
+export async function get_issue_submit_times(config) {
+    const issues = await get_issues(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+
+    const timeSlots = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+
+    issues.forEach((issue) => {
+        const issue_date = new Date(issue.created_at)
+        const day = (issue_date.getDay() + 7 - 1) % 7
+        const hour = issue_date.getHours()
         timeSlots[day][hour] += 1
     })
     const data = []
