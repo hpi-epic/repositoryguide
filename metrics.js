@@ -1,9 +1,52 @@
+import Heatmap from './visualizations/heatmap.js'
+import StackedBarChart from './visualizations/stacked_bar_chart.js'
+import BarChart from './visualizations/bar_chart.js'
+
+import {
+    get_commit_times,
+    get_issue_buckets_fixed_interval,
+    get_issue_sizes,
+    get_pull_request_closing_time_buckets,
+    get_pull_request_closing_times
+} from './data_functions.js'
+
 export const metrics = [
-    'Pull request closing times',
-    'Pull request closing times in buckets',
-    'Issue sizes',
-    'Issue sizes in buckets',
-    'Commit times'
+    {
+        name: 'Pull request closing times',
+        chart_class: BarChart,
+        data_retrieval_function: get_pull_request_closing_times,
+        sprint_segmented: false
+    },
+    {
+        name: 'Pull request closing times in buckets overall',
+        chart_class: BarChart,
+        data_retrieval_function: get_pull_request_closing_time_buckets,
+        sprint_segmented: false
+    },
+    {
+        name: 'Pull request closing times in buckets per sprint',
+        chart_class: StackedBarChart,
+        data_retrieval_function: get_pull_request_closing_time_buckets,
+        sprint_segmented: true
+    },
+    {
+        name: 'Issue sizes',
+        chart_class: BarChart,
+        data_retrieval_function: get_issue_sizes,
+        sprint_segmented: false
+    },
+    {
+        name: 'Issue sizes in buckets',
+        chart_class: BarChart,
+        data_retrieval_function: get_issue_buckets_fixed_interval,
+        sprint_segmented: false
+    },
+    {
+        name: 'Commit times',
+        chart_class: Heatmap,
+        data_retrieval_function: get_commit_times,
+        sprint_segmented: false
+    }
 ]
 
 // TODO: improve
