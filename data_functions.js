@@ -201,7 +201,7 @@ function find_commits_for_team(commits, team) {
     })
 }
 
-function get_commits_per_timeSlot(commits) {
+function construct_heatmap_objects_array(commits) {
     const timeSlots = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -217,10 +217,7 @@ function get_commits_per_timeSlot(commits) {
         const hour = commit_date.getHours()
         timeSlots[day][hour] += 1
     })
-    return timeSlots
-}
 
-function construct_heatmap_objects_array(timeSlots) {
     const data = []
     for (let day = 0; day < 7; day += 1) {
         for (let hour = 0; hour < 24; hour++) {
@@ -233,11 +230,6 @@ function construct_heatmap_objects_array(timeSlots) {
         }
     }
     return data
-}
-
-function construct_heatmap_data(commits) {
-    const commit_counts_in_timeSlots = get_commits_per_timeSlot(commits)
-    return construct_heatmap_objects_array(commit_counts_in_timeSlots)
 }
 
 // ------------------- public interface ------------------- //
@@ -436,7 +428,6 @@ export async function get_unregistered_collaborators(config) {
 }
 
 export async function get_commit_times(config) {
-    const data = []
     let commits = await get_commits(
         config.github_access_token,
         config.organization,
@@ -476,12 +467,13 @@ export async function get_commit_times(config) {
 
         return Object.keys(commit_groups).map((sprint) => ({
             label: `Sprint ${sprint}`,
-            value: construct_heatmap_data(commit_groups[sprint])
+            value: construct_heatmap_objects_array(commit_groups[sprint])
         }))
     }
 
-    data.push({ label: 'Sprint 0', value: construct_heatmap_data(commits) })
-    return data
+    return [{ label: 'Sprint 0', value: construct_heatmap_objects_array(commits) }]
+}
+
 export async function get_commit_amounts(config) {
     let data = []
     let commits = await get_commits(
