@@ -181,6 +181,16 @@ async function get_commits(auth, owner, project) {
     })
 }
 
+async function get_detailed_commit(auth, owner, project, ref) {
+    return octokit(auth).paginate('GET /repos/{owner}/{repo}/commits/{ref}', {
+        owner: owner,
+        repo: project,
+        ref: ref,
+        state: 'all',
+        per_page: PER_PAGE
+    })
+}
+
 function find_commits_for_team(commits, team) {
     const team_ids = team.members.map((member) => member.id)
     return commits.filter((commit) => {
@@ -203,7 +213,7 @@ function get_commits_per_timeSlot(commits) {
     ]
     commits.forEach((commit) => {
         const commit_date = new Date(commit.commit.committer.date)
-        const day = (commit_date.getDay() + 7 - 1) % 7
+        const day = (commit_date.getDay() + 6) % 7
         const hour = commit_date.getHours()
         timeSlots[day][hour] += 1
     })
@@ -472,4 +482,82 @@ export async function get_commit_times(config) {
 
     data.push({ label: 'Sprint 0', value: construct_heatmap_data(commits) })
     return data
+export async function get_commit_amounts(config) {
+    let data = []
+    let commits = await get_commits(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+    if (config.team_filtered) {
+        commits = find_commits_for_team(commits, config.teams[config.team_index])
+    }
+
+    if (config.sprint_segmented) {
+        const commit_groups = {}
+        config.sprints.forEach((sprint, index) => {
+            commit_groups[index] = []
+        })
+        commit_groups['not within sprint'] = []
+
+        for (let commit_index = 0; commit_index < commits.length; commit_index++) {
+            const commit = commits[commit_index]
+            let found = false
+
+            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
+                const sprint = config.sprints[sprint_index]
+                const closed_date = Date.parse(commit.commit.author.date)
+
+                if (sprint.from <= closed_date && closed_date < sprint.to) {
+                    commit_groups[sprint_index].push(commit)
+                    found = true
+                    break
+                }
+            }
+
+            if (!found) {
+                commit_groups['not within sprint'].push(commit)
+            }
+        }
+
+        data = Object.keys(commit_groups).map((sprint) => commit_groups[sprint])
+    } else {
+        data.push(commits)
+    }
+    const graphData = await calculateStatsForCommits(data, config)
+    return graphData
+}
+
+async function calculateStatsForCommits(commit_in_sprints, config) {
+    const newData = []
+    for (const sprint of commit_in_sprints) {
+        let commit_sum = 0
+        let changes_sum = 0
+        const team_members = [] // how to get team members that have not contributed???
+        for (const commit of sprint) {
+            if (commit.committer) {
+                const detailedCommit = await get_detailed_commit(
+                    config.github_access_token,
+                    config.organization,
+                    config.repository,
+                    commit.sha
+                )
+                commit_sum += 1
+                changes_sum += detailedCommit[0].stats.total
+
+                if (team_members.findIndex((member) => member === commit.committer.id) === -1) {
+                    team_members.push(commit.committer.id)
+                }
+            }
+        }
+
+        newData.push([
+            { label: 'commit_avg', value: commit_sum / team_members.length },
+            {
+                label: 'changes_avg',
+                value: changes_sum / team_members.length / commit_sum
+            }
+        ])
+    }
+    return newData
 }
