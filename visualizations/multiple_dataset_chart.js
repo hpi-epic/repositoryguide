@@ -4,7 +4,7 @@ import { transpose } from '../utils.js'
 // This class provides some common functionality for charts that deal with sprint-segmented data.
 // It should not be used as actual diagram. Please use the corresponding subclasses.
 export default class MultipleDatasetChart extends MetricChart {
-    constructor(parameters = { canvas_container: null, statistics_container: null }) {
+    constructor(parameters = { canvas: null, statistics_container: null }) {
         super(parameters)
     }
 

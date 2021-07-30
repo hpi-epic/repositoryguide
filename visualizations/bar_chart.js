@@ -11,7 +11,7 @@ import MetricChart from './chart.js'
 //     value: 'value 2'
 // }, ... ]
 export default class BarChart extends MetricChart {
-    constructor(parameters = { canvas_container: null, statistics_container: null }) {
+    constructor(parameters = { canvas: null, statistics_container: null }) {
         super(parameters)
 
         this._statistics = {

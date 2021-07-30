@@ -4,7 +4,7 @@ import BarChart from './bar_chart.js'
 import '../external/chartjs-plugin-datalabels.js'
 
 export default class StackedBarChart extends MultipleDatasetChart {
-    constructor(parameters = { canvas_container: null, statistics_container: null }) {
+    constructor(parameters = { canvas: null, statistics_container: null }) {
         super(parameters)
     }
 
