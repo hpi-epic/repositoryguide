@@ -5,7 +5,6 @@ import { paginateRest } from 'https://cdn.skypack.dev/@octokit/plugin-paginate-r
 import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
 
 // ------------------- Metrices ------------------- //
-
 import {
     buckets,
     issue_size,
@@ -15,7 +14,6 @@ import {
 } from './metrics.js'
 
 // ------------------- helper functions ------------------- //
-
 import { get_max, get_min, sort_descending_by_value } from './utils.js'
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
@@ -225,21 +223,18 @@ async function get_collaborators(config) {
     )
 }
 
-export async function get_pull_request_closing_times(config) {
+export async function get_pull_request_closing_times(config, sprint_segmented, team_index = null) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (config.team_filtered) {
-        pull_requests = pull_requests_filtered_by_team(
-            pull_requests,
-            config.teams[config.team_index]
-        )
+    if (team_index) {
+        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[team_index])
     }
 
     let data = []
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         // todo
     } else {
         data = pull_requests.map((pull_request) => ({
@@ -252,21 +247,22 @@ export async function get_pull_request_closing_times(config) {
     return data
 }
 
-export async function get_pull_request_closing_time_buckets(config) {
+export async function get_pull_request_closing_time_buckets(
+    config,
+    sprint_segmented,
+    team_index = null
+) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (config.team_filtered) {
-        pull_requests = pull_requests_filtered_by_team(
-            pull_requests,
-            config.teams[config.team_index]
-        )
+    if (team_index) {
+        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[team_index])
     }
 
     let data
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         const pull_request_groups = {}
         config.sprints.forEach((sprint, index) => {
             pull_request_groups[index] = []
@@ -308,18 +304,18 @@ export async function get_pull_request_closing_time_buckets(config) {
     return data
 }
 
-export async function get_issue_sizes(config) {
+export async function get_issue_sizes(config, sprint_segmented, team_index = null) {
     let issues = await get_issues(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (config.team_filtered) {
-        issues = await issues_filtered_by_team(config, issues, config.teams[config.team_index])
+    if (team_index) {
+        issues = await issues_filtered_by_team(config, issues, config.teams[team_index])
     }
 
     let data = []
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         // todo
     } else {
         data = issues.map((issue) => ({
@@ -332,11 +328,15 @@ export async function get_issue_sizes(config) {
     return data
 }
 
-export async function get_issue_buckets_fixed_interval(config) {
-    const issues = await get_issue_sizes(config) // does the filtering too
+export async function get_issue_buckets_fixed_interval(
+    config,
+    sprint_segmented,
+    team_index = null
+) {
+    const issues = await get_issue_sizes(config, sprint_segmented, team_index) // does the filtering too
 
     let data = []
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         // todo
     } else {
         const nr_of_buckets = 5
