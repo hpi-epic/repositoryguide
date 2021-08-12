@@ -22,21 +22,21 @@
         }
 
         .chart_container {
-            width: 100%;
+            width: 90%;
             height: 400px;
         }
 
         .chart-canvas-container {
             display: inline-block;
             width: 80%;
-            height: 100%;
+            height: 90%;
             float: left;
         }
 
         .chart-statistics-container {
             display: inline-block;
             width: 20%;
-            height: 100%;
+            height: 90%;
             float: right;
         }
 
@@ -150,6 +150,7 @@
                 </button>
             </li>
         </ul>
+        <br />
         <div class='tab-content'>
             <div
                 class='tab-pane active show'
@@ -158,6 +159,7 @@
                 aria-labelledby='nav-pull-request-tab'
             >
                 <div class='chart_container' id='pr_closing_times_container'>
+                    <h4>Pull request closing times</h4>
                     <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
@@ -170,7 +172,11 @@
                         data-metric='Pull request closing times'
                     ></div>
                 </div>
+
+                <hr class='border-3 border-bottom'>
+
                 <div class='chart_container' id='pr_closing_times_in_buckets_container'>
+                    <h4>Pull request closing times in buckets overall</h4>
                     <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
@@ -183,10 +189,14 @@
                         data-metric='Pull request closing times in buckets overall'
                     ></div>
                 </div>
+
+                <hr class='border-3 border-bottom'>
+
                 <div
                     class='chart_container'
                     id='pr_closing_times_in_buckets_sprint_segmented_container'
                 >
+                    <h4>Pull request closing times in buckets per sprint</h4>
                     <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
@@ -207,6 +217,7 @@
                 aria-labelledby='nav-commits-tab'
             >
                 <div class='chart_container' id='commit_times_container'>
+                    <h4>Commit times</h4>
                     <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
@@ -219,7 +230,11 @@
                         data-metric='Commit times'
                     ></div>
                 </div>
+
+                <hr class='border-3 border-bottom'>
+
                 <div class='chart_container' id='commit_amounts_container'>
+                    <h4>Commit amounts per sprint</h4>
                     <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
@@ -240,6 +255,7 @@
                 aria-labelledby='nav-issues-tab'
             >
                 <div class='chart_container' id='issues_sizes_in_buckets_container'>
+                    <h4>Issue sizes</h4>
                     <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
@@ -249,7 +265,11 @@
                     </div>
                     <div class='chart-statistics-container' data-metric='Issue sizes'></div>
                 </div>
+
+                <hr class='border-3 border-bottom'>
+
                 <div class='chart_container' id='issues_sizes_container'>
+                    <h4>Issue sizes in buckets</h4>
                     <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
@@ -262,7 +282,11 @@
                         data-metric='Issue sizes in buckets'
                     ></div>
                 </div>
+
+                <hr class='border-3 border-bottom'>
+
                 <div class='chart_container' id='issues_submit_times_container'>
+                    <h4>Issue submit times</h4>
                     <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
