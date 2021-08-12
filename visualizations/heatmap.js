@@ -28,9 +28,9 @@ export default class Heatmap extends MetricChart {
                             return ''
                         },
                         label: (item) => [
-                                `Time: ${item.raw.x}:00 to ${item.raw.x + 1}:00`,
-                                `${this.git_artifact_name}: ${item.raw.v}`
-                            ]
+                            `Time: ${item.raw.x}:00 to ${item.raw.x + 1}:00`,
+                            `${this.git_artifact_name}: ${item.raw.v}`
+                        ]
                     }
                 }
             },
