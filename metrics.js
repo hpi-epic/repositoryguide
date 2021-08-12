@@ -1,11 +1,14 @@
 import Heatmap from './visualizations/heatmap.js'
 import StackedBarChart from './visualizations/stacked_bar_chart.js'
 import BarChart from './visualizations/bar_chart.js'
+import MultipleLineChart from './visualizations/multiple_line_chart.js'
 
 import {
+    get_commit_amounts,
     get_commit_times,
     get_issue_buckets_fixed_interval,
     get_issue_sizes,
+    get_issue_submit_times,
     get_pull_request_closing_time_buckets,
     get_pull_request_closing_times
 } from './data_functions.js'
@@ -36,10 +39,20 @@ export const metrics = {
         data_retrieval_function: get_issue_buckets_fixed_interval,
         sprint_segmented: false
     },
+    'Issue submit times': {
+        chart_class: Heatmap,
+        data_retrieval_function: get_issue_submit_times,
+        sprint_segmented: false
+    },
     'Commit times': {
         chart_class: Heatmap,
         data_retrieval_function: get_commit_times,
         sprint_segmented: false
+    },
+    'Commit amounts per sprint': {
+        chart_class: MultipleLineChart,
+        data_retrieval_function: get_commit_amounts,
+        sprint_segmented: true
     }
 }
 

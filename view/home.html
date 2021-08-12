@@ -212,6 +212,18 @@
                         data-metric='Commit times'
                     ></div>
                 </div>
+                <div class='chart_container' id='commit_amounts_container'>
+                    <div class='chart-canvas-container'>
+                        <canvas
+                            class='svg-container chart-canvas'
+                            data-metric='Commit amounts per sprint'
+                        ></canvas>
+                    </div>
+                    <div
+                        class='chart-statistics-container'
+                        data-metric='Commit amounts per sprint'
+                    ></div>
+                </div>
             </div>
             <div
                 class='tab-pane'
@@ -219,6 +231,15 @@
                 role='tabpanel'
                 aria-labelledby='nav-issues-tab'
             >
+                <div class='chart_container' id='issues_sizes_in_buckets_container'>
+                    <div class='chart-canvas-container'>
+                        <canvas
+                            class='svg-container chart-canvas'
+                            data-metric='Issue sizes'
+                        ></canvas>
+                    </div>
+                    <div class='chart-statistics-container' data-metric='Issue sizes'></div>
+                </div>
                 <div class='chart_container' id='issues_sizes_container'>
                     <div class='chart-canvas-container'>
                         <canvas
@@ -231,14 +252,14 @@
                         data-metric='Issue sizes in buckets'
                     ></div>
                 </div>
-                <div class='chart_container' id='issues_sizes_in_buckets_container'>
+                <div class='chart_container' id='issues_submit_times_container'>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
-                            data-metric='Issue sizes'
+                            data-metric='Issue submit times'
                         ></canvas>
                     </div>
-                    <div class='chart-statistics-container' data-metric='Issue sizes'></div>
+                    <div class='chart-statistics-container' data-metric='Issue submit times'></div>
                 </div>
             </div>
         </div>

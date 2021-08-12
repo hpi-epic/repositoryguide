@@ -10,7 +10,16 @@ export default class MetricChart {
         this._statistics_container = parameters.statistics_container
         this._title = ''
         this._data_title = ''
+        this._git_artifact_name = ''
         this._config = {}
+    }
+
+    get git_artifact_name() {
+        return this._git_artifact_name
+    }
+
+    set git_artifact_name(value) {
+        this._git_artifact_name = value
     }
 
     get config() {

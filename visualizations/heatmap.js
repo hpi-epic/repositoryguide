@@ -27,12 +27,10 @@ export default class Heatmap extends MetricChart {
                         title: function () {
                             return ''
                         },
-                        label: function (item) {
-                            return [
-                                `Time: ${item.raw.x}:00 to ${item.raw.x + 1}:00`,
-                                `Commits: ${item.raw.v}`
-                            ]
-                        }
+                        label: (item) => [
+                            `Time: ${item.raw.x}:00 to ${item.raw.x + 1}:00`,
+                            `${this.git_artifact_name}: ${item.raw.v}`
+                        ]
                     }
                 }
             },
@@ -112,9 +110,9 @@ export default class Heatmap extends MetricChart {
     _construct_chart_datasets() {
         return [
             {
-                label: 'Commit times',
+                label: this.data_title,
                 type: 'matrix',
-                data: this.data,
+                data: this.data[0].value,
                 backgroundColor: function (drawing_context) {
                     const value = drawing_context.dataset.data[drawing_context.dataIndex].v
                     // max 50 commits ho wot calc max value in array?

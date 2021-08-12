@@ -1,4 +1,17 @@
-// import MultipleLineChart from './visualizations/multiple_line_chart.js'
+import {
+    get_commit_amounts,
+    get_commit_times,
+    get_issue_buckets_fixed_interval,
+    get_issue_sizes,
+    get_issue_submit_times,
+    get_pull_request_closing_time_buckets,
+    get_pull_request_closing_times
+} from './data_functions.js'
+
+import BarChart from './visualizations/bar_chart.js'
+import MultipleLineChart from './visualizations/multiple_line_chart.js'
+import Heatmap from './visualizations/heatmap.js'
+import StackedBarChart from './visualizations/stacked_bar_chart.js'
 
 export default class Config {
     constructor() {
