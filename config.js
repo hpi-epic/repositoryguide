@@ -11,6 +11,7 @@ import BarChart from './visualizations/bar_chart.js'
 // import StackedBarChart from './visualizations/stacked_bar_chart.js'
 import MultipleLineChart from './visualizations/multiple_line_chart.js'
 import Heatmap from './visualizations/heatmap.js'
+import StackedBarChart from './visualizations/stacked_bar_chart.js'
 
 export default class Config {
     constructor() {
@@ -149,7 +150,7 @@ export default class Config {
             return MultipleLineChart
         }
         if (this.sprint_segmented) {
-            return MultipleLineChart
+            return StackedBarChart
         }
         return BarChart
     }
