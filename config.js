@@ -1,18 +1,3 @@
-import {
-    get_commit_amounts,
-    get_commit_times,
-    get_issue_buckets_fixed_interval,
-    get_issue_sizes,
-    get_issue_submit_times,
-    get_pull_request_closing_time_buckets,
-    get_pull_request_closing_times
-} from './data_functions.js'
-
-import BarChart from './visualizations/bar_chart.js'
-import MultipleLineChart from './visualizations/multiple_line_chart.js'
-import Heatmap from './visualizations/heatmap.js'
-import StackedBarChart from './visualizations/stacked_bar_chart.js'
-
 export default class Config {
     constructor() {
         this._organization = ''
@@ -22,8 +7,8 @@ export default class Config {
         this._github_access_token = ''
     }
 
-    static from_session_storage() {
-        const string = sessionStorage.getItem('config')
+    static from_storage() {
+        const string = localStorage.getItem('config')
         if (!string) {
             return new Config()
         }
@@ -31,8 +16,7 @@ export default class Config {
         return Config.from_json(JSON.parse(string))
     }
 
-    static from_file(file, callback = () => {
-    }) {
+    static from_file(file, callback = () => {}) {
         if (file) {
             const config_reader = new FileReader()
 
@@ -67,8 +51,8 @@ export default class Config {
         return instance
     }
 
-    to_session_storage() {
-        sessionStorage.setItem('config', this.toString())
+    to_storage_storage() {
+        localStorage.setItem('config', this.toString())
     }
 
     get organization() {

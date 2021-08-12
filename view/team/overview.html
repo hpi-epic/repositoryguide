@@ -1,244 +1,246 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <title>Teams</title>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8' />
+    <title>Teams</title>
 
-        <link
-            rel="stylesheet"
-            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-        />
-    </head>
-    <body>
-        <template id="template_unregistered_collaborator">
-            <tr class="d-flex">
-                <td class="col-4" id="text_collaborator_name"></td>
-                <td class="col-6">
-                    <label style="display: none"
-                           for="select_team"
-                    >
-                        Selected team for the unregistered collaborator
-                    </label>
-                    <select id="select_team" class="form-control">
-                        <option selected disabled value="none">-- Select a team --</option>
-                    </select>
-                </td>
-                <td class="col-2"><button id="button_assign" class="btn btn-outline-secondary" disabled>Assign</button></td>
-            </tr>
-        </template>
-        <template id="template_team_row">
-            <tr class="d-flex">
-                <td class="col-5" id="text_name"></td>
-                <td class="col-5" id="text_label"></td>
-                <td class="col-2">
-                    <a id="link_detail_page" class="btn btn-outline-secondary" href="detail.html">Details</a>
-                </td>
-            </tr>
-        </template>
+    <link
+        rel='stylesheet'
+        href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
+        integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm'
+        crossorigin='anonymous'
+    />
+    <link
+        rel='stylesheet'
+        href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
+    />
+</head>
+<body>
+<template id='template_unregistered_collaborator'>
+    <tr class='d-flex'>
+        <td class='col-4' id='text_collaborator_name'></td>
+        <td class='col-6'>
+            <label style='display: none'
+                   for='select_team'
+            >
+                Selected team for the unregistered collaborator
+            </label>
+            <select id='select_team' class='form-control'>
+                <option selected disabled value='none'>-- Select a team --</option>
+            </select>
+        </td>
+        <td class='col-2'>
+            <button id='button_assign' class='btn btn-outline-secondary' disabled>Assign</button>
+        </td>
+    </tr>
+</template>
+<template id='template_team_row'>
+    <tr class='d-flex'>
+        <td class='col-5' id='text_name'></td>
+        <td class='col-5' id='text_label'></td>
+        <td class='col-2'>
+            <a id='link_detail_page' class='btn btn-outline-secondary' href='detail.html'>Details</a>
+        </td>
+    </tr>
+</template>
 
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-            <div class="navbar-brand">Agile Metrics</div>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/repositoryguide/view/home.html" id="button_navigate_home">
-                            <i class="fa fa-home" aria-hidden="true"></i>
-                            Home
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a class="nav-link"
-                           href="/repositoryguide/view/team/overview.html"
-                           id="button_navigate_teams"
-                        >
-                            Teams
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="/repositoryguide/view/sprint/overview.html"
-                            id="button_navigate_sprint"
-                        >
-                            Sprints
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="/repositoryguide/view/settings.html"
-                           id="button_navigate_settings"
-                        >
-                            <i class="fa fa-cogs" aria-hidden="true"></i>
-                            Settings
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-
-        <div class="card container">
-            <div class="card-header">
-                <h3>Unregistered Collaborators</h3>
-            </div>
-            <div class="form-group card-body">
-                <button
-                    class="form-control btn btn-outline-secondary"
-                    id="button_load_unregistered_collaborators_from_github"
+<nav class='navbar navbar-expand-md navbar-dark bg-dark mb-4'>
+    <div class='navbar-brand'>Agile Metrics</div>
+    <div class='collapse navbar-collapse'>
+        <ul class='navbar-nav mr-auto'>
+            <li class='nav-item'>
+                <a class='nav-link' href='/repositoryguide/view/home.html' id='button_navigate_home'>
+                    <i class='fa fa-home' aria-hidden='true'></i>
+                    Home
+                </a>
+            </li>
+            <li class='nav-item active'>
+                <a class='nav-link'
+                   href='/repositoryguide/view/team/overview.html'
+                   id='button_navigate_teams'
                 >
-                    Load unregistered collaborators from GitHub
-                </button>
-                <br />
-                <table class="table">
-                    <thead>
-                        <tr class="d-flex">
-                            <th class="col-4" scope="col">Name</th>
-                            <th class="col-6" scope="col">Team</th>
-                            <th class="col-2" scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="container_unregistered_collaborators"></tbody>
-                </table>
-            </div>
-        </div>
+                    Teams
+                </a>
+            </li>
+            <li class='nav-item'>
+                <a
+                    class='nav-link'
+                    href='/repositoryguide/view/sprint/overview.html'
+                    id='button_navigate_sprint'
+                >
+                    Sprints
+                </a>
+            </li>
+            <li class='nav-item'>
+                <a class='nav-link'
+                   href='/repositoryguide/view/settings.html'
+                   id='button_navigate_settings'
+                >
+                    <i class='fa fa-cogs' aria-hidden='true'></i>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
 
+<div class='card container'>
+    <div class='card-header'>
+        <h3>Unregistered Collaborators</h3>
+    </div>
+    <div class='form-group card-body'>
+        <button
+            class='form-control btn btn-outline-secondary'
+            id='button_load_unregistered_collaborators_from_github'
+        >
+            Load unregistered collaborators from GitHub
+        </button>
         <br />
+        <table class='table'>
+            <thead>
+            <tr class='d-flex'>
+                <th class='col-4' scope='col'>Name</th>
+                <th class='col-6' scope='col'>Team</th>
+                <th class='col-2' scope='col'></th>
+            </tr>
+            </thead>
+            <tbody id='container_unregistered_collaborators'></tbody>
+        </table>
+    </div>
+</div>
 
-        <div class="card container">
-            <div class="card-header">
-                <h3>Teams</h3>
-            </div>
-            <div class="form-group card-body">
-                <button class="form-control btn btn-outline-secondary" id="button_load_teams_from_github">
-                    Load teams from GitHub
-                </button>
-                <br />
-                <table class="table">
-                    <thead>
-                        <tr class="d-flex">
-                            <th class="col-5" scope="col">Name</th>
-                            <th class="col-5" scope="col">Label</th>
-                            <th class="col-2" scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="container_teams"></tbody>
-                </table>
-            </div>
-        </div>
+<br />
 
+<div class='card container'>
+    <div class='card-header'>
+        <h3>Teams</h3>
+    </div>
+    <div class='form-group card-body'>
+        <button class='form-control btn btn-outline-secondary' id='button_load_teams_from_github'>
+            Load teams from GitHub
+        </button>
         <br />
+        <table class='table'>
+            <thead>
+            <tr class='d-flex'>
+                <th class='col-5' scope='col'>Name</th>
+                <th class='col-5' scope='col'>Label</th>
+                <th class='col-2' scope='col'></th>
+            </tr>
+            </thead>
+            <tbody id='container_teams'></tbody>
+        </table>
+    </div>
+</div>
 
-        <a class="btn btn-outline-secondary" id="button_back" href="javascript:history.back()">Back</a>
+<br />
 
-        <script type="module">
-            import Config from '../../config.js'
-            import {
-                remove_children,
-            } from '../../utils.js'
-            import { get_teams, get_unregistered_collaborators } from '../../data_functions.js'
+<a class='btn btn-outline-secondary' id='button_back' href='javascript:history.back()'>Back</a>
 
-            const container_teams = document.getElementById('container_teams')
-            const container_unregistered_collaborators = document.getElementById(
-                'container_unregistered_collaborators'
+<script type='module'>
+    import Config from '../../config.js'
+    import {
+        remove_children
+    } from '../../utils.js'
+    import { get_teams, get_unregistered_collaborators } from '../../data_functions.js'
+
+    const container_teams = document.getElementById('container_teams')
+    const container_unregistered_collaborators = document.getElementById(
+        'container_unregistered_collaborators'
+    )
+    let config = Config.from_storage()
+
+    document.getElementById('button_navigate_home').addEventListener('click', () => config.to_storage_storage())
+    document.getElementById('button_navigate_teams').addEventListener('click', event => event.preventDefault())
+    document.getElementById('button_navigate_settings').addEventListener('click', () => config.to_storage_storage())
+    document.getElementById('button_back').addEventListener('click', () => config.to_storage_storage())
+
+    document
+        .getElementById('button_load_teams_from_github')
+        .addEventListener('click', async () => {
+            if (!config.organization) {
+                alert('No organization defined. This is required to lead the teams')
+                return
+            }
+
+            config.teams = await get_teams(config)
+
+            remove_children(container_teams)
+            remove_children(container_unregistered_collaborators)
+            await initialize()
+        })
+
+    document
+        .getElementById('button_load_unregistered_collaborators_from_github')
+        .addEventListener('click', async () => {
+            if (!config.organization || !config.repository) {
+                alert('This action requires an organization and a repository to be set')
+                return
+            }
+
+            remove_children(container_unregistered_collaborators)
+            await initialize_unregistered_collaborators()
+        })
+
+    function append_table_row_for_team(team, index) {
+        const row = document.getElementById('template_team_row').content.cloneNode(true)
+
+        row.getElementById('text_name').innerHTML = team.name
+        row.getElementById('text_label').innerHTML = team.label
+
+        const details_link = row.getElementById('link_detail_page')
+        details_link.href = details_link.href + `?index=${index}`
+
+        container_teams.appendChild(row)
+    }
+
+    function append_table_row_for_unregistered_collaborator(collaborator) {
+        const row = document
+            .getElementById('template_unregistered_collaborator')
+            .content.cloneNode(true)
+
+        row.getElementById('text_collaborator_name').innerHTML = collaborator.name
+        const select = row.getElementById('select_team')
+        const button = row.getElementById('button_assign')
+
+        config.teams.forEach((team) => {
+            select.options[select.options.length] = new Option(
+                team.name,
+                config.teams.indexOf(team).toString()
             )
-            let config = Config.from_session_storage()
+        })
+        select.addEventListener('change', () => {
+            button.disabled = false
+        })
 
-            document.getElementById("button_navigate_home").addEventListener('click', () => config.to_session_storage())
-            document.getElementById("button_navigate_teams").addEventListener('click', event => event.preventDefault())
-            document.getElementById("button_navigate_settings").addEventListener('click', () => config.to_session_storage())
-            document.getElementById("button_back").addEventListener('click', () => config.to_session_storage())
+        button.addEventListener('click', async () => {
+            const team_index = parseInt(select.options[select.selectedIndex].value)
+            config.teams[team_index].members.push(collaborator)
 
-            document
-                .getElementById('button_load_teams_from_github')
-                .addEventListener('click', async () => {
-                    if (!config.organization) {
-                        alert('No organization defined. This is required to lead the teams')
-                        return
-                    }
+            config.to_storage_storage()
 
-                    config.teams = await get_teams(config)
+            remove_children(container_unregistered_collaborators)
+            await initialize_unregistered_collaborators()
+        })
 
-                    remove_children(container_teams)
-                    remove_children(container_unregistered_collaborators)
-                    await initialize()
-                })
+        container_unregistered_collaborators.appendChild(row)
+    }
 
-            document
-                .getElementById('button_load_unregistered_collaborators_from_github')
-                .addEventListener('click', async () => {
-                    if (!config.organization || !config.repository) {
-                        alert('This action requires an organization and a repository to be set')
-                        return
-                    }
+    async function initialize_unregistered_collaborators() {
+        const collaborators = await get_unregistered_collaborators(config)
+        collaborators.forEach((collaborator) =>
+            append_table_row_for_unregistered_collaborator(collaborator)
+        )
+    }
 
-                    remove_children(container_unregistered_collaborators)
-                    await initialize_unregistered_collaborators()
-                })
+    async function initialize() {
+        config.teams.forEach((team, index) => {
+            append_table_row_for_team(team, index)
+        })
+        await initialize_unregistered_collaborators()
+    }
 
-            function append_table_row_for_team(team, index) {
-                const row = document.getElementById('template_team_row').content.cloneNode(true)
-
-                row.getElementById('text_name').innerHTML = team.name
-                row.getElementById('text_label').innerHTML = team.label
-
-                const details_link = row.getElementById('link_detail_page')
-                details_link.href = details_link.href + `?index=${index}`
-
-                container_teams.appendChild(row)
-            }
-
-            function append_table_row_for_unregistered_collaborator(collaborator) {
-                const row = document
-                    .getElementById('template_unregistered_collaborator')
-                    .content.cloneNode(true)
-
-                row.getElementById('text_collaborator_name').innerHTML = collaborator.name
-                const select = row.getElementById('select_team')
-                const button = row.getElementById('button_assign')
-
-                config.teams.forEach((team) => {
-                    select.options[select.options.length] = new Option(
-                        team.name,
-                        config.teams.indexOf(team).toString()
-                    )
-                })
-                select.addEventListener('change', () => {
-                    button.disabled = false
-                })
-
-                button.addEventListener('click', async () => {
-                    const team_index = parseInt(select.options[select.selectedIndex].value)
-                    config.teams[team_index].members.push(collaborator)
-
-                    config.to_session_storage()
-
-                    remove_children(container_unregistered_collaborators)
-                    await initialize_unregistered_collaborators()
-                })
-
-                container_unregistered_collaborators.appendChild(row)
-            }
-
-            async function initialize_unregistered_collaborators() {
-                const collaborators = await get_unregistered_collaborators(config)
-                collaborators.forEach((collaborator) =>
-                    append_table_row_for_unregistered_collaborator(collaborator)
-                )
-            }
-
-            async function initialize() {
-                config.teams.forEach((team, index) => {
-                    append_table_row_for_team(team, index)
-                })
-                await initialize_unregistered_collaborators()
-            }
-
-            ;(async () => await initialize())()
-        </script>
-    </body>
+    ;(async () => await initialize())()
+</script>
+</body>
 </html>

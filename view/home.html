@@ -39,6 +39,9 @@
             height: 100%;
             float: right;
         }
+
+        .metric_explanation {
+        }
     </style>
 </head>
 <body>
@@ -155,6 +158,7 @@
                 aria-labelledby='nav-pull-request-tab'
             >
                 <div class='chart_container' id='pr_closing_times_container'>
+                    <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -167,6 +171,7 @@
                     ></div>
                 </div>
                 <div class='chart_container' id='pr_closing_times_in_buckets_container'>
+                    <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -182,6 +187,7 @@
                     class='chart_container'
                     id='pr_closing_times_in_buckets_sprint_segmented_container'
                 >
+                    <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -201,6 +207,7 @@
                 aria-labelledby='nav-commits-tab'
             >
                 <div class='chart_container' id='commit_times_container'>
+                    <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -213,6 +220,7 @@
                     ></div>
                 </div>
                 <div class='chart_container' id='commit_amounts_container'>
+                    <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -232,6 +240,7 @@
                 aria-labelledby='nav-issues-tab'
             >
                 <div class='chart_container' id='issues_sizes_in_buckets_container'>
+                    <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -241,6 +250,7 @@
                     <div class='chart-statistics-container' data-metric='Issue sizes'></div>
                 </div>
                 <div class='chart_container' id='issues_sizes_container'>
+                    <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -253,13 +263,17 @@
                     ></div>
                 </div>
                 <div class='chart_container' id='issues_submit_times_container'>
+                    <p class='metric_explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
                             data-metric='Issue submit times'
                         ></canvas>
                     </div>
-                    <div class='chart-statistics-container' data-metric='Issue submit times'></div>
+                    <div
+                        class='chart-statistics-container'
+                        data-metric='Issue submit times'
+                    ></div>
                 </div>
             </div>
         </div>
@@ -270,20 +284,20 @@
     import Config from '../config.js'
     import { metrics } from '../metrics.js'
 
-    let config = Config.from_session_storage()
+    let config = Config.from_storage()
 
     document
         .getElementById('button_navigate_home')
         .addEventListener('click', (event) => event.preventDefault())
     document
         .getElementById('button_navigate_teams')
-        .addEventListener('click', () => config.to_session_storage())
+        .addEventListener('click', () => config.to_storage_storage())
     document
         .getElementById('button_navigate_sprint')
-        .addEventListener('click', () => config.to_session_storage())
+        .addEventListener('click', () => config.to_storage_storage())
     document
         .getElementById('button_navigate_settings')
-        .addEventListener('click', () => config.to_session_storage())
+        .addEventListener('click', () => config.to_storage_storage())
 
     async function initializeChart(
         chartClass,
