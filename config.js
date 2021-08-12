@@ -8,7 +8,6 @@ import {
 } from './data_functions.js'
 
 import BarChart from './visualizations/bar_chart.js'
-// import StackedBarChart from './visualizations/stacked_bar_chart.js'
 import MultipleLineChart from './visualizations/multiple_line_chart.js'
 import Heatmap from './visualizations/heatmap.js'
 import StackedBarChart from './visualizations/stacked_bar_chart.js'
