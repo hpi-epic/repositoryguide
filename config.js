@@ -3,13 +3,14 @@ import {
     get_issue_buckets_fixed_interval,
     get_pull_request_closing_times,
     get_pull_request_closing_time_buckets,
-    get_commit_times
+    get_commit_times,
+    get_commit_amounts
 } from './data_functions.js'
 
 import BarChart from './visualizations/bar_chart.js'
-import StackedBarChart from './visualizations/stacked_bar_chart.js'
-// import MultipleLineChart from './visualizations/multiple_line_chart.js'
+import MultipleLineChart from './visualizations/multiple_line_chart.js'
 import Heatmap from './visualizations/heatmap.js'
+import StackedBarChart from './visualizations/stacked_bar_chart.js'
 
 export default class Config {
     constructor() {
@@ -144,6 +145,9 @@ export default class Config {
         if (this.metric_index === 4) {
             return Heatmap
         }
+        if (this.metric_index === 5) {
+            return MultipleLineChart
+        }
         if (this.sprint_segmented) {
             return StackedBarChart
         }
@@ -170,6 +174,8 @@ export default class Config {
                 return get_issue_buckets_fixed_interval
             case 4:
                 return get_commit_times
+            case 5:
+                return get_commit_amounts
             default:
                 return () => {}
         }
