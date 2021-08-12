@@ -1,263 +1,272 @@
 <!DOCTYPE html>
-<html lang='en'>
-<head>
-    <meta charset='UTF-8' />
-    <title>Title</title>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
 
-    <link
-        crossorigin='anonymous'
-        href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
-        integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm'
-        rel='stylesheet'
-    />
-    <link
-        href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
-        rel='stylesheet'
-    />
+        <link
+            crossorigin="anonymous"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+            integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+            rel="stylesheet"
+        />
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+            rel="stylesheet"
+        />
 
-    <style>
-        html,
-        body {
-            height: 100%;
-        }
+        <style>
+            html,
+            body {
+                height: 100%;
+            }
 
-        #chart_container {
-            width: 100%;
-            height: 90%;
-        }
+            #chart_container {
+                width: 100%;
+                height: 90%;
+            }
 
-        #canvas_container {
-            display: inline-block;
-            width: 80%;
-            height: 100%;
-            float: left;
-        }
+            #canvas_container {
+                display: inline-block;
+                width: 80%;
+                height: 100%;
+                float: left;
+            }
 
-        #statistics_container {
-            display: inline-block;
-            width: 20%;
-            height: 100%;
-            float: right;
-        }
-    </style>
-</head>
-<body>
-<template id='template_input_sprint'>
-    <div class='input_sprint'>
-        <label for='sprint_begin'>From: </label>
-        <input class='form-control' id='sprint_begin' type='date' />
-        <label for='sprint_end'>to: </label>
-        <input class='form-control' id='sprint_end' type='date' />
-    </div>
-    <br />
-</template>
+            #statistics_container {
+                display: inline-block;
+                width: 20%;
+                height: 100%;
+                float: right;
+            }
+        </style>
+    </head>
+    <body>
+        <template id="template_input_sprint">
+            <div class="input_sprint">
+                <label for="sprint_begin">From: </label>
+                <input class="form-control" id="sprint_begin" type="date" />
+                <label for="sprint_end">to: </label>
+                <input class="form-control" id="sprint_end" type="date" />
+            </div>
+            <br />
+        </template>
 
-<nav class='navbar navbar-expand-md navbar-dark bg-dark mb-4'>
-    <div class='navbar-brand'>Agile Metrics</div>
-    <div class='collapse navbar-collapse'>
-        <ul class='navbar-nav mr-auto'>
-            <li class='nav-item active'>
-                <a class='nav-link' href='/repositoryguide/view/home.html' id='button_navigate_home'>
-                    <i class='fa fa-home' aria-hidden='true'></i>
-                    Home
-                </a>
-            </li>
-            <li class='nav-item'>
-                <a class='nav-link'
-                   href='/repositoryguide/view/team/overview.html'
-                   id='button_navigate_teams'
-                >
-                    Teams
-                </a>
-            </li>
-            <li class='nav-item'>
-                <a
-                    class='nav-link'
-                    href='/repositoryguide/view/sprint/overview.html'
-                    id='button_navigate_sprint'
-                >
-                    Sprints
-                </a>
-            </li>
-            <li class='nav-item'>
-                <a class='nav-link'
-                   href='/repositoryguide/view/settings.html'
-                   id='button_navigate_settings'
-                >
-                    <i class='fa fa-cogs' aria-hidden='true'></i>
-                    Settings
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <div class="navbar-brand">Agile Metrics</div>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a
+                            class="nav-link"
+                            href="/repositoryguide/view/home.html"
+                            id="button_navigate_home"
+                        >
+                            <i class="fa fa-home" aria-hidden="true"></i>
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="/repositoryguide/view/team/overview.html"
+                            id="button_navigate_teams"
+                        >
+                            Teams
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="/repositoryguide/view/sprint/overview.html"
+                            id="button_navigate_sprint"
+                        >
+                            Sprints
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="/repositoryguide/view/settings.html"
+                            id="button_navigate_settings"
+                        >
+                            <i class="fa fa-cogs" aria-hidden="true"></i>
+                            Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-<div class='card container' id='settings_container'>
-    <div class='card-header'>
-        <h3>Home</h3>
-    </div>
-    <div class='form-group card-body'>
-        <div class='input-group'>
-            <label for='select_metric'>Metric:</label>
-            <select class='form-control' id='select_metric'>
-                <option disabled selected value='none'>-- Select a metric --</option>
-            </select>
-        </div>
+        <div class="card container" id="settings_container">
+            <div class="card-header">
+                <h3>Home</h3>
+            </div>
+            <div class="form-group card-body">
+                <div class="input-group">
+                    <label for="select_metric">Metric:</label>
+                    <select class="form-control" id="select_metric">
+                        <option disabled selected value="none">-- Select a metric --</option>
+                    </select>
+                </div>
 
-        <br />
+                <br />
 
-        <div class='input-group'>
-            <label class='form-check-label' for='input_segmented_by_sprints'
-            >Segmented by sprint:</label
-            >
-            <div class='input-group'>
-                <input
-                    class='form-check-input'
-                    id='input_segmented_by_sprints'
-                    type='checkbox'
-                />
-                <a
-                    class='btn btn-outline-secondary'
-                    href='sprint/overview.html'
-                >
-                    View sprints
-                </a>
+                <div class="input-group">
+                    <label class="form-check-label" for="input_segmented_by_sprints"
+                        >Segmented by sprint:</label
+                    >
+                    <div class="input-group">
+                        <input
+                            class="form-check-input"
+                            id="input_segmented_by_sprints"
+                            type="checkbox"
+                        />
+                        <a class="btn btn-outline-secondary" href="sprint/overview.html">
+                            View sprints
+                        </a>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="input-group">
+                    <label class="form-check-label" for="input_filtered_by_teams"
+                        >Filtered by team:</label
+                    >
+                    <div class="input-group">
+                        <input
+                            class="form-check-input"
+                            id="input_filtered_by_teams"
+                            type="checkbox"
+                        />
+                        <label class="form-check-label" for="select_team" style="display: none"
+                            >Selected team:</label
+                        >
+                        <select class="form-control" id="select_team">
+                            <option disabled selected value="none">-- Select a team --</option>
+                        </select>
+                        <a class="btn btn-outline-secondary" href="team/overview.html"
+                            >View teams</a
+                        >
+                    </div>
+                </div>
+
+                <br />
+
+                <button class="form-control btn btn-outline-primary" id="button_submit">
+                    Apply
+                </button>
             </div>
         </div>
 
-        <br />
-
-        <div class='input-group'>
-            <label class='form-check-label' for='input_filtered_by_teams'
-            >Filtered by team:</label
-            >
-            <div class='input-group'>
-                <input
-                    class='form-check-input'
-                    id='input_filtered_by_teams'
-                    type='checkbox'
-                />
-                <label class='form-check-label' for='select_team' style='display: none'
-                >Selected team:</label
-                >
-                <select class='form-control' id='select_team'>
-                    <option disabled selected value='none'>-- Select a team --</option>
-                </select>
-                <a
-                    class='btn btn-outline-secondary'
-                    href='team/overview.html'
-                >View teams</a
-                >
-            </div>
+        <div id="chart_container">
+            <div class="svg-container" id="canvas_container"></div>
+            <div id="statistics_container"></div>
         </div>
 
-        <br />
+        <script type="module">
+            import Config from '../config.js'
+            import { metrics } from '../metrics.js'
 
-        <button class='form-control btn btn-outline-primary' id='button_submit'>
-            Apply
-        </button>
-    </div>
-</div>
+            import { remove_children } from '../utils.js'
 
-<div id='chart_container'>
-    <div class='svg-container' id='canvas_container'></div>
-    <div id='statistics_container'></div>
-</div>
+            let config = Config.from_session_storage()
 
-<script type='module'>
-    import Config from '../config.js'
-    import { metrics } from '../metrics.js'
+            const canvas_container = document.getElementById('canvas_container')
+            const statistics_container = document.getElementById('statistics_container')
+            let chart = {}
+            let chart_class = {}
 
-    import { remove_children } from '../utils.js'
+            let inputs = {
+                metric: document.getElementById('select_metric'),
+                segmented_by_sprints: document.getElementById('input_segmented_by_sprints'),
+                filtered_by_teams: document.getElementById('input_filtered_by_teams'),
+                team: document.getElementById('select_team'),
+                submit: document.getElementById('button_submit')
+            }
 
-    let config = Config.from_session_storage()
+            document
+                .getElementById('button_navigate_home')
+                .addEventListener('click', (event) => event.preventDefault())
+            document
+                .getElementById('button_navigate_teams')
+                .addEventListener('click', () => config.to_session_storage())
+            document
+                .getElementById('button_navigate_sprint')
+                .addEventListener('click', () => config.to_session_storage())
+            document
+                .getElementById('button_navigate_settings')
+                .addEventListener('click', () => config.to_session_storage())
 
-    const canvas_container = document.getElementById('canvas_container')
-    const statistics_container = document.getElementById('statistics_container')
-    let chart = {}
-    let chart_class = {}
+            initialize_inputs(config)
 
-    let inputs = {
-        metric: document.getElementById('select_metric'),
-        segmented_by_sprints: document.getElementById('input_segmented_by_sprints'),
-        filtered_by_teams: document.getElementById('input_filtered_by_teams'),
-        team: document.getElementById('select_team'),
-        submit: document.getElementById('button_submit')
-    }
+            document
+                .getElementById('button_navigate_home')
+                .addEventListener('click', (event) => event.preventDefault())
 
-    document.getElementById('button_navigate_home').addEventListener('click', event => event.preventDefault())
-    document.getElementById('button_navigate_teams').addEventListener('click', () => config.to_session_storage())
-    document.getElementById('button_navigate_sprint').addEventListener('click', () => config.to_session_storage())
-    document.getElementById('button_navigate_settings').addEventListener('click', () => config.to_session_storage())
-
-    initialize_inputs(config)
-
-    document
-        .getElementById('button_navigate_home')
-        .addEventListener('click', (event) => event.preventDefault())
-
-    inputs.metric.addEventListener('change', () => {
-        config.metric_index = parseInt(
-            inputs.metric.options[inputs.metric.selectedIndex].value
-        )
-    })
-
-    inputs.segmented_by_sprints.addEventListener('change', () => {
-        config.sprint_segmented = inputs.segmented_by_sprints.checked
-    })
-
-    inputs.filtered_by_teams.addEventListener('change', () => {
-        config.team_filtered = inputs.filtered_by_teams.checked
-    })
-
-    inputs.team.addEventListener('change', () => {
-        config.team_index = parseInt(inputs.team.options[inputs.team.selectedIndex].value)
-    })
-
-    inputs.submit.addEventListener('click', async () => {
-        config.to_session_storage()
-
-        let dataset = await config.data_retrieval_function(config)
-
-        if (chart_class !== config.chart_class) {
-            remove_children(canvas_container)
-            remove_children(statistics_container)
-
-            chart_class = config.chart_class
-            chart = new chart_class({
-                canvas_container: canvas_container,
-                statistics_container: statistics_container
+            inputs.metric.addEventListener('change', () => {
+                config.metric_index = parseInt(
+                    inputs.metric.options[inputs.metric.selectedIndex].value
+                )
             })
-        }
 
-        chart.data = dataset
-        chart.title = metrics[config.metric_index]
-        chart.data_title = metrics[config.metric_index]
-        chart.git_artifact_name = config.git_artifact_name
-        chart.config = config
-        chart.draw()
-    })
+            inputs.segmented_by_sprints.addEventListener('change', () => {
+                config.sprint_segmented = inputs.segmented_by_sprints.checked
+            })
 
-    function initialize_inputs(config) {
-        metrics.forEach((metric) => {
-            inputs.metric.options[inputs.metric.options.length] = new Option(
-                metric,
-                metrics.indexOf(metric).toString()
-            )
-        })
-        inputs.metric.selectedIndex = config.metric_index + 1
+            inputs.filtered_by_teams.addEventListener('change', () => {
+                config.team_filtered = inputs.filtered_by_teams.checked
+            })
 
-        inputs.segmented_by_sprints.checked = config.sprint_segmented
-        inputs.filtered_by_teams.checked = config.team_filtered
+            inputs.team.addEventListener('change', () => {
+                config.team_index = parseInt(inputs.team.options[inputs.team.selectedIndex].value)
+            })
 
-        config.teams.forEach((team) => {
-            inputs.team.options[inputs.team.options.length] = new Option(
-                team.name,
-                config.teams.indexOf(team).toString()
-            )
-        })
-        inputs.team.selectedIndex = config.team_index + 1
-    }
-</script>
-</body>
+            inputs.submit.addEventListener('click', async () => {
+                config.to_session_storage()
+
+                let dataset = await config.data_retrieval_function(config)
+
+                if (chart_class !== config.chart_class) {
+                    remove_children(canvas_container)
+                    remove_children(statistics_container)
+
+                    chart_class = config.chart_class
+                    chart = new chart_class({
+                        canvas_container: canvas_container,
+                        statistics_container: statistics_container
+                    })
+                }
+
+                chart.data = dataset
+                chart.title = metrics[config.metric_index]
+                chart.data_title = metrics[config.metric_index]
+                chart.git_artifact_name = config.git_artifact_name
+                chart.config = config
+                chart.draw()
+            })
+
+            function initialize_inputs(config) {
+                metrics.forEach((metric) => {
+                    inputs.metric.options[inputs.metric.options.length] = new Option(
+                        metric,
+                        metrics.indexOf(metric).toString()
+                    )
+                })
+                inputs.metric.selectedIndex = config.metric_index + 1
+
+                inputs.segmented_by_sprints.checked = config.sprint_segmented
+                inputs.filtered_by_teams.checked = config.team_filtered
+
+                config.teams.forEach((team) => {
+                    inputs.team.options[inputs.team.options.length] = new Option(
+                        team.name,
+                        config.teams.indexOf(team).toString()
+                    )
+                })
+                inputs.team.selectedIndex = config.team_index + 1
+            }
+        </script>
+    </body>
 </html>

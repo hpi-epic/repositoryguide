@@ -430,7 +430,7 @@ export async function get_issue_submit_times(config) {
 
     issues.forEach((issue) => {
         const issue_date = new Date(issue.created_at)
-        const day = (issue_date.getDay() + 7 - 1) % 7
+        const day = (issue_date.getDay() + 6) % 7
         const hour = issue_date.getHours()
         timeSlots[day][hour] += 1
     })
