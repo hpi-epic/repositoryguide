@@ -290,7 +290,6 @@ async function calculate_stats_for_commits(commit_in_sprints, config) {
             }
         ])
     }
-    debugger
     return newData
 }
 
