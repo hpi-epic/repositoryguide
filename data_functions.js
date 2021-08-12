@@ -524,7 +524,7 @@ export async function get_commit_amounts(config) {
         config.repository
     )
     if (config.team_filtered) {
-        commits = find_commits_for_team(commits, config.teams[config.team_index])
+        commits = select_commits_for_team(commits, config.teams[config.team_index])
     }
 
     if (config.sprint_segmented) {
