@@ -189,7 +189,7 @@ async function get_detailed_commit(auth, owner, project, ref) {
     })
 }
 
-function find_commits_for_team(commits, team) {
+function select_commits_for_team(commits, team) {
     const team_ids = team.members.map((member) => member.id)
     return commits.filter((commit) => {
         if (commit.committer) {
@@ -477,7 +477,7 @@ export async function get_commit_times(config) {
     )
 
     if (config.team_filtered) {
-        commits = find_commits_for_team(commits, config.teams[config.team_index])
+        commits = select_commits_for_team(commits, config.teams[config.team_index])
     }
 
     if (config.sprint_segmented) {
