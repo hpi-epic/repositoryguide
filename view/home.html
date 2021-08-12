@@ -57,15 +57,20 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="/repositoryguide/view/home.html" id="button_navigate_home">
+                        <a
+                            class="nav-link"
+                            href="/repositoryguide/view/home.html"
+                            id="button_navigate_home"
+                        >
                             <i class="fa fa-home" aria-hidden="true"></i>
                             Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                           href="/repositoryguide/view/team/overview.html"
-                           id="button_navigate_teams"
+                        <a
+                            class="nav-link"
+                            href="/repositoryguide/view/team/overview.html"
+                            id="button_navigate_teams"
                         >
                             Teams
                         </a>
@@ -80,9 +85,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                           href="/repositoryguide/view/settings.html"
-                           id="button_navigate_settings"
+                        <a
+                            class="nav-link"
+                            href="/repositoryguide/view/settings.html"
+                            id="button_navigate_settings"
                         >
                             <i class="fa fa-cogs" aria-hidden="true"></i>
                             Settings
@@ -116,10 +122,7 @@
                             id="input_segmented_by_sprints"
                             type="checkbox"
                         />
-                        <a
-                            class="btn btn-outline-secondary"
-                            href="sprint/overview.html"
-                        >
+                        <a class="btn btn-outline-secondary" href="sprint/overview.html">
                             View sprints
                         </a>
                     </div>
@@ -143,9 +146,7 @@
                         <select class="form-control" id="select_team">
                             <option disabled selected value="none">-- Select a team --</option>
                         </select>
-                        <a
-                            class="btn btn-outline-secondary"
-                            href="team/overview.html"
+                        <a class="btn btn-outline-secondary" href="team/overview.html"
                             >View teams</a
                         >
                     </div>
@@ -185,10 +186,18 @@
                 submit: document.getElementById('button_submit')
             }
 
-            document.getElementById("button_navigate_home").addEventListener('click', event => event.preventDefault())
-            document.getElementById("button_navigate_teams").addEventListener('click', () => config.to_session_storage())
-            document.getElementById("button_navigate_sprint").addEventListener('click', () => config.to_session_storage())
-            document.getElementById("button_navigate_settings").addEventListener('click', () => config.to_session_storage())
+            document
+                .getElementById('button_navigate_home')
+                .addEventListener('click', (event) => event.preventDefault())
+            document
+                .getElementById('button_navigate_teams')
+                .addEventListener('click', () => config.to_session_storage())
+            document
+                .getElementById('button_navigate_sprint')
+                .addEventListener('click', () => config.to_session_storage())
+            document
+                .getElementById('button_navigate_settings')
+                .addEventListener('click', () => config.to_session_storage())
 
             initialize_inputs(config)
 
@@ -233,6 +242,7 @@
                 chart.data = dataset
                 chart.title = metrics[config.metric_index]
                 chart.data_title = metrics[config.metric_index]
+                chart.git_artifact_name = config.git_artifact_name
                 chart.config = config
                 chart.draw()
             })

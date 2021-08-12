@@ -1,10 +1,11 @@
 import {
-    get_issue_sizes,
-    get_issue_buckets_fixed_interval,
-    get_pull_request_closing_times,
-    get_pull_request_closing_time_buckets,
+    get_commit_amounts,
     get_commit_times,
-    get_commit_amounts
+    get_issue_buckets_fixed_interval,
+    get_issue_sizes,
+    get_issue_submit_times,
+    get_pull_request_closing_time_buckets,
+    get_pull_request_closing_times
 } from './data_functions.js'
 
 import BarChart from './visualizations/bar_chart.js'
@@ -142,10 +143,10 @@ export default class Config {
     }
 
     get chart_class() {
-        if (this.metric_index === 4) {
+        if (this.metric_index === 4 || this.metric_index === 5) {
             return Heatmap
         }
-        if (this.metric_index === 5) {
+        if (this.metric_index === 6) {
             return MultipleLineChart
         }
         if (this.sprint_segmented) {
@@ -162,6 +163,27 @@ export default class Config {
         this._github_access_token = value
     }
 
+    get git_artifact_name() {
+        switch (this.metric_index) {
+            case 0:
+                return 'Pull requests'
+            case 1:
+                return 'Pull requests'
+            case 2:
+                return 'Issues'
+            case 3:
+                return 'Issues'
+            case 4:
+                return 'Issues'
+            case 5:
+                return 'Commits'
+            case 6:
+                return 'Commits'
+            default:
+                return ''
+        }
+    }
+
     get data_retrieval_function() {
         switch (this.metric_index) {
             case 0:
@@ -173,8 +195,10 @@ export default class Config {
             case 3:
                 return get_issue_buckets_fixed_interval
             case 4:
-                return get_commit_times
+                return get_issue_submit_times
             case 5:
+                return get_commit_times
+            case 6:
                 return get_commit_amounts
             default:
                 return () => {}
