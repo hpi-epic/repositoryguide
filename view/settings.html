@@ -99,12 +99,20 @@
             <label for='input_repository'>Repository:</label>
             <input class='form-control' id='input_repository' type='text' />
         </div>
+
+        <br />
+
+        <div class='input-group'>
+            <label for='input_team'>Team:</label>
+            <select id='input_team' class='form-control'></select>
+        </div>
     </div>
 </div>
 
 <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/toastify-js'></script>
 <script type='module'>
     import Config from '../config.js'
+    import { remove_children } from '../utils.js'
 
     let config = Config.from_storage()
 
@@ -112,7 +120,8 @@
         input_config_file: document.getElementById('input_config_file'),
         button_download_config: document.getElementById('button_download_config'),
         input_organization: document.getElementById('input_organization'),
-        input_repository: document.getElementById('input_repository')
+        input_repository: document.getElementById('input_repository'),
+        input_team: document.getElementById('input_team')
     }
 
     document.getElementById('button_navigate_home').addEventListener('click', () => config.to_storage_storage())
@@ -161,9 +170,26 @@
         config.repository = inputs.repository.value
     })
 
+    inputs.input_team.addEventListener('change', () => {
+        const selected = inputs.input_team.options[inputs.input_team.selectedIndex]
+        if (selected.value === 'none') {
+            config.team_index = null
+        } else {
+            config.team_index = parseInt(selected.value)
+        }
+    })
+
     function initialize(config) {
         inputs.input_organization.value = config.organization
         inputs.input_repository.value = config.repository
+        remove_children(inputs.input_team)
+        inputs.input_team.options[0] = new Option('None', 'none', true)
+        config.teams.forEach((team, index) => {
+            inputs.input_team.options[inputs.input_team.options.length] = new Option(team.name, index.toString())
+        })
+        if (config.team_index) {
+            inputs.input_team.selectedIndex = config.team_index
+        }
     }
 
     initialize(config)

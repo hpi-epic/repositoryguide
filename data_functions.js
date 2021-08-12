@@ -335,14 +335,14 @@ async function get_collaborators(config) {
     )
 }
 
-export async function get_pull_request_closing_times(config, sprint_segmented, team_index = null) {
+export async function get_pull_request_closing_times(config, sprint_segmented) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (team_index) {
-        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[team_index])
+    if (config.team_index) {
+        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[config.team_index])
     }
 
     let data = []
@@ -361,16 +361,15 @@ export async function get_pull_request_closing_times(config, sprint_segmented, t
 
 export async function get_pull_request_closing_time_buckets(
     config,
-    sprint_segmented,
-    team_index = null
+    sprint_segmented
 ) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (team_index) {
-        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[team_index])
+    if (config.team_index) {
+        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[config.team_index])
     }
 
     let data
@@ -416,14 +415,14 @@ export async function get_pull_request_closing_time_buckets(
     return data
 }
 
-export async function get_issue_sizes(config, sprint_segmented, team_index = null) {
+export async function get_issue_sizes(config, sprint_segmented) {
     let issues = await get_issues(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (team_index) {
-        issues = await select_issues_for_team(issues, config.teams[team_index], config)
+    if (config.team_index) {
+        issues = await select_issues_for_team(issues, config.teams[config.team_index], config)
     }
 
     let data = []
@@ -442,10 +441,10 @@ export async function get_issue_sizes(config, sprint_segmented, team_index = nul
 
 export async function get_issue_buckets_fixed_interval(
     config,
-    sprint_segmented,
-    team_index = null
+    sprint_segmented
 ) {
-    const issues = await get_issue_sizes(config, sprint_segmented, team_index) // does the filtering too
+    // does the filtering too
+    const issues = await get_issue_sizes(config, sprint_segmented)
 
     let data = []
     if (sprint_segmented) {
@@ -490,15 +489,15 @@ export async function get_unregistered_collaborators(config) {
     )
 }
 
-export async function get_commit_times(config, sprint_segmented, team_index = null) {
+export async function get_commit_times(config, sprint_segmented) {
     let commits = await get_commits(
         config.github_access_token,
         config.organization,
         config.repository
     )
 
-    if (team_index) {
-        commits = select_commits_for_team(commits, config.teams[team_index])
+    if (config.team_index) {
+        commits = select_commits_for_team(commits, config.teams[config.team_index])
     }
 
     if (sprint_segmented) {
@@ -537,14 +536,14 @@ export async function get_commit_times(config, sprint_segmented, team_index = nu
     return [{ label: 'Sprint 0', value: construct_heatmap_of_commit_times(commits) }]
 }
 
-export async function get_commit_amounts(config, sprint_segmented, team_index = null) {
+export async function get_commit_amounts(config, sprint_segmented) {
     let commits = await get_commits(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (team_index) {
-        commits = select_commits_for_team(commits, config.teams[team_index])
+    if (config.team_index) {
+        commits = select_commits_for_team(commits, config.teams[config.team_index])
     }
 
     if (sprint_segmented) {
@@ -581,15 +580,15 @@ export async function get_commit_amounts(config, sprint_segmented, team_index = 
     return calculate_stats_for_commits([commits], config)
 }
 
-export async function get_issue_submit_times(config, sprint_segmented, team_index = null) {
+export async function get_issue_submit_times(config, sprint_segmented) {
     let issues = await get_issues(
         config.github_access_token,
         config.organization,
         config.repository
     )
 
-    if (team_index) {
-        issues = await select_issues_for_team(issues, config.teams[team_index], config)
+    if (config.team_index) {
+        issues = await select_issues_for_team(issues, config.teams[config.team_index], config)
     }
 
     if (sprint_segmented) {

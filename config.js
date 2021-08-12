@@ -4,6 +4,7 @@ export default class Config {
         this._repository = ''
         this._sprints = []
         this._teams = []
+        this._team_index = null
         this._github_access_token = ''
     }
 
@@ -37,6 +38,7 @@ export default class Config {
         instance.organization = json.organization
         instance.repository = json.repository
         instance.teams = json.teams
+        instance.team_index = json.team_index
         instance.github_access_token = json.github_access_token
 
         json.sprints.forEach((sprint) => {
@@ -87,6 +89,14 @@ export default class Config {
         this._teams = value
     }
 
+    get team_index() {
+        return this._team_index
+    }
+
+    set team_index(value) {
+        this._team_index = value
+    }
+
     get github_access_token() {
         return this._github_access_token
     }
@@ -101,6 +111,7 @@ export default class Config {
             repository: this.repository,
             sprints: this.sprints,
             teams: this.teams,
+            team_index: this.team_index,
             github_access_token: this.github_access_token
         })
     }
