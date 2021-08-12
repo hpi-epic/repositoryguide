@@ -522,27 +522,37 @@ export async function get_commit_amounts(config) {
 
 async function calculateStatsForCommits(commit_in_sprints, config) {
     const newData = []
+    const arrayOfCommitPromises = []
     for (const sprint of commit_in_sprints) {
+        const index = 0
         let commit_sum = 0
         let changes_sum = 0
         const team_members = [] // how to get team members that have not contributed???
         for (const commit of sprint) {
             if (commit.committer) {
-                const detailedCommit = await get_detailed_commit(
-                    config.github_access_token,
-                    config.organization,
-                    config.repository,
-                    commit.sha
+                arrayOfCommitPromises.push(
+                    get_detailed_commit(
+                        config.github_access_token,
+                        config.organization,
+                        config.repository,
+                        commit.sha
+                    )
                 )
-                commit_sum += 1
-                changes_sum += detailedCommit[0].stats.total
-
-                if (team_members.findIndex((member) => member === commit.committer.id) === -1) {
-                    team_members.push(commit.committer.id)
-                }
             }
         }
-
+        await Promise.all(arrayOfCommitPromises).then((resolvedPromises) => {
+            resolvedPromises.forEach((detailedCommit) => {
+                commit_sum += 1
+                changes_sum += detailedCommit[0].stats.total
+                if (
+                    team_members.findIndex(
+                        (member) => member === detailedCommit[0].committer.id
+                    ) === -1
+                ) {
+                    team_members.push(detailedCommit[0].committer.id)
+                }
+            })
+        })
         newData.push([
             { label: 'commit_avg', value: commit_sum / team_members.length },
             {
