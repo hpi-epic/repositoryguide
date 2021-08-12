@@ -1,4 +1,5 @@
 import {
+    get_commit_amounts,
     get_commit_times,
     get_issue_buckets_fixed_interval,
     get_issue_sizes,
@@ -8,9 +9,9 @@ import {
 } from './data_functions.js'
 
 import BarChart from './visualizations/bar_chart.js'
-import StackedBarChart from './visualizations/stacked_bar_chart.js'
-// import MultipleLineChart from './visualizations/multiple_line_chart.js'
+import MultipleLineChart from './visualizations/multiple_line_chart.js'
 import Heatmap from './visualizations/heatmap.js'
+import StackedBarChart from './visualizations/stacked_bar_chart.js'
 
 export default class Config {
     constructor() {
@@ -145,6 +146,9 @@ export default class Config {
         if (this.metric_index === 4 || this.metric_index === 5) {
             return Heatmap
         }
+        if (this.metric_index === 6) {
+            return MultipleLineChart
+        }
         if (this.sprint_segmented) {
             return StackedBarChart
         }
@@ -170,9 +174,11 @@ export default class Config {
             case 3:
                 return 'Issues'
             case 4:
-                return 'Commits'
-            case 5:
                 return 'Issues'
+            case 5:
+                return 'Commits'
+            case 6:
+                return 'Commits'
             default:
                 return ''
         }
@@ -189,9 +195,11 @@ export default class Config {
             case 3:
                 return get_issue_buckets_fixed_interval
             case 4:
-                return get_commit_times
-            case 5:
                 return get_issue_submit_times
+            case 5:
+                return get_commit_times
+            case 6:
+                return get_commit_amounts
             default:
                 return () => {}
         }

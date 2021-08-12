@@ -181,6 +181,99 @@ async function get_commits(auth, owner, project) {
     })
 }
 
+async function get_detailed_commit(auth, owner, project, ref) {
+    return octokit(auth).paginate('GET /repos/{owner}/{repo}/commits/{ref}', {
+        owner: owner,
+        repo: project,
+        ref: ref
+    })
+}
+
+function select_commits_for_team(commits, team) {
+    const team_ids = team.members.map((member) => member.id)
+    return commits.filter((commit) => {
+        if (commit.committer) {
+            return team_ids.includes(commit.committer.id)
+        }
+        return false
+    })
+}
+
+function construct_heatmap_objects_array(commits) {
+    const timeSlots = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+    commits.forEach((commit) => {
+        const commit_date = new Date(commit.commit.committer.date)
+        const day = (commit_date.getDay() + 6) % 7
+        const hour = commit_date.getHours()
+        timeSlots[day][hour] += 1
+    })
+
+    const data = []
+    for (let day = 0; day < 7; day += 1) {
+        for (let hour = 0; hour < 24; hour++) {
+            const myObj = {
+                x: hour,
+                y: day,
+                v: timeSlots[day][hour]
+            }
+            data.push(myObj)
+        }
+    }
+    return data
+}
+
+async function calculate_stats_for_commits(commit_in_sprints, config) {
+    const newData = []
+    const arrayOfCommitPromises = []
+    for (const sprint of commit_in_sprints) {
+        const index = 0
+        let commit_sum = 0
+        let changes_sum = 0
+        const team_members = [] // how to get team members that have not contributed???
+        for (const commit of sprint) {
+            if (commit.committer) {
+                arrayOfCommitPromises.push(
+                    get_detailed_commit(
+                        config.github_access_token,
+                        config.organization,
+                        config.repository,
+                        commit.sha
+                    )
+                )
+            }
+        }
+        await Promise.all(arrayOfCommitPromises).then((resolvedPromises) => {
+            resolvedPromises.forEach((detailedCommit) => {
+                commit_sum += 1
+                changes_sum += detailedCommit[0].stats.total
+                if (
+                    team_members.findIndex(
+                        (member) => member === detailedCommit[0].committer.id
+                    ) === -1
+                ) {
+                    team_members.push(detailedCommit[0].committer.id)
+                }
+            })
+        })
+        newData.push([
+            { label: 'Average Commits', value: commit_sum / team_members.length },
+            {
+                label: 'Average Changes',
+                value: changes_sum / team_members.length / commit_sum
+            }
+        ])
+    }
+    return newData
+}
+
 // ------------------- public interface ------------------- //
 
 export async function get_teams(config) {
@@ -377,38 +470,96 @@ export async function get_unregistered_collaborators(config) {
 }
 
 export async function get_commit_times(config) {
-    const commits = await get_commits(
+    let commits = await get_commits(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    const timeSlots = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ]
-    commits.forEach((commit) => {
-        const commit_date = new Date(commit.commit.committer.date)
-        const day = (commit_date.getDay() + 7 - 1) % 7
-        const hour = commit_date.getHours()
-        timeSlots[day][hour] += 1
-    })
-    const data = []
-    for (let day = 0; day < 7; day += 1) {
-        for (let hour = 0; hour < 24; hour++) {
-            const myObj = {
-                x: hour,
-                y: day,
-                v: timeSlots[day][hour]
-            }
-            data.push(myObj)
-        }
+
+    if (config.team_filtered) {
+        commits = select_commits_for_team(commits, config.teams[config.team_index])
     }
-    return data
+
+    if (config.sprint_segmented) {
+        const commit_groups = {}
+        config.sprints.forEach((sprint, index) => {
+            commit_groups[index] = []
+        })
+        commit_groups['not within sprint'] = []
+
+        for (let commit_index = 0; commit_index < commits.length; commit_index++) {
+            const commit = commits[commit_index]
+            let found = false
+
+            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
+                const sprint = config.sprints[sprint_index]
+                const closed_date = Date.parse(commit.commit.author.date)
+
+                if (sprint.from <= closed_date && closed_date < sprint.to) {
+                    commit_groups[sprint_index].push(commit)
+                    found = true
+                    break
+                }
+            }
+
+            if (!found) {
+                commit_groups['not within sprint'].push(commit)
+            }
+        }
+
+        return Object.keys(commit_groups).map((sprint) => ({
+            label: `Sprint ${sprint}`,
+            value: construct_heatmap_objects_array(commit_groups[sprint])
+        }))
+    }
+
+    return [{ label: 'Sprint 0', value: construct_heatmap_objects_array(commits) }]
+}
+
+export async function get_commit_amounts(config) {
+    let data = []
+    let commits = await get_commits(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+    if (config.team_filtered) {
+        commits = select_commits_for_team(commits, config.teams[config.team_index])
+    }
+
+    if (config.sprint_segmented) {
+        const commit_groups = {}
+        config.sprints.forEach((sprint, index) => {
+            commit_groups[index] = []
+        })
+        commit_groups['not within sprint'] = []
+
+        for (let commit_index = 0; commit_index < commits.length; commit_index++) {
+            const commit = commits[commit_index]
+            let found = false
+
+            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
+                const sprint = config.sprints[sprint_index]
+                const closed_date = Date.parse(commit.commit.author.date)
+
+                if (sprint.from <= closed_date && closed_date < sprint.to) {
+                    commit_groups[sprint_index].push(commit)
+                    found = true
+                    break
+                }
+            }
+
+            if (!found) {
+                commit_groups['not within sprint'].push(commit)
+            }
+        }
+
+        data = Object.keys(commit_groups).map((sprint) => commit_groups[sprint])
+    } else {
+        data.push(commits)
+    }
+    const graphData = await calculate_stats_for_commits(data, config)
+    return graphData
 }
 
 export async function get_issue_submit_times(config) {
