@@ -110,7 +110,7 @@ export default class Heatmap extends MetricChart {
             {
                 label: 'Commit times',
                 type: 'matrix',
-                data: this.data,
+                data: this.data[0].value,
                 backgroundColor: function (drawing_context) {
                     const value = drawing_context.dataset.data[drawing_context.dataIndex].v
                     // max 50 commits ho wot calc max value in array?
