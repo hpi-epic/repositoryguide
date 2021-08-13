@@ -9,7 +9,7 @@ export default class Config {
     }
 
     static from_storage() {
-        const string = localStorage.getItem('config')
+        const string = sessionStorage.getItem('config')
         if (!string) {
             return new Config()
         }
@@ -54,7 +54,7 @@ export default class Config {
     }
 
     to_storage_storage() {
-        localStorage.setItem('config', this.toString())
+        sessionStorage.setItem('config', this.toString())
     }
 
     get organization() {
