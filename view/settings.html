@@ -1,56 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-    <meta charset="UTF-8" />
+    <meta charset='UTF-8' />
     <title>Title</title>
 
     <link
-        crossorigin="anonymous"
-        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-        rel="stylesheet"
+        crossorigin='anonymous'
+        href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
+        integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm'
+        rel='stylesheet'
     />
     <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-        rel="stylesheet"
+        href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
+        rel='stylesheet'
     />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css'>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-    <div class="navbar-brand">Agile Metrics</div>
-    <div class="collapse navbar-collapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="/repositoryguide/view/home.html" id="button_navigate_home">
-                    <i class="fa fa-home" aria-hidden="true"></i>
+<nav class='navbar navbar-expand-md navbar-dark bg-dark mb-4'>
+    <div class='navbar-brand'>Agile Metrics</div>
+    <div class='collapse navbar-collapse'>
+        <ul class='navbar-nav mr-auto'>
+            <li class='nav-item'>
+                <a class='nav-link' href='/repositoryguide/view/home.html' id='button_navigate_home'>
+                    <i class='fa fa-home' aria-hidden='true'></i>
                     Home
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link"
-                   href="/repositoryguide/view/team/overview.html"
-                   id="button_navigate_teams"
+            <li class='nav-item'>
+                <a class='nav-link'
+                   href='/repositoryguide/view/team/overview.html'
+                   id='button_navigate_teams'
                 >
                     Teams
                 </a>
             </li>
-            <li class="nav-item">
+            <li class='nav-item'>
                 <a
-                    class="nav-link"
-                    href="/repositoryguide/view/sprint/overview.html"
-                    id="button_navigate_sprint"
+                    class='nav-link'
+                    href='/repositoryguide/view/sprint/overview.html'
+                    id='button_navigate_sprint'
                 >
                     Sprints
                 </a>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link"
-                   href="/repositoryguide/view/settings.html"
-                   id="button_navigate_settings"
+            <li class='nav-item active'>
+                <a class='nav-link'
+                   href='/repositoryguide/view/settings.html'
+                   id='button_navigate_settings'
                 >
-                    <i class="fa fa-cogs" aria-hidden="true"></i>
+                    <i class='fa fa-cogs' aria-hidden='true'></i>
                     Settings
                 </a>
             </li>
@@ -58,112 +58,138 @@
     </div>
 </nav>
 
-<div class="card container" id="settings_container">
-    <div class="card-header">
+<div class='card container' id='settings_container'>
+    <div class='card-header'>
         <h3>Settings</h3>
     </div>
-    <div class="form-group card-body">
-        <div class="input-group">
-            <table class="table">
+    <div class='form-group card-body'>
+        <div class='input-group'>
+            <table class='table'>
                 <tbody>
-                    <tr class="d-flex">
-                        <td class="col-10">
-                            <label for="input_config_file">Load config file:</label>
-                            <input
-                                accept=".json"
-                                class="form-control-inline"
-                                id="input_config_file"
-                                type="file"
-                            />
-                        </td>
-                        <td class="col-2">
-                            <button class="btn btn-outline-secondary" id="button_download_config" style="float: right">
-                                Download config
-                            </button>
-                        </td>
-                    </tr>
+                <tr class='d-flex'>
+                    <td class='col-10'>
+                        <label for='input_config_file'>Load config file:</label>
+                        <input
+                            accept='.json'
+                            class='form-control-inline'
+                            id='input_config_file'
+                            type='file'
+                        />
+                    </td>
+                    <td class='col-2'>
+                        <button class='btn btn-outline-secondary' id='button_download_config' style='float: right'>
+                            Download config
+                        </button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
 
         <br />
 
-        <div class="input-group">
-            <label for="input_organization">Organization:</label>
-            <input class="form-control" id="input_organization" type="text" />
+        <div class='input-group'>
+            <label for='input_organization'>Organization:</label>
+            <input class='form-control' id='input_organization' type='text' />
         </div>
 
         <br />
 
-        <div class="input-group">
-            <label for="input_repository">Repository:</label>
-            <input class="form-control" id="input_repository" type="text" />
+        <div class='input-group'>
+            <label for='input_repository'>Repository:</label>
+            <input class='form-control' id='input_repository' type='text' />
+        </div>
+
+        <br />
+
+        <div class='input-group'>
+            <label for='input_team'>Team:</label>
+            <select id='input_team' class='form-control'></select>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script type="module">
+<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/toastify-js'></script>
+<script type='module'>
     import Config from '../config.js'
+    import { remove_children } from '../utils.js'
 
-    let config = Config.from_session_storage()
+    let config = Config.from_storage()
 
     const inputs = {
-        input_config_file: document.getElementById("input_config_file"),
-        button_download_config: document.getElementById("button_download_config"),
-        input_organization: document.getElementById("input_organization"),
-        input_repository: document.getElementById('input_repository')
+        input_config_file: document.getElementById('input_config_file'),
+        button_download_config: document.getElementById('button_download_config'),
+        input_organization: document.getElementById('input_organization'),
+        input_repository: document.getElementById('input_repository'),
+        input_team: document.getElementById('input_team')
     }
 
-    document.getElementById("button_navigate_home").addEventListener('click', () => config.to_session_storage())
-    document.getElementById("button_navigate_teams").addEventListener('click', () => config.to_session_storage())
-    document.getElementById("button_navigate_sprint").addEventListener('click', () => config.to_session_storage())
-    document.getElementById("button_navigate_settings").addEventListener('click', event => event.preventDefault())
+    document.getElementById('button_navigate_home').addEventListener('click', () => config.to_storage_storage())
+    document.getElementById('button_navigate_teams').addEventListener('click', () => config.to_storage_storage())
+    document.getElementById('button_navigate_sprint').addEventListener('click', () => config.to_storage_storage())
+    document.getElementById('button_navigate_settings').addEventListener('click', event => event.preventDefault())
 
-    inputs.input_config_file.addEventListener("change", (event) =>
+    inputs.input_config_file.addEventListener('change', (event) =>
         Config.from_file(event.target.files[0], (_config) => {
             config = _config
             initialize(config)
             Toastify({
-                text: "Config successfully loaded",
+                text: 'Config successfully loaded',
                 duration: 3000,
                 gravity: 'top',
                 position: 'center',
-                backgroundColor: "MediumSeaGreen",
-                stopOnFocus: true,
-            }).showToast();
+                backgroundColor: 'MediumSeaGreen',
+                stopOnFocus: true
+            }).showToast()
         })
     )
 
-    inputs.button_download_config.addEventListener("click", () => {
-        let content = config.toString();
+    inputs.button_download_config.addEventListener('click', () => {
+        let content = config.toString()
 
-        let element = document.createElement("a");
+        let element = document.createElement('a')
         element.setAttribute(
-          "href",
-          "data:text/plain;charset=utf-8," + encodeURIComponent(content)
+            'href',
+            'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
         )
-        element.setAttribute("download", "config.json");
+        element.setAttribute('download', 'config.json')
 
-        element.style.display = "none";
-        document.body.appendChild(element);
+        element.style.display = 'none'
+        document.body.appendChild(element)
 
-        element.click();
+        element.click()
 
-        document.body.removeChild(element);
+        document.body.removeChild(element)
     })
 
-    inputs.input_organization.addEventListener("change", () => {
-        config.organization = inputs.organization.value;
+    inputs.input_organization.addEventListener('change', () => {
+        config.organization = inputs.organization.value
     })
 
-    inputs.input_repository.addEventListener("change", () => {
-        config.repository = inputs.repository.value;
+    inputs.input_repository.addEventListener('change', () => {
+        config.repository = inputs.repository.value
+    })
+
+    inputs.input_team.addEventListener('change', () => {
+        const selected = inputs.input_team.options[inputs.input_team.selectedIndex]
+        if (selected.value === 'none') {
+            config.team_index = null
+        } else {
+            config.team_index = parseInt(selected.value)
+        }
     })
 
     function initialize(config) {
         inputs.input_organization.value = config.organization
         inputs.input_repository.value = config.repository
+        remove_children(inputs.input_team)
+        inputs.input_team.options[0] = new Option('None', 'none', true)
+        config.teams.forEach((team, index) => {
+            inputs.input_team.options[inputs.input_team.options.length] = new Option(team.name, index.toString())
+        })
+        if (config.team_index) {
+            inputs.input_team.selectedIndex = config.team_index
+        }
     }
 
     initialize(config)

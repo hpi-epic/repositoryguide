@@ -1,7 +1,7 @@
 import MultipleDatasetChart from './multiple_dataset_chart.js'
 
 export default class MultipleLineChart extends MultipleDatasetChart {
-    constructor(parameters = { canvas_container: null, statistics_container: null }) {
+    constructor(parameters = { canvas: null, statistics_container: null }) {
         super(parameters)
     }
 

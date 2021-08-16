@@ -3,10 +3,10 @@ import '../external/chart.js'
 // This class provides some common functionality for all charts
 // It should not be used as actual diagram. Please use the corresponding subclasses.
 export default class MetricChart {
-    constructor(parameters = { canvas_container: null, statistics_container: null }) {
+    constructor(parameters = { canvas: null, statistics_container: null }) {
         this._data = []
         this._chart = null
-        this._canvas_container = parameters.canvas_container
+        this._canvas = parameters.canvas
         this._statistics_container = parameters.statistics_container
         this._title = ''
         this._data_title = ''
@@ -62,8 +62,8 @@ export default class MetricChart {
         return this._data
     }
 
-    get canvas_container() {
-        return this._canvas_container
+    get canvas() {
+        return this._canvas
     }
 
     get statistics_container() {
@@ -86,10 +86,7 @@ export default class MetricChart {
     }
 
     _construct_chart() {
-        const canvas = document.createElement('canvas')
-        this.canvas_container.appendChild(canvas)
-
-        const drawing_context = canvas.getContext('2d')
+        const drawing_context = this.canvas.getContext('2d')
         return new Chart(drawing_context, {
             data: {
                 labels: this._construct_chart_labels(),

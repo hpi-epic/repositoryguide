@@ -335,21 +335,18 @@ async function get_collaborators(config) {
     )
 }
 
-export async function get_pull_request_closing_times(config) {
+export async function get_pull_request_closing_times(config, sprint_segmented) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (config.team_filtered) {
-        pull_requests = pull_requests_filtered_by_team(
-            pull_requests,
-            config.teams[config.team_index]
-        )
+    if (config.team_index) {
+        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[config.team_index])
     }
 
     let data = []
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         // todo
     } else {
         data = pull_requests.map((pull_request) => ({
@@ -362,21 +359,21 @@ export async function get_pull_request_closing_times(config) {
     return data
 }
 
-export async function get_pull_request_closing_time_buckets(config) {
+export async function get_pull_request_closing_time_buckets(
+    config,
+    sprint_segmented
+) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (config.team_filtered) {
-        pull_requests = pull_requests_filtered_by_team(
-            pull_requests,
-            config.teams[config.team_index]
-        )
+    if (config.team_index) {
+        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[config.team_index])
     }
 
     let data
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         const pull_request_groups = {}
         config.sprints.forEach((sprint, index) => {
             pull_request_groups[index] = []
@@ -418,19 +415,18 @@ export async function get_pull_request_closing_time_buckets(config) {
     return data
 }
 
-export async function get_issue_sizes(config) {
+export async function get_issue_sizes(config, sprint_segmented) {
     let issues = await get_issues(
         config.github_access_token,
         config.organization,
         config.repository
     )
-
-    if (config.team_filtered) {
+    if (config.team_index) {
         issues = await select_issues_for_team(issues, config.teams[config.team_index], config)
     }
 
     let data = []
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         // todo
     } else {
         data = issues.map((issue) => ({
@@ -443,11 +439,15 @@ export async function get_issue_sizes(config) {
     return data
 }
 
-export async function get_issue_buckets_fixed_interval(config) {
-    const issues = await get_issue_sizes(config) // does the filtering too
+export async function get_issue_buckets_fixed_interval(
+    config,
+    sprint_segmented
+) {
+    // does the filtering too
+    const issues = await get_issue_sizes(config, sprint_segmented)
 
     let data = []
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         // todo
     } else {
         const nr_of_buckets = 5
@@ -489,18 +489,18 @@ export async function get_unregistered_collaborators(config) {
     )
 }
 
-export async function get_commit_times(config) {
+export async function get_commit_times(config, sprint_segmented) {
     let commits = await get_commits(
         config.github_access_token,
         config.organization,
         config.repository
     )
 
-    if (config.team_filtered) {
+    if (config.team_index) {
         commits = select_commits_for_team(commits, config.teams[config.team_index])
     }
 
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         const commit_groups = {}
         config.sprints.forEach((sprint, index) => {
             commit_groups[index] = []
@@ -536,18 +536,17 @@ export async function get_commit_times(config) {
     return [{ label: 'Sprint 0', value: construct_heatmap_of_commit_times(commits) }]
 }
 
-export async function get_commit_amounts(config) {
-    let data = []
+export async function get_commit_amounts(config, sprint_segmented) {
     let commits = await get_commits(
         config.github_access_token,
         config.organization,
         config.repository
     )
-    if (config.team_filtered) {
+    if (config.team_index) {
         commits = select_commits_for_team(commits, config.teams[config.team_index])
     }
 
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         const commit_groups = {}
         config.sprints.forEach((sprint, index) => {
             commit_groups[index] = []
@@ -574,26 +573,25 @@ export async function get_commit_amounts(config) {
             }
         }
 
-        data = Object.keys(commit_groups).map((sprint) => commit_groups[sprint])
-    } else {
-        data.push(commits)
+        const data = Object.keys(commit_groups).map((sprint) => commit_groups[sprint])
+        return calculate_stats_for_commits(data, config)
     }
 
-    return calculate_stats_for_commits(data, config)
+    return calculate_stats_for_commits([commits], config)
 }
 
-export async function get_issue_submit_times(config) {
+export async function get_issue_submit_times(config, sprint_segmented) {
     let issues = await get_issues(
         config.github_access_token,
         config.organization,
         config.repository
     )
 
-    if (config.team_filtered) {
+    if (config.team_index) {
         issues = await select_issues_for_team(issues, config.teams[config.team_index], config)
     }
 
-    if (config.sprint_segmented) {
+    if (sprint_segmented) {
         const issue_groups = {}
         config.sprints.forEach((sprint, index) => {
             issue_groups[index] = []

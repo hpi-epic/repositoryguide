@@ -4,7 +4,7 @@ import BarChart from './bar_chart.js'
 import '../external/chartjs-plugin-datalabels.js'
 
 export default class StackedBarChart extends MultipleDatasetChart {
-    constructor(parameters = { canvas_container: null, statistics_container: null }) {
+    constructor(parameters = { canvas: null, statistics_container: null }) {
         super(parameters)
     }
 
@@ -92,14 +92,19 @@ export default class StackedBarChart extends MultipleDatasetChart {
         })
 
         const canvas_container = document.createElement('div')
-        canvas_container.style.height = '90%'
-        canvas_container.style.width = '100%'
+        canvas_container.style.display = 'inline-block'
+        canvas_container.style.height = '100%'
+        canvas_container.style.width = '80%'
+        canvas_container.style.float = 'left'
+
+        const canvas = document.createElement('canvas')
+        canvas_container.appendChild(canvas)
 
         container.append(close_button, canvas_container)
 
         return {
-            container,
-            canvas_container
+            container: container,
+            canvas: canvas
         }
     }
 
@@ -132,7 +137,7 @@ export default class StackedBarChart extends MultipleDatasetChart {
                 document.body.appendChild(container.container)
 
                 const mini_chart = new BarChart({
-                    canvas_container: container.canvas_container,
+                    canvas: container.canvas,
                     statistics_container: null
                 })
                 mini_chart.data = this.data[stack_index]
