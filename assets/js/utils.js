@@ -1,5 +1,3 @@
-import Config from './config.js'
-
 export const deepClone = (object) => JSON.parse(JSON.stringify(object))
 
 export const get_max = (data) => Math.max(...data.map((element) => element.value))

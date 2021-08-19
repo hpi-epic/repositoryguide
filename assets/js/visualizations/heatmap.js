@@ -1,6 +1,6 @@
 import MetricChart from './chart.js'
-import '../external/chart.js'
-import '../external/chartjs-chart-matrix.js'
+import '../../../external/chart.js'
+import '../../../external/chartjs-chart-matrix.js'
 
 export default class Heatmap extends MetricChart {
     constructor(parameters = { canvas: null, statistics_container: null }) {

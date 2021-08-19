@@ -2,7 +2,7 @@
 <html lang='en'>
 <head>
     <meta charset='UTF-8' />
-    <title>Sprints</title>
+    <title>Title</title>
 
     <link
         rel='stylesheet'
@@ -16,13 +16,15 @@
     />
 </head>
 <body>
-<template id='template_sprint_row'>
+<template id='template_member_row'>
     <tr class='d-flex'>
-        <td class='col-6' id='text_name'></td>
-        <td class='col-3' id='text_from'></td>
-        <td class='col-3' id='text_to'></td>
+        <td class='col-10' id='text_member_name'></td>
+        <td class='col-2'>
+            <button id='button_remove_member' class='btn btn-outline-secondary'>Remove</button>
+        </td>
     </tr>
 </template>
+
 <nav class='navbar navbar-expand-md navbar-dark bg-dark mb-4'>
     <div class='navbar-brand'>Agile Metrics</div>
     <div class='collapse navbar-collapse'>
@@ -41,7 +43,7 @@
                     Teams
                 </a>
             </li>
-            <li class='nav-item active'>
+            <li class='nav-item'>
                 <a
                     class='nav-link'
                     href='/repositoryguide/view/sprint/overview.html'
@@ -64,58 +66,38 @@
 </nav>
 
 <div class='card container'>
-    <div class='card-header'>
-        <h3>Sprints</h3>
-    </div>
     <div class='form-group card-body'>
+        <h3>General Information:</h3>
+        <table class='table'>
+            <tbody>
+            <tr class='d-flex'>
+                <th class='col-6' scope='row'>Team name:</th>
+                <td class='col-6' id='text_team_name'></td>
+            </tr>
+            <tr class='d-flex'>
+                <th class='col-6' scope='row'>Team label:</th>
+                <td class='col-6' id='text_team_label'></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3>Members:</h3>
         <table class='table'>
             <thead>
             <tr class='d-flex'>
-                <th class='col-6' scope='col'>Name</th>
-                <th class='col-3' scope='col'>From</th>
-                <th class='col-3' scope='col'>To</th>
+                <th class='col-10' scope='col'>Name</th>
+                <th class='col-2' scope='col'></th>
             </tr>
             </thead>
-            <tbody id='container_sprints'></tbody>
+            <tbody id='container_members'></tbody>
         </table>
     </div>
 </div>
+
+<br />
+
+<a class='btn btn-outline-secondary' id='button_back' href='javascript:history.back()'>Back</a>
+
+<script src='assets/js/team_detail.js'></script>
 </body>
-
-<script type='module'>
-    import Config from '../../config.js'
-
-    const container_sprints = document.getElementById('container_sprints')
-
-    const config = Config.from_storage()
-    const sprints = config._sprints
-    initialize()
-
-    document.getElementById('button_navigate_home').addEventListener('click', () => config.to_storage_storage())
-    document.getElementById('button_navigate_teams').addEventListener('click', () => config.to_storage_storage())
-    document.getElementById('button_navigate_sprint').addEventListener('click', event => event.preventDefault())
-    document.getElementById('button_navigate_settings').addEventListener('click', () => config.to_storage_storage())
-
-    function append_table_row_for_sprint(sprint, index) {
-        const row = document.getElementById('template_sprint_row').content.cloneNode(true)
-        const startDate = new Date(sprint.from)
-        const endDate = new Date(sprint.to)
-
-        row.getElementById('text_name').innerHTML = `Sprint ${index + 1}`
-        row.getElementById('text_from').innerHTML = getDateString(startDate)
-        row.getElementById('text_to').innerHTML = getDateString(endDate)
-
-        container_sprints.appendChild(row)
-    }
-
-    function initialize() {
-        config.sprints.forEach((sprint, index) => {
-            append_table_row_for_sprint(sprint, index)
-        })
-    }
-
-    function getDateString(date) {
-        return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
-    }
-</script>
 </html>
