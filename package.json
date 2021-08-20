@@ -13,18 +13,19 @@
     },
     "homepage": "https://github.com/hpi-epic/repositoryguide#readme",
     "config": {
-        "port": "3000"
+        "port": "3000",
+        "scss_src": "assets/css/src"
     },
     "scripts": {
         "build": "npm run css",
-        "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 scss -o assets/css/",
-        "css-lint": "stylelint scss/",
-        "css-prefix": "postcss --replace assets/css/starter.css --use autoprefixer --map",
+        "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 $npm_package_config_scss_src -o assets/css/dist",
+        "css-compile:about": "echo 'Compile SCSS files from the src folder to the dist folder'",
+        "css-lint": "stylelint $npm_package_config_scss_src",
+        "css-prefix": "postcss --replace assets/css/dist/main.css --use autoprefixer --map",
         "css": "npm-run-all css-compile css-prefix",
         "server": "serve --listen $npm_package_config_port",
         "start": "npm-run-all --parallel watch server",
         "watch": "nodemon -e html,scss -x \"npm run css\"",
-        "clear": "rm -rf node_modules/ && npm i",
         "test": "npm run css-lint && npm run css"
     },
     "dependencies": {
