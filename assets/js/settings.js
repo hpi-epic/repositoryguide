@@ -43,7 +43,7 @@ inputs.button_download_config.addEventListener('click', () => {
     const content = config.toString()
 
     const element = document.createElement('a')
-    element.setAttribute('href', `data:text/plain;charset=utf-8,${  encodeURIComponent(content)}`)
+    element.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`)
     element.setAttribute('download', 'config.json')
 
     element.style.display = 'none'

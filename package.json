@@ -18,10 +18,16 @@
     },
     "scripts": {
         "build": "npm run css",
+<<<<<<< HEAD
         "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 $npm_package_config_scss_src -o assets/css/dist",
         "css-compile:about": "echo 'Compile SCSS files from the src folder to the dist folder'",
         "css-lint": "stylelint $npm_package_config_scss_src",
         "css-prefix": "postcss --replace assets/css/dist/main.css --use autoprefixer --map",
+=======
+        "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 scss -o assets/css/",
+        "css-lint": "stylelint scss/ assets/css/home.css",
+        "css-prefix": "postcss --replace assets/css/starter.css --use autoprefixer --map",
+>>>>>>> 7e6d7e583464b94b08a9eda0c634155edabae6a6
         "css": "npm-run-all css-compile css-prefix",
         "server": "serve --listen $npm_package_config_port",
         "start": "npm-run-all --parallel watch server",
@@ -29,12 +35,16 @@
         "test": "npm run css-lint && npm run css"
     },
     "dependencies": {
+        "@octokit/core": "^3.5.1",
+        "@octokit/plugin-paginate-rest": "^2.15.1",
+        "@octokit/plugin-throttling": "^3.5.1",
         "@popperjs/core": "^2.9.3",
         "bootstrap": "^5.1.0",
         "bootstrap-icons": "^1.5.0",
-        "chartjs": "^0.3.24",
+        "chart.js": "^3.5.1",
         "chartjs-chart-matrix": "^1.0.2",
-        "chartjs-plugin-datalabels": "^2.0.0"
+        "chartjs-plugin-datalabels": "^2.0.0",
+        "octokit": "^1.4.0"
     },
     "devDependencies": {
         "autoprefixer": "^10.3.1",

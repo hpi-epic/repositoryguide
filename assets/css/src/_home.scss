@@ -1,26 +1,21 @@
-html,
-body {
-    height: 100%;
-}
-
-.chart_container {
+.chart-container {
     width: 90%;
     height: 400px;
 }
 
 .chart-canvas-container {
     display: inline-block;
+    float: left;
     width: 80%;
     height: 90%;
-    float: left;
 }
 
 .chart-statistics-container {
     display: inline-block;
+    float: right;
     width: 20%;
     height: 90%;
-    float: right;
 }
 
-.metric_explanation {
+.metric-explanation {
 }

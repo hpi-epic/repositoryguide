@@ -81,6 +81,11 @@ $success: #7952b3;
 @import "home";
 @import "icon-list"; //Bootstrap starter test file
 
+html,
+body {
+  height: 100%;
+}
+
 body {
   padding: 3rem 1.5rem;
 }
