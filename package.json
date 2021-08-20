@@ -6,16 +6,16 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/hpi-epic/repositoryguide.git"
+        "url": "git+https://github.com/hpi-epic.git"
     },
     "bugs": {
-        "url": "https://github.com/hpi-epic/repositoryguide/issues"
+        "url": "https://github.com/hpi-epic/issues"
     },
-    "homepage": "https://github.com/hpi-epic/repositoryguide#readme",
+    "homepage": "https://github.com/hpi-epic#readme",
     "scripts": {
         "build": "npm run css",
         "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 scss -o assets/css/",
-        "css-lint": "stylelint scss/",
+        "css-lint": "stylelint scss/ assets/css/home.css",
         "css-prefix": "postcss --replace assets/css/starter.css --use autoprefixer --map",
         "css-purge": "purgecss --keyframes --css assets/css/starter.css --content index.html \"node_modules/bootstrap/js/dist/{util,modal}.js\" --output assets/css/",
         "css": "npm-run-all css-compile css-prefix",
@@ -31,12 +31,16 @@
         "javascript"
     ],
     "dependencies": {
+        "@octokit/core": "^3.5.1",
+        "@octokit/plugin-paginate-rest": "^2.15.1",
+        "@octokit/plugin-throttling": "^3.5.1",
         "@popperjs/core": "^2.9.3",
         "bootstrap": "^5.1.0",
         "bootstrap-icons": "^1.5.0",
-        "chartjs": "^0.3.24",
+        "chart.js": "^3.5.1",
         "chartjs-chart-matrix": "^1.0.2",
-        "chartjs-plugin-datalabels": "^2.0.0"
+        "chartjs-plugin-datalabels": "^2.0.0",
+        "octokit": "^1.4.0"
     },
     "devDependencies": {
         "autoprefixer": "^10.3.1",

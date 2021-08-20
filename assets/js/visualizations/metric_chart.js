@@ -1,4 +1,4 @@
-import '../../../external/chart.js'
+import Chart from 'chart.js/auto'
 
 // This class provides some common functionality for all charts
 // It should not be used as actual diagram. Please use the corresponding subclasses.

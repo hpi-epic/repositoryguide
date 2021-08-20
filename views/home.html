@@ -4,19 +4,9 @@
     <meta charset='UTF-8' />
     <title>Title</title>
 
-    <link
-        crossorigin='anonymous'
-        href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
-        integrity='sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm'
-        rel='stylesheet'
-    />
-    <link
-        href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
-        rel='stylesheet'
-    />
-
+    <link rel='stylesheet' type='text/css' href='/assets/css/starter.css'>
     <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css'>
-    <link rel='stylesheet' type='text/css' href='assets/css/home.css'>
+    <link rel='stylesheet' type='text/css' href='/assets/css/home.css'>
 </head>
 <body>
 <template id='template_input_sprint'>
@@ -36,17 +26,17 @@
             <li class='nav-item active'>
                 <a
                     class='nav-link'
-                    href='/repositoryguide/view/home.html'
+                    href='/view/home.html'
                     id='button_navigate_home'
                 >
-                    <i class='fa fa-home' aria-hidden='true'></i>
+                    <i class='bi bi-house-fill' aria-hidden='true'></i>
                     Home
                 </a>
             </li>
             <li class='nav-item'>
                 <a
                     class='nav-link'
-                    href='/repositoryguide/view/team/overview.html'
+                    href='/view/team/overview.html'
                     id='button_navigate_teams'
                 >
                     Teams
@@ -55,7 +45,7 @@
             <li class='nav-item'>
                 <a
                     class='nav-link'
-                    href='/repositoryguide/view/sprint/overview.html'
+                    href='/view/sprint/overview.html'
                     id='button_navigate_sprint'
                 >
                     Sprints
@@ -64,10 +54,10 @@
             <li class='nav-item'>
                 <a
                     class='nav-link'
-                    href='/repositoryguide/view/settings.html'
+                    href='/view/settings.html'
                     id='button_navigate_settings'
                 >
-                    <i class='fa fa-cogs' aria-hidden='true'></i>
+                    <i class='bi bi-gear-fill' aria-hidden='true'></i>
                     Settings
                 </a>
             </li>
@@ -132,9 +122,9 @@
                 role='tabpanel'
                 aria-labelledby='nav-pull-request-tab'
             >
-                <div class='chart_container' id='pr_closing_times_container'>
+                <div class='chart-container' id='pr_closing_times_container'>
                     <h4>Pull request closing times</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric-explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -149,9 +139,9 @@
 
                 <hr class='border-3 border-bottom' />
 
-                <div class='chart_container' id='pr_closing_times_in_buckets_container'>
+                <div class='chart-container' id='pr_closing_times_in_buckets_container'>
                     <h4>Pull request closing times in buckets overall</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric-explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -167,11 +157,11 @@
                 <hr class='border-3 border-bottom' />
 
                 <div
-                    class='chart_container'
+                    class='chart-container'
                     id='pr_closing_times_in_buckets_sprint_segmented_container'
                 >
                     <h4>Pull request closing times in buckets per sprint</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric-explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -190,9 +180,9 @@
                 role='tabpanel'
                 aria-labelledby='nav-commits-tab'
             >
-                <div class='chart_container' id='commit_times_container'>
+                <div class='chart-container' id='commit_times_container'>
                     <h4>Commit times</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric-explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -207,9 +197,9 @@
 
                 <hr class='border-3 border-bottom' />
 
-                <div class='chart_container' id='commit_amounts_container'>
+                <div class='chart-container' id='commit_amounts_container'>
                     <h4>Commit amounts per sprint</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric-explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -228,9 +218,9 @@
                 role='tabpanel'
                 aria-labelledby='nav-issues-tab'
             >
-                <div class='chart_container' id='issues_sizes_in_buckets_container'>
+                <div class='chart-container' id='issues_sizes_in_buckets_container'>
                     <h4>Issue sizes</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric-explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -242,9 +232,9 @@
 
                 <hr class='border-3 border-bottom' />
 
-                <div class='chart_container' id='issues_sizes_container'>
+                <div class='chart-container' id='issues_sizes_container'>
                     <h4>Issue sizes in buckets</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric-explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -259,9 +249,9 @@
 
                 <hr class='border-3 border-bottom' />
 
-                <div class='chart_container' id='issues_submit_times_container'>
+                <div class='chart-container' id='issues_submit_times_container'>
                     <h4>Issue submit times</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric-explanation'></p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -279,7 +269,8 @@
 </div>
 
 <script type='text/javascript' src='https://cdn.jsdelivr.net/npm/toastify-js'></script>
-<script src='assets/js/home.js'></script>
+<script type='module' src='/assets/js/home.js'></script>
+<script type='module' src='/assets/js/starter.js'></script>
 
 </body>
 </html>

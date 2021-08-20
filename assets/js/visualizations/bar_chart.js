@@ -1,6 +1,6 @@
 import { get_max, get_min, quantile, sum } from '../utils.js'
 
-import MetricChart from './chart.js'
+import MetricChart from './metric_chart.js'
 
 // expected data format:
 // [{

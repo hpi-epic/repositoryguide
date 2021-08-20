@@ -23,8 +23,7 @@ async function initializeChart(
     data_retrieval_function,
     sprint_segmented,
     title,
-    data_title,
-    config
+    data_title
 ) {
     const chart = new chartClass({
         canvas: canvas,
@@ -67,8 +66,7 @@ async function initialize() {
                 metric.data_retrieval_function,
                 metric.sprint_segmented,
                 metric_name,
-                metric_name,
-                config
+                metric_name
             )
         )
     }

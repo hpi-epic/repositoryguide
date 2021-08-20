@@ -1,4 +1,4 @@
-import MetricChart from './chart.js'
+import MetricChart from './metric_chart.js'
 import { transpose } from '../utils.js'
 
 // This class provides some common functionality for charts that deal with sprint-segmented data.
