@@ -11,19 +11,39 @@
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "plugins": ["only-warn"],
-    "ignorePatterns": ["/node_modules", "/external"],
+    "plugins": [
+        "only-warn"
+    ],
+    "ignorePatterns": [
+        "/node_modules",
+        "/external",
+        "/assets/css/dist"
+    ],
     "rules": {
-        "no-console": ["error", { "allow": ["warn", "error"] }],
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
         "camelcase": "off",
         "import/extensions": "off",
         "object-shorthand": "off",
-        "no-underscore-dangle": [2, {
-            "allowAfterThis": true,
-            "allowAfterSuper": true
-        }],
-        "no-plusplus": [2, {
-            "allowForLoopAfterthoughts": true
-        }]
+        "no-underscore-dangle": [
+            2,
+            {
+                "allowAfterThis": true,
+                "allowAfterSuper": true
+            }
+        ],
+        "no-plusplus": [
+            2,
+            {
+                "allowForLoopAfterthoughts": true
+            }
+        ]
     }
 }

@@ -1,4 +1,4 @@
-import ChartDataLabels from 'chartjs-plugin-datalabels'
+import 'https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.js'
 import MultipleDatasetChart from './multiple_dataset_chart.js'
 import BarChart from './bar_chart.js'
 

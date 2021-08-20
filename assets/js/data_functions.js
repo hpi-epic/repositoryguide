@@ -1,8 +1,8 @@
 // ------------------- Octokit ------------------- //
 
-import { Octokit } from 'octokit'
-import { paginateRest } from '@octokit/plugin-paginate-rest'
-import { throttling } from '@octokit/plugin-throttling'
+import { Octokit } from 'https://cdn.skypack.dev/octokit'
+import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
+import { paginateRest } from 'https://cdn.skypack.dev/@octokit/plugin-paginate-rest'
 
 // ------------------- Metrices ------------------- //
 import {

@@ -4,7 +4,7 @@ An application that helps with analyzing your team's GitHub repository
 
 ## Installation
 
-1. Clone the repository: ```git@github.com:hpi-epic.git``` and go into the repository folder
+1. Clone the repository: ```git@github.com:hpi-epic/repositoryguide.git``` and go into the repository folder
 2. Make sure you've installed node. If not download and install it from [here](https://nodejs.org/en/download/)
 3. Run `npm install` in the root of the repository
 4. generate a personal access token for GitHub

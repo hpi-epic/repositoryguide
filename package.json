@@ -28,19 +28,8 @@
         "watch": "nodemon -e html,scss -x \"npm run css\"",
         "test": "npm run css-lint && npm run css"
     },
-    "dependencies": {
-        "@octokit/core": "^3.5.1",
-        "@octokit/plugin-paginate-rest": "^2.15.1",
-        "@octokit/plugin-throttling": "^3.5.1",
-        "@popperjs/core": "^2.9.3",
-        "bootstrap": "^5.1.0",
-        "bootstrap-icons": "^1.5.0",
-        "chart.js": "^3.5.1",
-        "chartjs-chart-matrix": "^1.0.2",
-        "chartjs-plugin-datalabels": "^2.0.0",
-        "octokit": "^1.4.0"
-    },
     "devDependencies": {
+        "bootstrap": "^5.1.0",
         "autoprefixer": "^10.3.1",
         "eslint": "^7.30.0",
         "eslint-config-airbnb-base": "^14.2.1",
