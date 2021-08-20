@@ -6,30 +6,27 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/hpi-epic.git"
+        "url": "git+https://github.com/hpi-epic/repositoryguide.git"
     },
     "bugs": {
-        "url": "https://github.com/hpi-epic/issues"
+        "url": "https://github.com/hpi-epic/repositoryguide/issues"
     },
-    "homepage": "https://github.com/hpi-epic#readme",
+    "homepage": "https://github.com/hpi-epic/repositoryguide#readme",
+    "config": {
+        "port": "3000"
+    },
     "scripts": {
         "build": "npm run css",
         "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 scss -o assets/css/",
         "css-lint": "stylelint scss/ assets/css/home.css",
         "css-prefix": "postcss --replace assets/css/starter.css --use autoprefixer --map",
-        "css-purge": "purgecss --keyframes --css assets/css/starter.css --content index.html \"node_modules/bootstrap/js/dist/{util,modal}.js\" --output assets/css/",
         "css": "npm-run-all css-compile css-prefix",
-        "server": "serve --listen 3000",
+        "server": "serve --listen $npm_package_config_port",
         "start": "npm-run-all --parallel watch server",
         "watch": "nodemon -e html,scss -x \"npm run css\"",
+        "clear": "rm -rf node_modules/ && npm i",
         "test": "npm run css-lint && npm run css"
     },
-    "keywords": [
-        "bootstrap",
-        "sass",
-        "css",
-        "javascript"
-    ],
     "dependencies": {
         "@octokit/core": "^3.5.1",
         "@octokit/plugin-paginate-rest": "^2.15.1",
@@ -55,7 +52,6 @@
         "postcss": "^8.3.6",
         "postcss-cli": "^8.3.1",
         "prettier": "2.3.2",
-        "purgecss": "^4.0.3",
         "serve": "^12.0.0",
         "stylelint": "^13.13.1",
         "stylelint-config-twbs-bootstrap": "^2.2.3"
