@@ -18,16 +18,10 @@
     },
     "scripts": {
         "build": "npm run css",
-<<<<<<< HEAD
         "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 $npm_package_config_scss_src -o assets/css/dist",
         "css-compile:about": "echo 'Compile SCSS files from the src folder to the dist folder'",
         "css-lint": "stylelint $npm_package_config_scss_src",
         "css-prefix": "postcss --replace assets/css/dist/main.css --use autoprefixer --map",
-=======
-        "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 scss -o assets/css/",
-        "css-lint": "stylelint scss/ assets/css/home.css",
-        "css-prefix": "postcss --replace assets/css/starter.css --use autoprefixer --map",
->>>>>>> 7e6d7e583464b94b08a9eda0c634155edabae6a6
         "css": "npm-run-all css-compile css-prefix",
         "server": "serve --listen $npm_package_config_port",
         "start": "npm-run-all --parallel watch server",
