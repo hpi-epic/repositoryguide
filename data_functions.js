@@ -181,11 +181,21 @@ async function get_commits(auth, owner, project) {
     })
 }
 
-function select_commits_for_team(commits, team) {
+function select_graph_commits_for_team(commits, team) {
     const team_ids = team.members.map((member) => member.id)
     return commits.filter((commit) => {
         if (commit.node.author.user) {
             return team_ids.includes(commit.node.author.user.databaseId)
+        }
+        return false
+    })
+}
+
+function select_commits_for_team(commits, team) {
+    const team_ids = team.members.map((member) => member.id)
+    return commits.filter((commit) => {
+        if (commit.committer) {
+            return team_ids.includes(commit.committer.id)
         }
         return false
     })
@@ -583,7 +593,7 @@ export async function get_commit_amounts(config, sprint_segmented) {
         config.repository
     )
     if (config.team_index) {
-        commits = select_commits_for_team(commits, config.teams[config.team_index])
+        commits = select_graph_commits_for_team(commits, config.teams[config.team_index])
     }
 
     if (sprint_segmented) {
