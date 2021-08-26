@@ -3,19 +3,6 @@ import { metrics } from './metrics.js'
 
 const config = Config.from_storage()
 
-document
-    .getElementById('button_navigate_home')
-    .addEventListener('click', (event) => event.preventDefault())
-document
-    .getElementById('button_navigate_teams')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_sprint')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_settings')
-    .addEventListener('click', () => config.to_storage_storage())
-
 async function initializeChart(
     chartClass,
     canvas,

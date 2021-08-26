@@ -3,19 +3,6 @@ import Config from './config.js'
 const container_sprints = document.getElementById('container_sprints')
 const config = Config.from_storage()
 
-document
-    .getElementById('button_navigate_home')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_teams')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_sprint')
-    .addEventListener('click', (event) => event.preventDefault())
-document
-    .getElementById('button_navigate_settings')
-    .addEventListener('click', () => config.to_storage_storage())
-
 function getDateString(date) {
     return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
 }

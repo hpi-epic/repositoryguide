@@ -10,17 +10,6 @@ const container_members = document.getElementById('container_members')
 document.getElementById('text_team_name').innerHTML = team.name
 document.getElementById('text_team_label').innerHTML = team.label
 
-document
-    .getElementById('button_navigate_home')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_teams')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_settings')
-    .addEventListener('click', () => config.to_storage_storage())
-document.getElementById('button_back').addEventListener('click', () => config.to_storage_storage())
-
 async function initialize_member_list() {
     team.members.forEach((member, index) => {
         const row = document.getElementById('template_team_member_row').content.cloneNode(true)

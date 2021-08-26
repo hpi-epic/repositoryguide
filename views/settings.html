@@ -12,47 +12,7 @@
         />
     </head>
     <body>
-        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-            <div class="navbar-brand">Repository Guide</div>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/views/home.html" id="button_navigate_home">
-                            <i class="fas fa-home" aria-hidden="true"></i>
-                            Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="/views/team/overview.html"
-                            id="button_navigate_teams"
-                        >
-                            Teams
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            class="nav-link"
-                            href="/views/sprint/overview.html"
-                            id="button_navigate_sprint"
-                        >
-                            Sprints
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a
-                            class="nav-link"
-                            href="/views/settings.html"
-                            id="button_navigate_settings"
-                        >
-                            <i class="fas fa-cogs" aria-hidden="true"></i>
-                            Settings
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <header id="header"></header>
 
         <div class="card container" id="settings_container">
             <div class="card-header">
@@ -109,6 +69,7 @@
             </div>
         </div>
 
+        <script type="module" src="/assets/js/header.js"></script>
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
         <script type="module" src="/assets/js/settings.js"></script>
         <script

@@ -11,19 +11,6 @@ const inputs = {
     input_team: document.getElementById('input_team')
 }
 
-document
-    .getElementById('button_navigate_home')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_teams')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_sprint')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_settings')
-    .addEventListener('click', (event) => event.preventDefault())
-
 inputs.input_config_file.addEventListener('change', (event) =>
     Config.from_file(event.target.files[0], (_config) => {
         config = _config

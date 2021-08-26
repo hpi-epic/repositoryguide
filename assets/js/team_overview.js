@@ -8,17 +8,6 @@ const container_unregistered_collaborators = document.getElementById(
 )
 const config = Config.from_storage()
 
-document
-    .getElementById('button_navigate_home')
-    .addEventListener('click', () => config.to_storage_storage())
-document
-    .getElementById('button_navigate_teams')
-    .addEventListener('click', (event) => event.preventDefault())
-document
-    .getElementById('button_navigate_settings')
-    .addEventListener('click', () => config.to_storage_storage())
-document.getElementById('button_back').addEventListener('click', () => config.to_storage_storage())
-
 document.getElementById('button_load_teams_from_github').addEventListener('click', async () => {
     if (!config.organization) {
         alert('No organization defined. This is required to lead the teams')
