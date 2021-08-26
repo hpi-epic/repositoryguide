@@ -23,10 +23,14 @@
         "css-lint": "stylelint $npm_package_config_scss_src",
         "css-prefix": "postcss --replace assets/css/dist/main.css --use autoprefixer --map",
         "css": "npm-run-all css-compile css-prefix",
+        "eslint-check": "eslint --config ./.eslintrc.json .",
+        "eslint-autofix": "eslint --config ./.eslintrc.json --fix .",
+        "prettier-check": "prettier --check --config ./.prettierrc.json .",
+        "prettier-autofix": "prettier --write --config ./.prettierrc.json .",
         "server": "serve --listen $npm_package_config_port",
         "start": "npm-run-all --parallel watch server",
         "watch": "nodemon -e html,scss -x \"npm run css\"",
-        "test": "npm run css-lint && npm run css"
+        "test": "npm run eslint-check && npm run prettier-check && npm run css-lint && npm run css"
     },
     "devDependencies": {
         "autoprefixer": "^10.3.1",

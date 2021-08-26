@@ -1,268 +1,245 @@
 <!DOCTYPE html>
-<html lang='en'>
-<head>
-    <meta charset='UTF-8' />
-    <title>Title</title>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
 
-    <link rel='stylesheet' type='text/css' href='/assets/css/dist/main.css' />
-    <link
-        rel='stylesheet'
-        type='text/css'
-        href='https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css'
-    />
-</head>
+        <link rel="stylesheet" type="text/css" href="/assets/css/dist/main.css" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+        />
+    </head>
 
-<body>
-<template id='template_input_sprint'>
-    <div class='input_sprint'>
-        <label for='sprint_begin'>From: </label>
-        <input class='form-control' id='sprint_begin' type='date' />
-        <label for='sprint_end'>to: </label>
-        <input class='form-control' id='sprint_end' type='date' />
-    </div>
-    <br />
-</template>
-
-<header>
-    <nav class='navbar navbar-expand-md navbar-dark bg-dark mb-4'>
-        <div class='navbar-brand'>Repository Guide</div>
-        <div class='collapse navbar-collapse'>
-            <ul class='navbar-nav mr-auto'>
-                <li class='nav-item active'>
-                    <a
-                        class='nav-link'
-                        href='/views/home.html'
-                        id='button_navigate_home'
-                    >
-                        <i class='fas fa-home'></i>
-                        Home
-                    </a>
-                </li>
-                <li class='nav-item'>
-                    <a
-                        class='nav-link'
-                        href='/views/team/overview.html'
-                        id='button_navigate_teams'
-                    >
-                        Teams
-                    </a>
-                </li>
-                <li class='nav-item'>
-                    <a
-                        class='nav-link'
-                        href='/views/sprint/overview.html'
-                        id='button_navigate_sprint'
-                    >
-                        Sprints
-                    </a>
-                </li>
-                <li class='nav-item'>
-                    <a
-                        class='nav-link'
-                        href='/views/settings.html'
-                        id='button_navigate_settings'
-                    >
-                        <i class='fas fa-cogs'></i>
-                        Settings
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</header>
-
-<div class='container-fluid'>
-    <div class='row'>
-        <nav id='sidebarMenu' class='col-md-3 col-lg-2 d-md-block bg-light sidebar collapse'>
-            <div class='position-sticky pt-3'>
-                <ul class='nav flex-column'>
-                    <li class='nav-item'>
-                        <a class='nav-item active'
-                           href='#pull-requests'
-                           aria-current='page'>
-                            Pull Requests
-                        </a>
-                    </li>
-                    <li class='nav-item' role='presentation'>
-                        <a class='nav-link' href='#commits'>
-                            Commits
-                        </a>
-                    </li>
-                    <li class='nav-item' role='presentation'>
-                        <a class='nav-link' href='#issues'>
-                            Issues
-                        </a>
-                    </li>
+    <body>
+        <header class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Repository Guide</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active"></li>
                 </ul>
             </div>
-        </nav>
-        <main class='col-md-9 ms-sm-auto col-lg-10 px-md-4' role='main'>
-            <div
-                class='d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom'
-            >
-                <div
-                    class='tab-pane active show'
-                    id='pull-requests'
-                    role='tabpanel'
-                    aria-labelledby='nav-pull-request-tab'
+        </header>
+
+        <div class="container-fluid">
+            <div class="row">
+                <nav
+                    id="sidebarMenu"
+                    class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse"
                 >
-                    <div class='chart-container' id='pr_closing_times_container'>
+                    <div class="position-sticky pt-3">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link active"
+                                    aria-current="page"
+                                    href="#pull-requests"
+                                >
+                                    Pull Requests
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#commits"> Commits </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#issues"> Issues </a>
+                            </li>
+                        </ul>
+
+                        <h6
+                            class="
+                                sidebar-heading
+                                d-flex
+                                justify-content-between
+                                align-items-center
+                                px-3
+                                mt-4
+                                mb-1
+                                text-muted
+                            "
+                        >
+                            Configuration
+                        </h6>
+                        <ul class="nav flex-column mb-2">
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="/views/home.html"
+                                    id="button_navigate_home"
+                                >
+                                    <i class="fas fa-home"></i>
+                                    Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="/views/team/overview.html"
+                                    id="button_navigate_teams"
+                                >
+                                    Teams
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="/views/sprint/overview.html"
+                                    id="button_navigate_sprint"
+                                >
+                                    Sprints
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a
+                                    class="nav-link"
+                                    href="/views/settings.html"
+                                    id="button_navigate_settings"
+                                >
+                                    <i class="fas fa-cogs"></i>
+                                    Settings
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" role="main">
+                    <div class="chart-container" id="pr_closing_times_container">
                         <h4>Pull request closing times</h4>
-                        <p class='metric-explanation'></p>
-                        <div class='chart-canvas-container'>
+                        <p class="metric-explanation"></p>
+                        <div class="chart-canvas-container">
                             <canvas
-                                class='svg-container chart-canvas'
-                                data-metric='Pull request closing times'
+                                class="svg-container chart-canvas"
+                                data-metric="Pull request closing times"
                             ></canvas>
                         </div>
                         <div
-                            class='chart-statistics-container'
-                            data-metric='Pull request closing times'
+                            class="chart-statistics-container"
+                            data-metric="Pull request closing times"
                         ></div>
                     </div>
 
-                    <hr class='border-3 border-bottom' />
+                    <hr class="border-3 border-bottom" />
 
-                    <div class='chart-container' id='pr_closing_times_in_buckets_container'>
+                    <div class="chart-container" id="pr_closing_times_in_buckets_container">
                         <h4>Pull request closing times in buckets overall</h4>
-                        <p class='metric-explanation'></p>
-                        <div class='chart-canvas-container'>
+                        <p class="metric-explanation"></p>
+                        <div class="chart-canvas-container">
                             <canvas
-                                class='svg-container chart-canvas'
-                                data-metric='Pull request closing times in buckets overall'
+                                class="svg-container chart-canvas"
+                                data-metric="Pull request closing times in buckets overall"
                             ></canvas>
                         </div>
                         <div
-                            class='chart-statistics-container'
-                            data-metric='Pull request closing times in buckets overall'
+                            class="chart-statistics-container"
+                            data-metric="Pull request closing times in buckets overall"
                         ></div>
                     </div>
 
-                    <hr class='border-3 border-bottom' />
+                    <hr class="border-3 border-bottom" />
 
                     <div
-                        class='chart-container'
-                        id='pr_closing_times_in_buckets_sprint_segmented_container'
+                        class="chart-container"
+                        id="pr_closing_times_in_buckets_sprint_segmented_container"
                     >
                         <h4>Pull request closing times in buckets per sprint</h4>
-                        <p class='metric-explanation'></p>
-                        <div class='chart-canvas-container'>
+                        <p class="metric-explanation"></p>
+                        <div class="chart-canvas-container">
                             <canvas
-                                class='svg-container chart-canvas'
-                                data-metric='Pull request closing times in buckets per sprint'
+                                class="svg-container chart-canvas"
+                                data-metric="Pull request closing times in buckets per sprint"
                             ></canvas>
                         </div>
                         <div
-                            class='chart-statistics-container'
-                            data-metric='Pull request closing times in buckets per sprint'
+                            class="chart-statistics-container"
+                            data-metric="Pull request closing times in buckets per sprint"
                         ></div>
                     </div>
-                </div>
-                <div
-                    class='tab-pane'
-                    id='commits'
-                    role='tabpanel'
-                    aria-labelledby='nav-commits-tab'
-                >
-                    <div class='chart-container' id='commit_times_container'>
+
+                    <div class="chart-container" id="commit_times_container">
                         <h4>Commit times</h4>
-                        <p class='metric-explanation'></p>
-                        <div class='chart-canvas-container'>
+                        <p class="metric-explanation"></p>
+                        <div class="chart-canvas-container">
                             <canvas
-                                class='svg-container chart-canvas'
-                                data-metric='Commit times'
+                                class="svg-container chart-canvas"
+                                data-metric="Commit times"
                             ></canvas>
                         </div>
-                        <div
-                            class='chart-statistics-container'
-                            data-metric='Commit times'
-                        ></div>
+                        <div class="chart-statistics-container" data-metric="Commit times"></div>
                     </div>
 
-                    <hr class='border-3 border-bottom' />
+                    <hr class="border-3 border-bottom" />
 
-                    <div class='chart-container' id='commit_amounts_container'>
+                    <div class="chart-container" id="commit_amounts_container">
                         <h4>Commit amounts per sprint</h4>
-                        <p class='metric-explanation'></p>
-                        <div class='chart-canvas-container'>
+                        <p class="metric-explanation"></p>
+                        <div class="chart-canvas-container">
                             <canvas
-                                class='svg-container chart-canvas'
-                                data-metric='Commit amounts per sprint'
+                                class="svg-container chart-canvas"
+                                data-metric="Commit amounts per sprint"
                             ></canvas>
                         </div>
                         <div
-                            class='chart-statistics-container'
-                            data-metric='Commit amounts per sprint'
+                            class="chart-statistics-container"
+                            data-metric="Commit amounts per sprint"
                         ></div>
                     </div>
-                </div>
-                <div
-                    class='tab-pane'
-                    id='issues'
-                    role='tabpanel'
-                    aria-labelledby='nav-issues-tab'
-                >
-                    <div class='chart-container' id='issues_sizes_in_buckets_container'>
+
+                    <div class="chart-container" id="issues_sizes_in_buckets_container">
                         <h4>Issue sizes</h4>
-                        <p class='metric-explanation'></p>
-                        <div class='chart-canvas-container'>
+                        <p class="metric-explanation"></p>
+                        <div class="chart-canvas-container">
                             <canvas
-                                class='svg-container chart-canvas'
-                                data-metric='Issue sizes'
+                                class="svg-container chart-canvas"
+                                data-metric="Issue sizes"
                             ></canvas>
                         </div>
-                        <div
-                            class='chart-statistics-container'
-                            data-metric='Issue sizes'
-                        ></div>
+                        <div class="chart-statistics-container" data-metric="Issue sizes"></div>
                     </div>
 
-                    <hr class='border-3 border-bottom' />
+                    <hr class="border-3 border-bottom" />
 
-                    <div class='chart-container' id='issues_sizes_container'>
+                    <div class="chart-container" id="issues_sizes_container">
                         <h4>Issue sizes in buckets</h4>
-                        <p class='metric-explanation'></p>
-                        <div class='chart-canvas-container'>
+                        <p class="metric-explanation"></p>
+                        <div class="chart-canvas-container">
                             <canvas
-                                class='svg-container chart-canvas'
-                                data-metric='Issue sizes in buckets'
+                                class="svg-container chart-canvas"
+                                data-metric="Issue sizes in buckets"
                             ></canvas>
                         </div>
                         <div
-                            class='chart-statistics-container'
-                            data-metric='Issue sizes in buckets'
+                            class="chart-statistics-container"
+                            data-metric="Issue sizes in buckets"
                         ></div>
                     </div>
 
-                    <hr class='border-3 border-bottom' />
+                    <hr class="border-3 border-bottom" />
 
-                    <div class='chart-container' id='issues_submit_times_container'>
+                    <div class="chart-container" id="issues_submit_times_container">
                         <h4>Issue submit times</h4>
-                        <p class='metric-explanation'></p>
-                        <div class='chart-canvas-container'>
+                        <p class="metric-explanation"></p>
+                        <div class="chart-canvas-container">
                             <canvas
-                                class='svg-container chart-canvas'
-                                data-metric='Issue submit times'
+                                class="svg-container chart-canvas"
+                                data-metric="Issue submit times"
                             ></canvas>
                         </div>
                         <div
-                            class='chart-statistics-container'
-                            data-metric='Issue submit times'
+                            class="chart-statistics-container"
+                            data-metric="Issue submit times"
                         ></div>
                     </div>
-                </div>
+                </main>
             </div>
-        </main>
-    </div>
-</div>
+        </div>
 
-<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/toastify-js'></script>
-<script type='module' src='/assets/js/home.js'></script>
-<script
-    src='https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js'
-    integrity='sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj'
-    crossorigin='anonymous'
-></script>
-</body>
-
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <script type="module" src="/assets/js/home.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+            crossorigin="anonymous"
+        ></script>
+    </body>
 </html>

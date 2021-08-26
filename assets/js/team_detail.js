@@ -21,10 +21,9 @@ document
     .addEventListener('click', () => config.to_storage_storage())
 document.getElementById('button_back').addEventListener('click', () => config.to_storage_storage())
 
-function initialize_member_list() {
+async function initialize_member_list() {
     team.members.forEach((member, index) => {
-        const row = document.getElementById('template_member_row').content.cloneNode(true)
-
+        const row = document.getElementById('template_team_member_row').content.cloneNode(true)
         row.getElementById('text_member_name').innerHTML = member.name
 
         const button_remove = row.getElementById('button_remove_member')

@@ -58,7 +58,7 @@ function append_table_row_for_team(team, index) {
 
 function append_table_row_for_unregistered_collaborator(collaborator) {
     const row = document
-        .getElementById('template_unregistered_collaborator')
+        .getElementById('template_unregistered_collaborator_row')
         .content.cloneNode(true)
 
     row.getElementById('text_collaborator_name').innerHTML = collaborator.name
@@ -102,4 +102,4 @@ async function initialize() {
     await initialize_unregistered_collaborators()
 }
 
-;(async () => await initialize())()
+initialize()

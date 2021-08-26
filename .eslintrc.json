@@ -3,30 +3,18 @@
         "browser": true,
         "es2021": true
     },
-    "extends": [
-        "airbnb-base",
-        "prettier"
-    ],
+    "extends": ["airbnb-base", "prettier"],
     "parserOptions": {
         "ecmaVersion": 12,
         "sourceType": "module"
     },
-    "plugins": [
-        "only-warn"
-    ],
-    "ignorePatterns": [
-        "/node_modules",
-        "/external",
-        "/assets/css/dist"
-    ],
+    "plugins": ["only-warn"],
+    "ignorePatterns": ["/node_modules", "/external", "/assets/css/dist"],
     "rules": {
         "no-console": [
             "error",
             {
-                "allow": [
-                    "warn",
-                    "error"
-                ]
+                "allow": ["warn", "error"]
             }
         ],
         "camelcase": "off",

@@ -1,10 +1,7 @@
 import Config from './config.js'
 
 const container_sprints = document.getElementById('container_sprints')
-
 const config = Config.from_storage()
-const sprints = config._sprints
-initialize()
 
 document
     .getElementById('button_navigate_home')
@@ -19,7 +16,11 @@ document
     .getElementById('button_navigate_settings')
     .addEventListener('click', () => config.to_storage_storage())
 
-function append_table_row_for_sprint(sprint, index) {
+function getDateString(date) {
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
+}
+
+async function append_table_row_for_sprint(sprint, index) {
     const row = document.getElementById('template_sprint_row').content.cloneNode(true)
     const startDate = new Date(sprint.from)
     const endDate = new Date(sprint.to)
@@ -37,6 +38,4 @@ function initialize() {
     })
 }
 
-function getDateString(date) {
-    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
-}
+initialize()
