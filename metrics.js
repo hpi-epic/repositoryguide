@@ -9,24 +9,24 @@ import {
     get_issue_buckets_fixed_interval,
     get_issue_sizes,
     get_issue_submit_times,
-    get_pull_request_closing_time_buckets,
-    get_pull_request_closing_times
+    get_pull_request_open_duration_buckets,
+    get_pull_request_open_durations
 } from './data_functions.js'
 
 export const metrics = {
-    'Pull request closing times': {
+    'Pull request open duration': {
         chart_class: BarChart,
-        data_retrieval_function: get_pull_request_closing_times,
+        data_retrieval_function: get_pull_request_open_durations,
         sprint_segmented: false
     },
-    'Pull request closing times in buckets overall': {
+    'Pull request open durations in buckets overall': {
         chart_class: BarChart,
-        data_retrieval_function: get_pull_request_closing_time_buckets,
+        data_retrieval_function: get_pull_request_open_duration_buckets,
         sprint_segmented: false
     },
-    'Pull request closing times in buckets per sprint': {
+    'Pull request open durations in buckets per sprint': {
         chart_class: StackedBarChart,
-        data_retrieval_function: get_pull_request_closing_time_buckets,
+        data_retrieval_function: get_pull_request_open_duration_buckets,
         sprint_segmented: true
     },
     'Issue sizes': {
@@ -87,7 +87,7 @@ export function pull_request_closing_time(pull_request) {
     return closing_date - creation_date
 }
 
-export function closed_pull_request_closing_time_in_hours(pull_request) {
+export function closed_pull_request_open_duration_in_hours(pull_request) {
     const creation_date = Date.parse(pull_request.created_at)
     const closing_date = Date.parse(pull_request.closed_at)
     let diffHours
@@ -103,7 +103,7 @@ export function closed_pull_request_closing_time_in_hours(pull_request) {
 }
 
 // 31: Früh mergen
-export function pull_request_closing_time_bucket(pull_request) {
+export function pull_request_open_duration_bucket(pull_request) {
     const closing_time = pull_request_closing_time(pull_request)
 
     switch (true) {
