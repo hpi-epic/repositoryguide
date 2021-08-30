@@ -342,7 +342,10 @@ export async function get_pull_request_closing_times(config, sprint_segmented) {
         config.repository
     )
     if (config.team_index) {
-        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[config.team_index])
+        pull_requests = pull_requests_filtered_by_team(
+            pull_requests,
+            config.teams[config.team_index]
+        )
     }
 
     let data = []
@@ -359,17 +362,17 @@ export async function get_pull_request_closing_times(config, sprint_segmented) {
     return data
 }
 
-export async function get_pull_request_closing_time_buckets(
-    config,
-    sprint_segmented
-) {
+export async function get_pull_request_closing_time_buckets(config, sprint_segmented) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
         config.repository
     )
     if (config.team_index) {
-        pull_requests = pull_requests_filtered_by_team(pull_requests, config.teams[config.team_index])
+        pull_requests = pull_requests_filtered_by_team(
+            pull_requests,
+            config.teams[config.team_index]
+        )
     }
 
     let data
@@ -409,7 +412,6 @@ export async function get_pull_request_closing_time_buckets(
         )
     } else {
         data = construct_pull_request_buckets(pull_requests)
-        sort_descending_by_value(data)
     }
 
     return data
@@ -439,10 +441,7 @@ export async function get_issue_sizes(config, sprint_segmented) {
     return data
 }
 
-export async function get_issue_buckets_fixed_interval(
-    config,
-    sprint_segmented
-) {
+export async function get_issue_buckets_fixed_interval(config, sprint_segmented) {
     // does the filtering too
     const issues = await get_issue_sizes(config, sprint_segmented)
 
