@@ -3,6 +3,7 @@
 import { Octokit } from 'https://cdn.skypack.dev/octokit'
 import { paginateRest } from 'https://cdn.skypack.dev/@octokit/plugin-paginate-rest'
 import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
+import { graphql } from 'https://cdn.skypack.dev/@octokit/graphql'
 
 // ------------------- Metrices ------------------- //
 import {
@@ -284,60 +285,65 @@ async function calculate_stats_for_commits(commits_separated_in_sprints, config)
 }
 
 async function get_detailed_commits(auth, owner, project) {
-    let hasNextPage = true
+    let has_next_page = true
     const data = []
-    let afterString = ``
+    let last_commit_cursor = null
 
-    while (hasNextPage) {
-        const query = `query {
-  repository(owner: ${JSON.stringify(owner)}, name: ${JSON.stringify(project)}) {
-    defaultBranchRef {
-      name
-      target {
-        ... on Commit {
-          history(first: 100${afterString}){
-            edges {
-              cursor
-              node {
-               id
-              author {
-                user {
-                  databaseId
-                }
-                email
-                name
-              }
-              committedDate
-              additions
-              deletions
-            }
-            }
-            
-            pageInfo { 
-            hasNextPage
-            }
-          }
-        }
-      }
-    }
-  }
-}`
-
-        const response = await fetch('https://api.github.com/graphql', {
-            method: 'POST',
-            body: JSON.stringify({ query: query }),
+    while (has_next_page) {
+        const graphql_with_auth = graphql.defaults({
             headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${auth}`
+                authorization: `token ${auth}`
             }
         })
 
-        const json = await response.json()
+        const response = await graphql_with_auth(
+            `
+            query detailedCommits($owner: String!, $project: String!, $last_commit_cursor: String)
+                {
+                    repository(owner: $owner, name: $project) {
+                        defaultBranchRef {
+                            name
+                            target {
+                                ... on Commit {
+                                    history(first: 100, after: $last_commit_cursor) {
+                                        edges {
+                                            cursor
+                                            node {
+                                                id
+                                                author {
+                                                    user {
+                                                        databaseId
+                                                    }
+                                                    email
+                                                    name
+                                                }
+                                                committedDate
+                                                additions
+                                                deletions
+                                            }
+                                        }
 
-        data.push(...json.data.repository.defaultBranchRef.target.history.edges)
-        hasNextPage = json.data.repository.defaultBranchRef.target.history.pageInfo.hasNextPage
-        const lastElement = data[data.length - 1]
-        afterString = `, after: ${JSON.stringify(lastElement.cursor)}`
+                                        pageInfo {
+                                            hasNextPage
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            `,
+            {
+                owner: owner,
+                project: project,
+                last_commit_cursor: last_commit_cursor
+            }
+        )
+
+        data.push(...response.repository.defaultBranchRef.target.history.edges)
+        has_next_page = response.repository.defaultBranchRef.target.history.pageInfo.hasNextPage
+        const last_element = data[data.length - 1]
+        last_commit_cursor = `${last_element.cursor}`
     }
 
     return data
