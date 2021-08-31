@@ -10,7 +10,8 @@ import {
     get_issue_sizes,
     get_issue_submit_times,
     get_pull_request_closing_time_buckets,
-    get_pull_request_closing_times
+    get_pull_request_closing_times,
+    get_pull_request_review_times
 } from './data_functions.js'
 
 export const metrics = {
@@ -27,6 +28,11 @@ export const metrics = {
     'Pull request closing times in buckets per sprint': {
         chart_class: StackedBarChart,
         data_retrieval_function: get_pull_request_closing_time_buckets,
+        sprint_segmented: true
+    },
+    'Pull request time to first review': {
+        chart_class: StackedBarChart,
+        data_retrieval_function: get_pull_request_review_times,
         sprint_segmented: true
     },
     'Issue sizes': {
@@ -108,6 +114,29 @@ export function pull_request_closing_time_bucket(pull_request) {
         default:
             return '>=2w'
     }
+}
+
+export function calculate_first_review_for_pull_request(pull_request) {
+    const creation_time = Date.parse(pull_request.node.createdAt)
+    let first_review_time
+    pull_request.node.reviews.nodes.length !== 0
+        ? (first_review_time = Date.parse(pull_request.node.reviews.nodes[0].createdAt))
+        : (first_review_time = Date.now())
+    let first_comment_time = Date.now()
+    if (pull_request.node.comments) {
+        pull_request.node.comments.nodes.every((comment) => {
+            if (comment.author.login !== pull_request.node.author.login) {
+                first_comment_time = Date.parse(comment.createdAt)
+                return false
+            }
+            return true
+        })
+    }
+
+    if (first_comment_time < first_review_time) {
+        return ((first_comment_time - creation_time) / (1000 * 60 * 60)).toFixed(2)
+    }
+    return ((first_review_time - creation_time) / (1000 * 60 * 60)).toFixed(2)
 }
 
 export const buckets = ['<1h', '<12h', '<24h', '<3d', '<1w', '<2w', '>=2w']
