@@ -12,6 +12,7 @@
             integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
             crossorigin="anonymous"
         ></script>
+
         <template id="template_unregistered_collaborator_row">
             <tr class="d-flex">
                 <td class="col-4" id="text_collaborator_name"></td>
@@ -43,11 +44,9 @@
             </tr>
         </template>
 
-        <div class="card container">
-            <div class="card-header">
-                <h3>Unregistered Collaborators</h3>
-            </div>
-            <div class="form-group card-body">
+        <div class="container">
+            <h4>Unregistered Collaborators</h4>
+            <div class="form-group">
                 <button
                     class="form-control btn btn-outline-secondary"
                     id="button_load_unregistered_collaborators_from_github"
@@ -70,11 +69,9 @@
 
         <br />
 
-        <div class="card container">
-            <div class="card-header">
-                <h3>Teams</h3>
-            </div>
-            <div class="form-group card-body">
+        <div class="container">
+            <h4>Teams</h4>
+            <div class="form-group">
                 <button
                     class="form-control btn btn-outline-secondary"
                     id="button_load_teams_from_github"
@@ -94,12 +91,6 @@
                 </table>
             </div>
         </div>
-
-        <br />
-
-        <a class="btn btn-outline-secondary" id="button_back" href="javascript:history.back()"
-            >Back</a
-        >
 
         <script type="module" src="/assets/js/header.js"></script>
         <script type="module" src="/assets/js/team_overview.js"></script>

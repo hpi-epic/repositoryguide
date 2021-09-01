@@ -12,6 +12,7 @@
             integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
             crossorigin="anonymous"
         ></script>
+
         <template id="template_team_member_row">
             <tr class="d-flex">
                 <td class="col-10" id="text_member_name"></td>
@@ -23,9 +24,9 @@
             </tr>
         </template>
 
-        <div class="card container">
-            <div class="form-group card-body">
-                <h3>General Information:</h3>
+        <div class="container">
+            <h4>General Information:</h4>
+            <div class="form-group">
                 <table class="table">
                     <tbody>
                         <tr class="d-flex">
@@ -38,25 +39,17 @@
                         </tr>
                     </tbody>
                 </table>
-
-                <h3>Members:</h3>
-                <table class="table">
-                    <thead>
-                        <tr class="d-flex">
-                            <th class="col-10" scope="col">Name</th>
-                            <th class="col-2" scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="container_members"></tbody>
-                </table>
             </div>
         </div>
 
         <br />
 
-        <a class="btn btn-outline-secondary" id="button_back" href="javascript:history.back()"
-            >Back</a
-        >
+        <div class="container">
+            <h3>Members:</h3>
+            <table class="table">
+                <tbody id="container_members"></tbody>
+            </table>
+        </div>
 
         <script type="module" src="/assets/js/header.js"></script>
         <script type="module" src="/assets/js/team_detail.js"></script>

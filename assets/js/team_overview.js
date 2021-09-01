@@ -10,36 +10,11 @@ const container_unregistered_collaborators = document.getElementById(
 )
 const config = Config.from_storage()
 
-document.getElementById('button_load_teams_from_github').addEventListener('click', async () => {
-    if (!config.organization) {
-        alert('No organization defined. This is required to lead the teams')
-        return
-    }
-
-    config.teams = await get_teams(config)
-
-    remove_children(container_teams)
-    remove_children(container_unregistered_collaborators)
-    await initialize()
-})
-
-document
-    .getElementById('button_load_unregistered_collaborators_from_github')
-    .addEventListener('click', async () => {
-        if (!config.organization || !config.repository) {
-            alert('This action requires an organization and a repository to be set')
-            return
-        }
-
-        remove_children(container_unregistered_collaborators)
-        await initialize_unregistered_collaborators()
-    })
-
 function append_table_row_for_team(team, index) {
     const row = document.getElementById('template_team_row').content.cloneNode(true)
 
     row.getElementById('text_name').innerHTML = team.name
-    row.getElementById('text_label').innerHTML = team.label
+    row.getElementById('text_label').innerHTML = team.label ? team.label : '[None]'
 
     const details_link = row.getElementById('link_detail_page')
     details_link.href += `?index=${index}`
@@ -67,7 +42,7 @@ function append_table_row_for_unregistered_collaborator(collaborator) {
     })
 
     button.addEventListener('click', async () => {
-        const team_index = parseInt(select.options[select.selectedIndex].value)
+        const team_index = parseInt(select.options[select.selectedIndex].value, 10)
         config.teams[team_index].members.push(collaborator)
 
         config.to_storage_storage()
@@ -92,5 +67,30 @@ async function initialize() {
     })
     await initialize_unregistered_collaborators()
 }
+
+document.getElementById('button_load_teams_from_github').addEventListener('click', async () => {
+    if (!config.organization) {
+        alert('No organization defined. This is required to lead the teams')
+        return
+    }
+
+    config.teams = await get_teams(config)
+
+    remove_children(container_teams)
+    remove_children(container_unregistered_collaborators)
+    await initialize()
+})
+
+document
+    .getElementById('button_load_unregistered_collaborators_from_github')
+    .addEventListener('click', async () => {
+        if (!config.organization || !config.repository) {
+            alert('This action requires an organization and a repository to be set')
+            return
+        }
+
+        remove_children(container_unregistered_collaborators)
+        await initialize_unregistered_collaborators()
+    })
 
 initialize()
