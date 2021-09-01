@@ -19,11 +19,9 @@
             crossorigin="anonymous"
         ></script>
 
-        <div class="card container" id="settings_container">
-            <div class="card-header">
-                <h3>Settings</h3>
-            </div>
-            <div class="form-group card-body">
+        <div class="container" id="settings_container">
+            <h4>Settings</h4>
+            <div class="form-group">
                 <div class="input-group">
                     <table class="table">
                         <tbody>
@@ -54,22 +52,38 @@
                 <br />
 
                 <div class="input-group">
-                    <label for="input_organization">Organization:</label>
-                    <input class="form-control" id="input_organization" type="text" />
-                </div>
-
-                <br />
-
-                <div class="input-group">
-                    <label for="input_repository">Repository:</label>
-                    <input class="form-control" id="input_repository" type="text" />
-                </div>
-
-                <br />
-
-                <div class="input-group">
-                    <label for="input_team">Team:</label>
-                    <select id="input_team" class="form-control"></select>
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr class="d-flex">
+                                <td class="col-3">
+                                    <label for="input_organization">Organization:</label>
+                                </td>
+                                <td class="col-9">
+                                    <input
+                                        class="form-control"
+                                        id="input_organization"
+                                        type="text"
+                                    />
+                                </td>
+                            </tr>
+                            <tr class="d-flex">
+                                <td class="col-3">
+                                    <label for="input_repository">Repository:</label>
+                                </td>
+                                <td class="col-9">
+                                    <input class="form-control" id="input_repository" type="text" />
+                                </td>
+                            </tr>
+                            <tr class="d-flex">
+                                <td class="col-3">
+                                    <label for="input_team">Team:</label>
+                                </td>
+                                <td class="col-9">
+                                    <select id="input_team" class="form-control"></select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
