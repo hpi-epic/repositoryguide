@@ -2,6 +2,8 @@ import Config from './config.js'
 import { remove_children } from './utils.js'
 import { get_teams, get_unregistered_collaborators } from './data_functions.js'
 
+document.getElementById('button_navigate_teams').classList.add('active')
+
 const container_teams = document.getElementById('container_teams')
 const container_unregistered_collaborators = document.getElementById(
     'container_unregistered_collaborators'

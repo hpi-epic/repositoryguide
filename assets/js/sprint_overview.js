@@ -1,5 +1,7 @@
 import Config from './config.js'
 
+document.getElementById('button_navigate_sprint').classList.add('active')
+
 const container_sprints = document.getElementById('container_sprints')
 const config = Config.from_storage()
 

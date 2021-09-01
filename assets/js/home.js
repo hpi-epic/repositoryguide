@@ -1,6 +1,8 @@
 import Config from './config.js'
 import { metrics } from './metrics.js'
 
+document.getElementById('button_navigate_home').classList.add('active')
+
 const config = Config.from_storage()
 
 async function initializeChart(

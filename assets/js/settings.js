@@ -1,6 +1,8 @@
 import Config from './config.js'
 import { remove_children } from './utils.js'
 
+document.getElementById('button_navigate_settings').classList.add('active')
+
 let config = Config.from_storage()
 
 const inputs = {

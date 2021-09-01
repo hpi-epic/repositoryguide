@@ -1,6 +1,8 @@
 import Config from './config.js'
 import { get_parameters, remove_children } from './utils.js'
 
+document.getElementById('button_navigate_teams').classList.add('active')
+
 const parameters = get_parameters(window.location.href)
 const config = Config.from_storage()
 const team = config.teams[parseInt(parameters.index)]
