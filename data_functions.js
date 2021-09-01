@@ -413,7 +413,6 @@ export async function get_pull_request_open_duration_buckets(config, sprint_segm
         )
     } else {
         data = construct_pull_request_buckets(pull_requests)
-        sort_descending_by_value(data)
     }
 
     return data
