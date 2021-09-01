@@ -81,7 +81,7 @@ export function issue_size_bucket(size, min, max, nr_of_buckets) {
 }
 
 // 31: Früh mergen
-export function pull_request_closing_time(pull_request) {
+export function pull_request_open_duration(pull_request) {
     const creation_date = Date.parse(pull_request.created_at)
     const closing_date = Date.parse(pull_request.closed_at)
     return closing_date - creation_date
@@ -104,20 +104,20 @@ export function closed_pull_request_open_duration_in_hours(pull_request) {
 
 // 31: Früh mergen
 export function pull_request_open_duration_bucket(pull_request) {
-    const closing_time = pull_request_closing_time(pull_request)
+    const open_duration = pull_request_open_duration(pull_request)
 
     switch (true) {
-        case closing_time < 1000 * 60 * 60:
+        case open_duration < 1000 * 60 * 60:
             return '<1h'
-        case closing_time < 1000 * 60 * 60 * 12:
+        case open_duration < 1000 * 60 * 60 * 12:
             return '<12h'
-        case closing_time < 1000 * 60 * 60 * 24:
+        case open_duration < 1000 * 60 * 60 * 24:
             return '<24h'
-        case closing_time < 1000 * 60 * 60 * 24 * 3:
+        case open_duration < 1000 * 60 * 60 * 24 * 3:
             return '<3d'
-        case closing_time < 1000 * 60 * 60 * 24 * 7:
+        case open_duration < 1000 * 60 * 60 * 24 * 7:
             return '<1w'
-        case closing_time < 1000 * 60 * 60 * 24 * 14:
+        case open_duration < 1000 * 60 * 60 * 24 * 14:
             return '<2w'
         default:
             return '>=2w'
