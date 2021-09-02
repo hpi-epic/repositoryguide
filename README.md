@@ -4,22 +4,25 @@ An application that helps with analyzing your team's GitHub repository
 
 ## Installation
 
-1. Clone the repository: `git@github.com:hpi-epic/repositoryguide.git` and go into the repository folder
-2. Make sure you've installed node. If not download and install it from [here](https://nodejs.org/en/download/)
+1. Make sure you've installed node. If not download and install it from [here](https://nodejs.org/en/download/)
+2. Clone the repository: `git@github.com:hpi-epic/repositoryguide.git` and go into the repository folder
 3. Run `npm install` in the root of the repository
-4. generate a personal access token for GitHub
+4. Run `npm start` to compile the scss and start a server
+5. Open the home page in a browser (default address is `localhost:3000/views/home`)
+
+## Configuration
+
+1. Generate a personal access token for GitHub
    using [these instructions](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-5. Host the project on a local server, opening `index.html` directly won't work. The WebStorm IDE offers a local
-   development server, or run one using `python3 -m http.server`.
-6. Download the config to have an empty version of a `config.json file`. Replace `"github_access_token": ""`
+2. On the settings page, download the config to have an empty version of a `config.json file`. Replace `"github_access_token": ""`
    with `"github_access_token": "<your token>"`
-7. Load the edited config into the application.
-8. The preparations are now done. Enjoy your metrics. :-)
+3. Load the edited config into the application.
 
 ## Codestyle
 
-To follow the codestyle used in this repository you need Prettier and Eslint. After having setup the project you need to
-setup these tools. For Webstorm follow the following tutorials:
+To define a codestyle, we used Prettier and Eslint. Use `npm run prettier-<check|autofix>` or `npm run eslint-<check|autofix>` to apply these rules.
+
+Alternatively, you can set these up for your IDE. For Webstorm follow the following tutorials:
 
 -   ESLint
     -   Follow the following steps from [this tutorial](https://www.jetbrains.com/help/webstorm/eslint.html)
@@ -30,5 +33,5 @@ setup these tools. For Webstorm follow the following tutorials:
 -   Prettier
     -   Follow the following steps from [this tutorial](https://www.jetbrains.com/help/webstorm/prettier.html)
         -   [Before you start](https://www.jetbrains.com/help/webstorm/prettier.html#prettier_before_you_start) 1,2 and 3
-        -   [Configure PRettier 2,3, & 4](https://www.jetbrains.com/help/webstorm/prettier.html#ws_prettier_install)
+        -   [Configure Prettier 2,3, & 4](https://www.jetbrains.com/help/webstorm/prettier.html#ws_prettier_install)
         -   [Recommended to run Prettier on save](https://www.jetbrains.com/help/webstorm/prettier.html#ws_prettier_run_automatically_in_current_project)
