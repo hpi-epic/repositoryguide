@@ -5,6 +5,16 @@ import 'https://cdn.jsdelivr.net/npm/chartjs-chart-matrix@1.0.2/dist/chartjs-cha
 export default class Heatmap extends MetricChart {
     constructor(parameters = { canvas: null, statistics_container: null }) {
         super(parameters)
+
+        this._maxValue = -1
+    }
+
+    get maxValue() {
+        return this._maxValue
+    }
+
+    set maxValue(value) {
+        this._maxValue = value
     }
 
     _construct_chart_options() {
@@ -113,15 +123,30 @@ export default class Heatmap extends MetricChart {
                 label: this.data_title,
                 type: 'matrix',
                 data: this.data[0].value,
-                backgroundColor: function (drawing_context) {
-                    const value = drawing_context.dataset.data[drawing_context.dataIndex].v
-                    // max 50 commits ho wot calc max value in array?
-                    const alpha = (value * 1.8) / 100 + 0.05
-                    return `rgba(199, 91, 91, ${alpha})`
+                backgroundColor: (drawing_context) => {
+                    if (drawing_context.raw) {
+                        if (this.maxValue === -1) {
+                            this._calculate_max_value()
+                        }
+                        const value = drawing_context.dataset.data[drawing_context.dataIndex].v
+                        const alpha = value / this.maxValue + 0.05
+                        return `rgba(199, 91, 91, ${alpha})`
+                    }
+                    return null
                 },
                 width: ({ chart }) => (chart.chartArea || {}).width / 28,
                 height: ({ chart }) => (chart.chartArea || {}).height / 8
             }
         ]
+    }
+
+    _calculate_max_value() {
+        let max = 0
+        this.data[0].value.forEach((data) => {
+            if (data.v > max) {
+                max = data.v
+            }
+        })
+        this.maxValue = max
     }
 }

@@ -412,7 +412,6 @@ export async function get_pull_request_closing_time_buckets(config, sprint_segme
         )
     } else {
         data = construct_pull_request_buckets(pull_requests)
-        sort_descending_by_value(data)
     }
 
     return data
