@@ -1,6 +1,5 @@
 import Config from './config.js'
-
-document.getElementById('button_navigate_sprint').classList.add('active')
+import { add_header } from '../components/components.js'
 
 const container_sprints = document.getElementById('container_sprints')
 const config = Config.from_storage()
@@ -21,7 +20,10 @@ async function append_table_row_for_sprint(sprint, index) {
     container_sprints.appendChild(row)
 }
 
-function initialize() {
+async function initialize() {
+    await add_header()
+    document.getElementById('button_navigate_sprint').classList.add('active')
+
     config.sprints.forEach((sprint, index) => {
         append_table_row_for_sprint(sprint, index)
     })

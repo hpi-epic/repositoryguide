@@ -1,18 +1,17 @@
 import Config from './config.js'
 import { get_parameters, remove_children } from './utils.js'
-
-document.getElementById('button_navigate_teams').classList.add('active')
+import { add_header } from '../components/components.js'
 
 const parameters = get_parameters(window.location.href)
 const config = Config.from_storage()
-const team = config.teams[parseInt(parameters.index)]
+const team = config.teams[parseInt(parameters.index, 10)]
 
 const container_members = document.getElementById('container_members')
 
 document.getElementById('text_team_name').innerHTML = team.name
 document.getElementById('text_team_label').innerHTML = team.label
 
-async function initialize_member_list() {
+function initialize_member_list() {
     team.members.forEach((member, index) => {
         const row = document.getElementById('template_team_member_row').content.cloneNode(true)
         row.getElementById('text_member_name').innerHTML = member.name
@@ -23,7 +22,7 @@ async function initialize_member_list() {
                 team.members.splice(index, 1)
                 remove_children(container_members)
                 initialize_member_list()
-                config.to_storage_storage()
+                config.to_storage()
             }
         })
 
@@ -31,4 +30,11 @@ async function initialize_member_list() {
     })
 }
 
-initialize_member_list()
+async function initialize() {
+    await add_header()
+    document.getElementById('button_navigate_teams').classList.add('active')
+
+    initialize_member_list()
+}
+
+initialize()

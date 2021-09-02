@@ -1,7 +1,6 @@
 import Config from './config.js'
 import { metrics } from './metrics.js'
-
-document.getElementById('button_navigate_home').classList.add('active')
+import { add_header } from '../components/components.js'
 
 const config = Config.from_storage()
 
@@ -26,6 +25,9 @@ async function initializeChart(
 }
 
 async function initialize() {
+    await add_header()
+    document.getElementById('button_navigate_home').classList.add('active')
+
     const canvases = [...document.getElementsByClassName('chart-canvas')]
     const statistic_containers = [...document.getElementsByClassName('chart-statistics-container')]
     const groups = {}

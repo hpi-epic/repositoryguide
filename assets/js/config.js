@@ -53,7 +53,7 @@ export default class Config {
         return instance
     }
 
-    to_storage_storage() {
+    to_storage() {
         localStorage.setItem('config', this.toString())
     }
 

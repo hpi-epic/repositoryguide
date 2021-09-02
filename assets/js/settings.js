@@ -1,7 +1,6 @@
 import Config from './config.js'
 import { remove_children } from './utils.js'
-
-document.getElementById('button_navigate_settings').classList.add('active')
+import { add_header } from '../components/components.js'
 
 let config = Config.from_storage()
 
@@ -56,11 +55,18 @@ inputs.input_team.addEventListener('change', () => {
     if (selected.value === 'none') {
         config.team_index = null
     } else {
-        config.team_index = parseInt(selected.value)
+        config.team_index = parseInt(selected.value, 10)
     }
 })
 
-function initialize(config) {
+window.onunload = () => {
+    config.to_storage()
+}
+
+async function initialize(config) {
+    await add_header()
+    document.getElementById('button_navigate_settings').classList.add('active')
+
     inputs.input_organization.value = config.organization
     inputs.input_repository.value = config.repository
     remove_children(inputs.input_team)
