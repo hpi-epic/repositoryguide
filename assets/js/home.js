@@ -49,6 +49,7 @@ async function initialize() {
     for (const metric_name of Object.keys(groups)) {
         const metric = metrics[metric_name]
         const group = groups[metric_name]
+        debugger
         promises.push(
             initializeChart(
                 metric.chart_class,
