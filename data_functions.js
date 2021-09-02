@@ -7,10 +7,10 @@ import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
 // ------------------- Metrices ------------------- //
 import {
     buckets,
+    closed_pull_request_open_duration_in_hours,
     issue_size,
     issue_size_bucket,
-    pull_request_closing_time,
-    pull_request_closing_time_bucket
+    pull_request_open_duration_bucket
 } from './metrics.js'
 
 // ------------------- helper functions ------------------- //
@@ -115,7 +115,7 @@ function construct_pull_request_buckets(pull_requests) {
     })
 
     pull_requests.forEach((pull_request) => {
-        bucket_count[pull_request_closing_time_bucket(pull_request)] += 1
+        bucket_count[pull_request_open_duration_bucket(pull_request)] += 1
     })
 
     return Object.keys(bucket_count).map((bucket) => ({
@@ -335,7 +335,7 @@ async function get_collaborators(config) {
     )
 }
 
-export async function get_pull_request_closing_times(config, sprint_segmented) {
+export async function get_pull_request_open_durations(config, sprint_segmented) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
@@ -354,15 +354,16 @@ export async function get_pull_request_closing_times(config, sprint_segmented) {
     } else {
         data = pull_requests.map((pull_request) => ({
             label: pull_request.title,
-            value: pull_request_closing_time(pull_request)
+            value: closed_pull_request_open_duration_in_hours(pull_request)
         }))
+        data = data.filter((pullRequest) => pullRequest.value !== null)
         sort_descending_by_value(data)
     }
 
     return data
 }
 
-export async function get_pull_request_closing_time_buckets(config, sprint_segmented) {
+export async function get_pull_request_open_duration_buckets(config, sprint_segmented) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
