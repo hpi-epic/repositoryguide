@@ -9,7 +9,7 @@ const team = config.teams[parseInt(parameters.index, 10)]
 const container_members = document.getElementById('container_members')
 
 document.getElementById('text_team_name').innerHTML = team.name
-document.getElementById('text_team_label').innerHTML = team.label
+document.getElementById('text_team_label').innerHTML = team.label ? team.label : '[None]'
 
 function initialize_member_list() {
     team.members.forEach((member, index) => {

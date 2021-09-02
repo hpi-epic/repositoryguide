@@ -16,7 +16,7 @@ function append_table_row_for_team(team, index) {
     row.getElementById('text_label').innerHTML = team.label ? team.label : '[None]'
 
     const details_link = row.getElementById('link_detail_page')
-    details_link.href += `?index=${index}`
+    details_link.href = details_link.href.replace('.html', `?index=${index}`)
 
     container_teams.appendChild(row)
 }
