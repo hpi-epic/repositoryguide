@@ -19,28 +19,33 @@ import { deepClone, get_max, get_min, sort_descending_by_value } from './utils.j
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
 
-const octokit = (auth) =>
-    new MyOctokit({
-        userAgent: 'Agile Research',
-        auth: auth,
-        throttle: {
-            onRateLimit: (retryAfter, options, octo) => {
-                octo.log.warn(
-                    `Request quota exhausted for request ${options.method} ${options.url}`
-                )
+const octokit = (auth) => new MyOctokit({
+    userAgent: 'Agile Research',
+    auth: auth,
+    throttle: {
+        onRateLimit: (retryAfter, options, octo) => {
+            octo.log.warn(
+                `Request quota exhausted for request ${options.method} ${options.url}`
+            )
 
-                if (options.request.retryCount === 0) {
-                    octo.log.info(`Retrying after ${retryAfter} seconds!`)
-                    return true
-                }
-
-                return false
-            },
-            onAbuseLimit: (retryAfter, options, octo) => {
-                octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
+            if (options.request.retryCount === 0) {
+                octo.log.info(`Retrying after ${retryAfter} seconds!`)
+                return true
             }
+
+            return false
+        },
+        onAbuseLimit: (retryAfter, options, octo) => {
+            octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         }
-    })
+    }
+})
+
+const graphql_with_auth = (auth) => graphql.defaults({
+    headers: {
+        authorization: `token ${auth}`
+    }
+})
 
 const PER_PAGE = 50
 
@@ -290,13 +295,7 @@ async function get_detailed_commits(auth, owner, project) {
     let last_commit_cursor = null
 
     while (has_next_page) {
-        const graphql_with_auth = graphql.defaults({
-            headers: {
-                authorization: `token ${auth}`
-            }
-        })
-
-        const response = await graphql_with_auth(
+        const response = await graphql_with_auth(auth)(
             `
             query detailedCommits($owner: String!, $project: String!, $last_commit_cursor: String)
                 {
