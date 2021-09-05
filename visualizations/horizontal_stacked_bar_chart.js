@@ -42,6 +42,9 @@ export default class HorizontalStackedBarChart extends MultipleDatasetChart {
                 title: {
                     text: this.title,
                     display: true
+                },
+                legend: {
+                    display: false
                 }
             },
             responsive: true,
@@ -55,7 +58,10 @@ export default class HorizontalStackedBarChart extends MultipleDatasetChart {
                 }
             },
             onClick: (event, clickedElements, chart) => {
-                // visit url
+                const stack_index = clickedElements[0].index
+                const index = clickedElements[0].datasetIndex
+                const object = this.data[stack_index][index]
+                window.open(object.url, '_blank').focus()
             }
         }
     }
