@@ -126,19 +126,32 @@ function construct_pull_request_buckets(pull_requests) {
     }))
 }
 
-function construct_pull_request_review_buckets(pull_requests) {
+function construct_pull_request_review_buckets(
+    pull_requests,
+    maximum_amout_of_pull_requests_per_sprint
+) {
+    debugger
     const data = []
-    let count = 1
-    pull_requests.forEach((pull_request) => {
+    const count = 1
+    for (let i = 1; i <= maximum_amout_of_pull_requests_per_sprint; i++) {
+        const data_object = {
+            label: `PR ${i}`,
+            value: pull_requests[i - 1]
+                ? calculate_first_review_for_pull_request(pull_requests[i - 1])
+                : 0,
+            url: pull_requests[i - 1] ? pull_requests[i - 1].node.url : ''
+        }
+        data.push(data_object)
+    }
+    /* pull_requests.forEach((pull_request) => {
         const data_object = {
             label: `PR ${count}`,
             value: calculate_first_review_for_pull_request(pull_request),
             url: pull_request.node.url
         }
         data.push(data_object)
-        count++
-    })
-    console.log(data)
+        count += 1
+    }) */
     return data
 }
 
@@ -443,7 +456,6 @@ async function get_pull_requests_with_review_and_comments(auth, owner, project) 
 
 function filter_closed_and_unreviewed(pull_requests) {
     const filtered_pull_requests = pull_requests.filter((pull_request) => {
-        debugger
         let commented_by_other_users = false
         let reviewed_by_other_users = false
         if (pull_request.node.comments) {
@@ -638,9 +650,15 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
                 pull_request_groups['not within sprint'].push(pull_request)
             }
         }
+        const maximum_amout_of_pull_requests_per_sprint = Object.values(pull_request_groups).reduce(
+            (a, b) => (a.length < b.length ? b : a)
+        ).length
 
         data = Object.keys(pull_request_groups).map((key) =>
-            construct_pull_request_review_buckets(pull_request_groups[key])
+            construct_pull_request_review_buckets(
+                pull_request_groups[key],
+                maximum_amout_of_pull_requests_per_sprint
+            )
         )
     } else {
         data = construct_pull_request_review_buckets(pull_requests)
