@@ -110,6 +110,11 @@ function pull_requests_filtered_by_team(pull_requests, team) {
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.user.id))
 }
 
+function pull_requests_with_review_and_comments_filtered_by_team(pull_requests, team) {
+    const team_ids = team.members.map((member) => member.name)
+    return pull_requests.filter((pull_request) => team_ids.includes(pull_request.node.author.login))
+}
+
 function construct_pull_request_buckets(pull_requests) {
     const bucket_count = {}
     buckets.forEach((bucket) => {
@@ -130,9 +135,7 @@ function construct_pull_request_review_buckets(
     pull_requests,
     maximum_amout_of_pull_requests_per_sprint
 ) {
-    debugger
     const data = []
-    const count = 1
     for (let i = 1; i <= maximum_amout_of_pull_requests_per_sprint; i++) {
         const data_object = {
             label: `PR ${i}`,
@@ -611,12 +614,13 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
         config.repository
     )
     pull_requests = filter_closed_and_unreviewed(pull_requests)
-    /* if (config.team_index) {
-        pull_requests = pull_requests_filtered_by_team(
+    if (config.team_index) {
+        pull_requests = pull_requests_with_review_and_comments_filtered_by_team(
             pull_requests,
             config.teams[config.team_index]
         )
-    } */
+    }
+    debugger
 
     let data
     if (sprint_segmented) {
