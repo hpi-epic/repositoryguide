@@ -13,6 +13,13 @@ export default class HorizontalStackedBarChart extends MultipleDatasetChart {
     }
 
     _construct_chart_dataset(dataset, index, nr_of_datasets) {
+        Chart.Tooltip.positioners.followMouse = function (elements, eventPosition) {
+            return {
+                x: eventPosition.x,
+                y: eventPosition.y
+            }
+        }
+
         const dataset_object = super._construct_chart_dataset(dataset, index, nr_of_datasets)
 
         const color_base =
@@ -45,6 +52,27 @@ export default class HorizontalStackedBarChart extends MultipleDatasetChart {
                 },
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    displayColors: false,
+                    position: 'followMouse',
+                    yAlign: 'bottom',
+                    xAlign: 'center',
+                    callbacks: {
+                        title: (item, data) => {
+                            const dataObject = this._data[item[0].dataIndex][item[0].datasetIndex]
+                            return dataObject.title.length > 50
+                                ? `${dataObject.title.slice(0, 50)}...`
+                                : dataObject.title
+                        },
+                        label: (item) => {
+                            debugger
+                            const dataObject = this._data[item.dataIndex][item.datasetIndex]
+                            return dataObject.body.length > 50
+                                ? `${dataObject.body.slice(0, 50)}...`
+                                : dataObject.body
+                        }
+                    }
                 }
             },
             responsive: true,

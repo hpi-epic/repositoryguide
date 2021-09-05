@@ -142,7 +142,9 @@ function construct_pull_request_review_buckets(
             value: pull_requests[i - 1]
                 ? calculate_first_review_for_pull_request(pull_requests[i - 1])
                 : 0,
-            url: pull_requests[i - 1] ? pull_requests[i - 1].node.url : ''
+            url: pull_requests[i - 1] ? pull_requests[i - 1].node.url : '',
+            title: pull_requests[i - 1] ? pull_requests[i - 1].node.title : '',
+            body: pull_requests[i - 1] ? pull_requests[i - 1].node.body : ''
         }
         data.push(data_object)
     }
@@ -409,6 +411,8 @@ async function get_pull_requests_with_review_and_comments(auth, owner, project) 
                         cursor
                         node {
                             url
+                            title
+                            body
                             author {
                                 login
                             }
@@ -620,7 +624,6 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
             config.teams[config.team_index]
         )
     }
-    debugger
 
     let data
     if (sprint_segmented) {
