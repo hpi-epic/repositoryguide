@@ -683,3 +683,50 @@ export async function get_issue_submit_times(config, sprint_segmented) {
 
     return [{ label: 'Sprint 0', value: construct_heatmap_of_issue_submit_times(issues) }]
 }
+
+export async function get_issue_submitters(config, sprint_segmented) {
+    let issues = await get_issues(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+
+    if (config.team_index) {
+        issues = await select_issues_for_team(issues, config.teams[config.team_index], config)
+    }
+
+    if (sprint_segmented) {
+        const issue_groups = {}
+        config.sprints.forEach((sprint, index) => {
+            issue_groups[index] = []
+        })
+        issue_groups['not within sprint'] = []
+
+        for (let issue_index = 0; issue_index < issues.length; issue_index++) {
+            const issue = issues[issue_index]
+            let found = false
+
+            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
+                const sprint = config.sprints[sprint_index]
+                const submit_date = Date.parse(issue.created_at)
+
+                if (sprint.from <= submit_date && submit_date < sprint.to) {
+                    issue_groups[sprint_index].push(issue)
+                    found = true
+                    break
+                }
+            }
+
+            if (!found) {
+                issue_groups['not within sprint'].push(issue)
+            }
+        }
+
+        return Object.keys(issue_groups).map((sprint) => ({
+            label: `Sprint ${sprint}`,
+            value: construct_heatmap_of_issue_submit_times(issue_groups[sprint])
+        }))
+    }
+
+    return [{ label: 'Sprint 0', value: construct_heatmap_of_issue_submit_times(issues) }]
+}
