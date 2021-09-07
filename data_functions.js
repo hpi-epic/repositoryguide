@@ -8,10 +8,10 @@ import { graphql } from 'https://cdn.skypack.dev/@octokit/graphql'
 // ------------------- Metrices ------------------- //
 import {
     buckets,
+    closed_pull_request_open_duration_in_hours,
     issue_size,
     issue_size_bucket,
-    pull_request_closing_time,
-    pull_request_closing_time_bucket,
+    pull_request_open_duration_bucket
     calculate_first_review_for_pull_request
 } from './metrics.js'
 
@@ -20,28 +20,33 @@ import { deepClone, get_max, get_min, sort_descending_by_value } from './utils.j
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
 
-const octokit = (auth) =>
-    new MyOctokit({
-        userAgent: 'Agile Research',
-        auth: auth,
-        throttle: {
-            onRateLimit: (retryAfter, options, octo) => {
-                octo.log.warn(
-                    `Request quota exhausted for request ${options.method} ${options.url}`
-                )
+const octokit = (auth) => new MyOctokit({
+    userAgent: 'Agile Research',
+    auth: auth,
+    throttle: {
+        onRateLimit: (retryAfter, options, octo) => {
+            octo.log.warn(
+                `Request quota exhausted for request ${options.method} ${options.url}`
+            )
 
-                if (options.request.retryCount === 0) {
-                    octo.log.info(`Retrying after ${retryAfter} seconds!`)
-                    return true
-                }
-
-                return false
-            },
-            onAbuseLimit: (retryAfter, options, octo) => {
-                octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
+            if (options.request.retryCount === 0) {
+                octo.log.info(`Retrying after ${retryAfter} seconds!`)
+                return true
             }
+
+            return false
+        },
+        onAbuseLimit: (retryAfter, options, octo) => {
+            octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         }
-    })
+    }
+})
+
+const graphql_with_auth = (auth) => graphql.defaults({
+    headers: {
+        authorization: `token ${auth}`
+    }
+})
 
 const PER_PAGE = 50
 
@@ -122,7 +127,7 @@ function construct_pull_request_buckets(pull_requests) {
     })
 
     pull_requests.forEach((pull_request) => {
-        bucket_count[pull_request_closing_time_bucket(pull_request)] += 1
+        bucket_count[pull_request_open_duration_bucket(pull_request)] += 1
     })
 
     return Object.keys(bucket_count).map((bucket) => ({
@@ -325,13 +330,7 @@ async function get_detailed_commits(auth, owner, project) {
     let last_commit_cursor = null
 
     while (has_next_page) {
-        const graphql_with_auth = graphql.defaults({
-            headers: {
-                authorization: `token ${auth}`
-            }
-        })
-
-        const response = await graphql_with_auth(
+        const response = await graphql_with_auth(auth)(
             `
             query detailedCommits($owner: String!, $project: String!, $last_commit_cursor: String)
                 {
@@ -528,7 +527,7 @@ async function get_collaborators(config) {
     )
 }
 
-export async function get_pull_request_closing_times(config, sprint_segmented) {
+export async function get_pull_request_open_durations(config, sprint_segmented) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
@@ -547,15 +546,16 @@ export async function get_pull_request_closing_times(config, sprint_segmented) {
     } else {
         data = pull_requests.map((pull_request) => ({
             label: pull_request.title,
-            value: pull_request_closing_time(pull_request)
+            value: closed_pull_request_open_duration_in_hours(pull_request)
         }))
+        data = data.filter((pullRequest) => pullRequest.value !== null)
         sort_descending_by_value(data)
     }
 
     return data
 }
 
-export async function get_pull_request_closing_time_buckets(config, sprint_segmented) {
+export async function get_pull_request_open_duration_buckets(config, sprint_segmented) {
     let pull_requests = await get_pull_requests(
         config.github_access_token,
         config.organization,
@@ -605,7 +605,6 @@ export async function get_pull_request_closing_time_buckets(config, sprint_segme
         )
     } else {
         data = construct_pull_request_buckets(pull_requests)
-        sort_descending_by_value(data)
     }
 
     return data
