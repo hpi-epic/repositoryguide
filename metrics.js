@@ -12,7 +12,7 @@ import {
     get_issue_submit_times,
     get_pull_request_open_duration_buckets,
     get_pull_request_open_durations,
-    get_issue_submitters
+    get_top_issue_submitters
 } from './data_functions.js'
 
 export const metrics = {
@@ -58,7 +58,7 @@ export const metrics = {
     },
     'Top issue submitters': {
         chart_class: HorizontalBarChart,
-        data_retrieval_function: get_issue_submitters,
+        data_retrieval_function: get_top_issue_submitters,
         sprint_segmented: true
     }
 }

@@ -19,33 +19,35 @@ import { deepClone, get_max, get_min, sort_descending_by_value } from './utils.j
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
 
-const octokit = (auth) => new MyOctokit({
-    userAgent: 'Agile Research',
-    auth: auth,
-    throttle: {
-        onRateLimit: (retryAfter, options, octo) => {
-            octo.log.warn(
-                `Request quota exhausted for request ${options.method} ${options.url}`
-            )
+const octokit = (auth) =>
+    new MyOctokit({
+        userAgent: 'Agile Research',
+        auth: auth,
+        throttle: {
+            onRateLimit: (retryAfter, options, octo) => {
+                octo.log.warn(
+                    `Request quota exhausted for request ${options.method} ${options.url}`
+                )
 
-            if (options.request.retryCount === 0) {
-                octo.log.info(`Retrying after ${retryAfter} seconds!`)
-                return true
+                if (options.request.retryCount === 0) {
+                    octo.log.info(`Retrying after ${retryAfter} seconds!`)
+                    return true
+                }
+
+                return false
+            },
+            onAbuseLimit: (retryAfter, options, octo) => {
+                octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
             }
-
-            return false
-        },
-        onAbuseLimit: (retryAfter, options, octo) => {
-            octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         }
-    }
-})
+    })
 
-const graphql_with_auth = (auth) => graphql.defaults({
-    headers: {
-        authorization: `token ${auth}`
-    }
-})
+const graphql_with_auth = (auth) =>
+    graphql.defaults({
+        headers: {
+            authorization: `token ${auth}`
+        }
+    })
 
 const PER_PAGE = 50
 
@@ -178,6 +180,17 @@ async function select_issues_for_team(issues, team, config) {
     ).then((results) => issues.filter((_, index) => results[index]))
 }
 
+async function select_issues_for_team_by_author(issues, team, config) {
+    const team_users = team.members.map((member) => member.name)
+    const filtered_issues = []
+    issues.forEach((issue) => {
+        if (team_users.includes(issue.node.author.login)) {
+            filtered_issues.push(issue)
+        }
+    })
+    return filtered_issues
+}
+
 async function get_commits(auth, owner, project) {
     return octokit(auth).paginate('GET /repos/{owner}/{repo}/commits', {
         owner: owner,
@@ -289,6 +302,39 @@ async function calculate_stats_for_commits(commits_separated_in_sprints, config)
     return newData
 }
 
+async function select_top_issue_submitters(issues_of_sprint, config) {
+    debugger
+    // TODO from here on
+    const newData = []
+    for (const commits_in_single_sprint of issues_of_sprint) {
+        let commit_sum = 0
+        let changes_sum = 0
+        const team_members = [] // how to get team members that have not contributed???
+        commits_in_single_sprint.forEach((commit) => {
+            if (commit.node.author.user) {
+                commit_sum += 1
+                changes_sum += commit.node.additions + commit.node.deletions
+                if (
+                    team_members.findIndex(
+                        (member) => member === commit.node.author.user.databaseId
+                    ) === -1
+                ) {
+                    team_members.push(commit.node.author.user.databaseId)
+                }
+            }
+        })
+
+        newData.push([
+            { label: 'Average Commits', value: commit_sum / team_members.length },
+            {
+                label: 'Average Changes',
+                value: changes_sum / team_members.length / commit_sum
+            }
+        ])
+    }
+    return newData
+}
+
 async function get_detailed_commits(auth, owner, project) {
     let has_next_page = true
     const data = []
@@ -341,6 +387,55 @@ async function get_detailed_commits(auth, owner, project) {
 
         data.push(...response.repository.defaultBranchRef.target.history.edges)
         has_next_page = response.repository.defaultBranchRef.target.history.pageInfo.hasNextPage
+        const last_element = data[data.length - 1]
+        last_commit_cursor = `${last_element.cursor}`
+    }
+
+    return data
+}
+
+async function get_issue_submitters(auth, owner, project) {
+    let has_next_page = true
+    const data = []
+    let last_commit_cursor = null
+
+    while (has_next_page) {
+        const response = await graphql_with_auth(auth)(
+            `
+            query detailedCommits(
+              $owner: String!
+              $project: String!
+              $last_commit_cursor: String
+            ) {
+              repository(owner: $owner, name: $project) {
+                issues(first: 100, after: $last_commit_cursor) {
+                  pageInfo {
+                    hasNextPage
+                  }
+                  edges {
+                    cursor
+                    node {
+                      title
+                      number
+                      createdAt
+                      url
+                      author {
+                        login
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            `,
+            {
+                owner: owner,
+                project: project,
+                last_commit_cursor: last_commit_cursor
+            }
+        )
+        data.push(...response.repository.issues.edges)
+        has_next_page = response.repository.issues.pageInfo.hasNextPage
         const last_element = data[data.length - 1]
         last_commit_cursor = `${last_element.cursor}`
     }
@@ -684,17 +779,22 @@ export async function get_issue_submit_times(config, sprint_segmented) {
     return [{ label: 'Sprint 0', value: construct_heatmap_of_issue_submit_times(issues) }]
 }
 
-export async function get_issue_submitters(config, sprint_segmented) {
-    let issues = await get_issues(
+export async function get_top_issue_submitters(config, sprint_segmented) {
+    let issues = await get_issue_submitters(
         config.github_access_token,
         config.organization,
         config.repository
     )
 
     if (config.team_index) {
-        issues = await select_issues_for_team(issues, config.teams[config.team_index], config)
+        issues = await select_issues_for_team_by_author(
+            issues,
+            config.teams[config.team_index],
+            config
+        )
     }
 
+    debugger
     if (sprint_segmented) {
         const issue_groups = {}
         config.sprints.forEach((sprint, index) => {
@@ -708,7 +808,7 @@ export async function get_issue_submitters(config, sprint_segmented) {
 
             for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
                 const sprint = config.sprints[sprint_index]
-                const submit_date = Date.parse(issue.created_at)
+                const submit_date = Date.parse(issue.node.createdAt)
 
                 if (sprint.from <= submit_date && submit_date < sprint.to) {
                     issue_groups[sprint_index].push(issue)
@@ -721,12 +821,12 @@ export async function get_issue_submitters(config, sprint_segmented) {
                 issue_groups['not within sprint'].push(issue)
             }
         }
-
+        debugger
         return Object.keys(issue_groups).map((sprint) => ({
             label: `Sprint ${sprint}`,
-            value: construct_heatmap_of_issue_submit_times(issue_groups[sprint])
+            value: select_top_issue_submitters(issue_groups[sprint])
         }))
     }
 
-    return [{ label: 'Sprint 0', value: construct_heatmap_of_issue_submit_times(issues) }]
+    return [{ label: 'Sprint 0', value: select_top_issue_submitters(issues) }]
 }
