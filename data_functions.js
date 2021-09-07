@@ -11,7 +11,7 @@ import {
     closed_pull_request_open_duration_in_hours,
     issue_size,
     issue_size_bucket,
-    pull_request_open_duration_bucket
+    pull_request_open_duration_bucket,
     calculate_first_review_for_pull_request
 } from './metrics.js'
 
@@ -20,33 +20,35 @@ import { deepClone, get_max, get_min, sort_descending_by_value } from './utils.j
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
 
-const octokit = (auth) => new MyOctokit({
-    userAgent: 'Agile Research',
-    auth: auth,
-    throttle: {
-        onRateLimit: (retryAfter, options, octo) => {
-            octo.log.warn(
-                `Request quota exhausted for request ${options.method} ${options.url}`
-            )
+const octokit = (auth) =>
+    new MyOctokit({
+        userAgent: 'Agile Research',
+        auth: auth,
+        throttle: {
+            onRateLimit: (retryAfter, options, octo) => {
+                octo.log.warn(
+                    `Request quota exhausted for request ${options.method} ${options.url}`
+                )
 
-            if (options.request.retryCount === 0) {
-                octo.log.info(`Retrying after ${retryAfter} seconds!`)
-                return true
+                if (options.request.retryCount === 0) {
+                    octo.log.info(`Retrying after ${retryAfter} seconds!`)
+                    return true
+                }
+
+                return false
+            },
+            onAbuseLimit: (retryAfter, options, octo) => {
+                octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
             }
-
-            return false
-        },
-        onAbuseLimit: (retryAfter, options, octo) => {
-            octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         }
-    }
-})
+    })
 
-const graphql_with_auth = (auth) => graphql.defaults({
-    headers: {
-        authorization: `token ${auth}`
-    }
-})
+const graphql_with_auth = (auth) =>
+    graphql.defaults({
+        headers: {
+            authorization: `token ${auth}`
+        }
+    })
 
 const PER_PAGE = 50
 

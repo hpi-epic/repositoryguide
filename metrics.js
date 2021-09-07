@@ -11,7 +11,7 @@ import {
     get_issue_sizes,
     get_issue_submit_times,
     get_pull_request_open_duration_buckets,
-    get_pull_request_open_durations
+    get_pull_request_open_durations,
     get_pull_request_review_times
 } from './data_functions.js'
 
