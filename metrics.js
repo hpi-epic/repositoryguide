@@ -31,7 +31,7 @@ export const metrics = {
         data_retrieval_function: get_pull_request_closing_time_buckets,
         sprint_segmented: true
     },
-    'Pull request time to first interaction': {
+    'Pull request time to first interaction in hours': {
         chart_class: HorizontalStackedBarChart,
         data_retrieval_function: get_pull_request_review_times,
         sprint_segmented: true
