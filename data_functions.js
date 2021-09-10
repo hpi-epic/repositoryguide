@@ -155,15 +155,7 @@ function construct_pull_request_review_buckets(
         }
         data.push(data_object)
     }
-    /* pull_requests.forEach((pull_request) => {
-        const data_object = {
-            label: `PR ${count}`,
-            value: calculate_first_review_for_pull_request(pull_request),
-            url: pull_request.node.url
-        }
-        data.push(data_object)
-        count += 1
-    }) */
+
     return data
 }
 
@@ -644,10 +636,9 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
 
             for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
                 const sprint = config.sprints[sprint_index]
-                // why not created date?
-                const closed_date = Date.parse(pull_request.node.closedAt)
+                const open_date = Date.parse(pull_request.node.createdAt)
 
-                if (sprint.from <= closed_date && closed_date < sprint.to) {
+                if (sprint.from <= open_date && open_date < sprint.to) {
                     pull_request_groups[sprint_index].push(pull_request)
                     found = true
                     break
