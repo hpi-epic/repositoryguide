@@ -303,36 +303,27 @@ async function calculate_stats_for_commits(commits_separated_in_sprints, config)
 }
 
 async function select_top_issue_submitters(issues_of_sprint, config) {
-    debugger
-    // TODO from here on
-    const newData = []
-    for (const commits_in_single_sprint of issues_of_sprint) {
-        let commit_sum = 0
-        let changes_sum = 0
-        const team_members = [] // how to get team members that have not contributed???
-        commits_in_single_sprint.forEach((commit) => {
-            if (commit.node.author.user) {
-                commit_sum += 1
-                changes_sum += commit.node.additions + commit.node.deletions
-                if (
-                    team_members.findIndex(
-                        (member) => member === commit.node.author.user.databaseId
-                    ) === -1
-                ) {
-                    team_members.push(commit.node.author.user.databaseId)
-                }
-            }
-        })
+    const submitters = []
 
-        newData.push([
-            { label: 'Average Commits', value: commit_sum / team_members.length },
-            {
-                label: 'Average Changes',
-                value: changes_sum / team_members.length / commit_sum
-            }
-        ])
-    }
-    return newData
+    issues_of_sprint.forEach((issue) => {
+        const issue_author = issue.node.author.login
+        const index = submitters.findIndex((author) => author.name === issue_author)
+        const issue_number = issue.node.number
+
+        if (index === -1) {
+            submitters.push({
+                name: issue_author,
+                issue_numbers: [issue_number],
+                submissions: 1
+            })
+        } else {
+            submitters[index].issue_numbers.push(issue_number)
+            submitters[index].submissions += 1
+        }
+    })
+
+    submitters.sort((a, b) => b.submissions - a.submissions)
+    return submitters
 }
 
 async function get_detailed_commits(auth, owner, project) {
@@ -794,7 +785,6 @@ export async function get_top_issue_submitters(config, sprint_segmented) {
         )
     }
 
-    debugger
     if (sprint_segmented) {
         const issue_groups = {}
         config.sprints.forEach((sprint, index) => {
@@ -821,7 +811,7 @@ export async function get_top_issue_submitters(config, sprint_segmented) {
                 issue_groups['not within sprint'].push(issue)
             }
         }
-        debugger
+
         return Object.keys(issue_groups).map((sprint) => ({
             label: `Sprint ${sprint}`,
             value: select_top_issue_submitters(issue_groups[sprint])
