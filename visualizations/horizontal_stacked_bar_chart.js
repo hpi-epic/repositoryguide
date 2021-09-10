@@ -68,13 +68,16 @@ export default class HorizontalStackedBarChart extends MultipleDatasetChart {
                         label: (item) => {
                             const data_object = this._data[item.dataIndex][item.datasetIndex]
                             const value_string = `${this._data_title}: ${data_object.value}`
-                            return [
-                                value_string,
-                                data_object.body.length > 50
-                                    ? `${data_object.body.slice(0, 50)}...`
-                                    : data_object.body
-                            ]
+                            return value_string
                         }
+                    }
+                },
+                datalabels: {
+                    display: function (ctx) {
+                        const scale = ctx.chart.scales.x
+                        const value = ctx.dataset.data[ctx.dataIndex]
+                        const range = Math.max(scale.max - scale.min, 1)
+                        return (ctx.chart.height / range) * value > 16
                     }
                 }
             },
