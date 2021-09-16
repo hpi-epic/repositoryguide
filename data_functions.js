@@ -19,33 +19,35 @@ import { deepClone, get_max, get_min, sort_descending_by_value } from './utils.j
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
 
-const octokit = (auth) => new MyOctokit({
-    userAgent: 'Agile Research',
-    auth: auth,
-    throttle: {
-        onRateLimit: (retryAfter, options, octo) => {
-            octo.log.warn(
-                `Request quota exhausted for request ${options.method} ${options.url}`
-            )
+const octokit = (auth) =>
+    new MyOctokit({
+        userAgent: 'Agile Research',
+        auth: auth,
+        throttle: {
+            onRateLimit: (retryAfter, options, octo) => {
+                octo.log.warn(
+                    `Request quota exhausted for request ${options.method} ${options.url}`
+                )
 
-            if (options.request.retryCount === 0) {
-                octo.log.info(`Retrying after ${retryAfter} seconds!`)
-                return true
+                if (options.request.retryCount === 0) {
+                    octo.log.info(`Retrying after ${retryAfter} seconds!`)
+                    return true
+                }
+
+                return false
+            },
+            onAbuseLimit: (retryAfter, options, octo) => {
+                octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
             }
-
-            return false
-        },
-        onAbuseLimit: (retryAfter, options, octo) => {
-            octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         }
-    }
-})
+    })
 
-const graphql_with_auth = (auth) => graphql.defaults({
-    headers: {
-        authorization: `token ${auth}`
-    }
-})
+const graphql_with_auth = (auth) =>
+    graphql.defaults({
+        headers: {
+            authorization: `token ${auth}`
+        }
+    })
 
 const PER_PAGE = 50
 
@@ -104,6 +106,13 @@ async function get_team_members(auth, org, team_slug) {
 
 async function get_collaborators_for_repository(auth, owner, repo) {
     return octokit(auth).paginate('GET /repos/{owner}/{repo}/collaborators', {
+        owner: owner,
+        repo: repo
+    })
+}
+
+async function get_anonymous_contributors_for_repository(auth, owner, repo) {
+    return octokit(auth).paginate('GET /repos/{owner}/{repo}/contributors?anon=1', {
         owner: owner,
         repo: repo
     })
@@ -542,6 +551,28 @@ export async function get_unregistered_collaborators(config) {
     return collaborators.filter(
         (collaborator) => !registered_collaborator_ids.includes(collaborator.id)
     )
+}
+
+export async function get_anonymous_contributors(config) {
+    if (!config.organization || !config.repository) {
+        return []
+    }
+
+    const anonymous_contributors = await get_anonymous_contributors_for_repository(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    ).then((result) =>
+        result.filter((contributor) => {
+            if (contributor.type == 'Anonymous') {
+                return true
+            }
+            return false
+        })
+    )
+
+    debugger
+    return anonymous_contributors
 }
 
 export async function get_commit_times(config, sprint_segmented) {
