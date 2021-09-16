@@ -1,6 +1,6 @@
 import MultipleDatasetChart from './multiple_dataset_chart.js'
 
-export default class Horizontal_bar_chart extends MultipleDatasetChart {
+export default class Multiple_horizontal_bar_chart extends MultipleDatasetChart {
     constructor(parameters = { canvas: null, statistics_container: null }) {
         super(parameters)
     }
@@ -29,7 +29,7 @@ export default class Horizontal_bar_chart extends MultipleDatasetChart {
                         },
                         label: (item) => {
                             const data_object = this._data[item.dataIndex].value[item.datasetIndex]
-                            return data_object.submissions
+                            return data_object.value
                         }
                     }
                 }
@@ -46,6 +46,12 @@ export default class Horizontal_bar_chart extends MultipleDatasetChart {
                     display: true,
                     barThickness: 1000
                 }
+            },
+            onClick: (event, clickedElements) => {
+                const stack_index = clickedElements[0].index
+                const index = clickedElements[0].datasetIndex
+                const object = this._data[stack_index].value[index]
+                window.open(object.url, '_blank')
             }
         }
     }
@@ -75,11 +81,10 @@ export default class Horizontal_bar_chart extends MultipleDatasetChart {
                     }
                 }
             }
-            dataset.label = `${this.data_title} Place ${i + 1}`
 
             dataset.data = this.data.map((element) => {
                 if (element.value[i]) {
-                    return element.value[i].submissions
+                    return element.value[i].value
                 }
             })
 
@@ -88,7 +93,6 @@ export default class Horizontal_bar_chart extends MultipleDatasetChart {
                 `${(255 / dispayed_number) * (dispayed_number - i)},` +
                 `${(255 / dispayed_number) * i},`
 
-            dataset.type = 'bar'
             dataset.borderColor = `${color_base}1)`
             dataset.backgroundColor = `${color_base}0.25)`
             dataset.hoverBackgroundColor = `${color_base}1)`

@@ -309,19 +309,20 @@ function select_top_issue_submitters(issues_of_sprint, config) {
         const issue_author = issue.node.author.login
         const index = submitters.findIndex((author) => author.name === issue_author)
         const issue_number = issue.node.number
-        debugger
+
         if (index === -1) {
             submitters.push({
                 name: issue_author,
                 issue_numbers: [issue_number],
-                submissions: 1
+                value: 1,
+                url: issue.node.author.url
             })
         } else {
             submitters[index].issue_numbers.push(issue_number)
-            submitters[index].submissions += 1
+            submitters[index].value += 1
         }
     })
-    submitters.sort((a, b) => b.submissions - a.submissions)
+    submitters.sort((a, b) => b.value - a.value)
     return submitters
 }
 
@@ -411,6 +412,7 @@ async function get_issue_submitters(auth, owner, project) {
                       url
                       author {
                         login
+                        url
                       }
                     }
                   }
