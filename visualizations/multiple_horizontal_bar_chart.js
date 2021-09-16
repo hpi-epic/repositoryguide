@@ -31,7 +31,8 @@ export default class Multiple_horizontal_bar_chart extends MultipleDatasetChart 
                             const data_object = this._data[item.dataIndex].value[item.datasetIndex]
                             return data_object.value
                         }
-                    }
+                    },
+                    displayColors: false
                 }
             },
             responsive: true,
