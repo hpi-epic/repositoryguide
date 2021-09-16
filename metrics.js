@@ -2,7 +2,7 @@ import Heatmap from './visualizations/heatmap.js'
 import StackedBarChart from './visualizations/stacked_bar_chart.js'
 import BarChart from './visualizations/bar_chart.js'
 import MultipleLineChart from './visualizations/multiple_line_chart.js'
-import HorizontalBarChart from './visualizations/HorizontalBarChart.js'
+import Horizontal_bar_chart from './visualizations/horizontal_bar_chart.js'
 
 import {
     get_commit_amounts,
@@ -57,7 +57,7 @@ export const metrics = {
         sprint_segmented: true
     },
     'Top issue submitters': {
-        chart_class: HorizontalBarChart,
+        chart_class: Horizontal_bar_chart,
         data_retrieval_function: get_top_issue_submitters,
         sprint_segmented: true
     }

@@ -302,14 +302,14 @@ async function calculate_stats_for_commits(commits_separated_in_sprints, config)
     return newData
 }
 
-async function select_top_issue_submitters(issues_of_sprint, config) {
+function select_top_issue_submitters(issues_of_sprint, config) {
     const submitters = []
 
     issues_of_sprint.forEach((issue) => {
         const issue_author = issue.node.author.login
         const index = submitters.findIndex((author) => author.name === issue_author)
         const issue_number = issue.node.number
-
+        debugger
         if (index === -1) {
             submitters.push({
                 name: issue_author,
@@ -321,7 +321,6 @@ async function select_top_issue_submitters(issues_of_sprint, config) {
             submitters[index].submissions += 1
         }
     })
-
     submitters.sort((a, b) => b.submissions - a.submissions)
     return submitters
 }
