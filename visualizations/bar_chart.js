@@ -61,6 +61,13 @@ export default class BarChart extends MetricChart {
                     offset: true,
                     display: true
                 }
+            },
+            onClick: (event, clickedElements) => {
+                const { index } = clickedElements[0]
+                const object = this._data[index]
+                if (object.url) {
+                    window.open(object.url, '_blank')
+                }
             }
         }
     }

@@ -19,33 +19,35 @@ import { deepClone, get_max, get_min, sort_descending_by_value } from './utils.j
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
 
-const octokit = (auth) => new MyOctokit({
-    userAgent: 'Agile Research',
-    auth: auth,
-    throttle: {
-        onRateLimit: (retryAfter, options, octo) => {
-            octo.log.warn(
-                `Request quota exhausted for request ${options.method} ${options.url}`
-            )
+const octokit = (auth) =>
+    new MyOctokit({
+        userAgent: 'Agile Research',
+        auth: auth,
+        throttle: {
+            onRateLimit: (retryAfter, options, octo) => {
+                octo.log.warn(
+                    `Request quota exhausted for request ${options.method} ${options.url}`
+                )
 
-            if (options.request.retryCount === 0) {
-                octo.log.info(`Retrying after ${retryAfter} seconds!`)
-                return true
+                if (options.request.retryCount === 0) {
+                    octo.log.info(`Retrying after ${retryAfter} seconds!`)
+                    return true
+                }
+
+                return false
+            },
+            onAbuseLimit: (retryAfter, options, octo) => {
+                octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
             }
-
-            return false
-        },
-        onAbuseLimit: (retryAfter, options, octo) => {
-            octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         }
-    }
-})
+    })
 
-const graphql_with_auth = (auth) => graphql.defaults({
-    headers: {
-        authorization: `token ${auth}`
-    }
-})
+const graphql_with_auth = (auth) =>
+    graphql.defaults({
+        headers: {
+            authorization: `token ${auth}`
+        }
+    })
 
 const PER_PAGE = 50
 
@@ -409,7 +411,8 @@ export async function get_pull_request_open_durations(config, sprint_segmented) 
     } else {
         data = pull_requests.map((pull_request) => ({
             label: pull_request.title,
-            value: closed_pull_request_open_duration_in_hours(pull_request)
+            value: closed_pull_request_open_duration_in_hours(pull_request),
+            url: pull_request.html_url
         }))
         data = data.filter((pullRequest) => pullRequest.value !== null)
         sort_descending_by_value(data)
@@ -489,7 +492,8 @@ export async function get_issue_sizes(config, sprint_segmented) {
     } else {
         data = issues.map((issue) => ({
             label: issue.title,
-            value: issue_size(issue)
+            value: issue_size(issue),
+            url: issue.html_url
         }))
         sort_descending_by_value(data)
     }
