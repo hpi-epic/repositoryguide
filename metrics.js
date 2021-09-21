@@ -2,6 +2,7 @@ import Heatmap from './visualizations/heatmap.js'
 import StackedBarChart from './visualizations/stacked_bar_chart.js'
 import BarChart from './visualizations/bar_chart.js'
 import MultipleLineChart from './visualizations/multiple_line_chart.js'
+import Multiple_horizontal_bar_chart from './visualizations/multiple_horizontal_bar_chart.js'
 
 import {
     get_commit_amounts,
@@ -10,7 +11,8 @@ import {
     get_issue_sizes,
     get_issue_submit_times,
     get_pull_request_open_duration_buckets,
-    get_pull_request_open_durations
+    get_pull_request_open_durations,
+    get_top_issue_submitters
 } from './data_functions.js'
 
 export const metrics = {
@@ -52,6 +54,11 @@ export const metrics = {
     'Commit amounts per sprint': {
         chart_class: MultipleLineChart,
         data_retrieval_function: get_commit_amounts,
+        sprint_segmented: true
+    },
+    'Top issue submitters': {
+        chart_class: Multiple_horizontal_bar_chart,
+        data_retrieval_function: get_top_issue_submitters,
         sprint_segmented: true
     }
 }
