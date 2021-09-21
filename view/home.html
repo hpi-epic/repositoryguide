@@ -211,6 +211,9 @@
                         data-metric='Pull request open durations in buckets per sprint'
                     ></div>
                 </div>
+
+                <hr class='border-3 border-bottom' />
+
                 <div
                   class='chart_container'
                   id="pr_total_interactions_container"
@@ -228,6 +231,27 @@
                       data-metric='Pull request total interactions'
                     ></div>
                 </div>
+
+                <hr class='border-3 border-bottom' />
+
+                <div
+                  class='chart_container'
+                  id='pr_first_review_time'
+                >
+                    <h4>Pull request time to first team mate interaction per sprint</h4>
+                    <p class='metric_explanation'></p>
+                    <div class='chart-canvas-container'>
+                        <canvas
+                          class='svg-container chart-canvas'
+                          data-metric='Pull request time to first interaction in hours'
+                        ></canvas>
+                    </div>
+                    <div
+                      class='chart-statistics-container'
+                      data-metric='Pull request time to first interaction in hours'
+                    ></div>
+                </div>
+
             </div>
             <div
                 class='tab-pane'
@@ -318,6 +342,24 @@
                         data-metric='Issue submit times'
                     ></div>
                 </div>
+
+                <hr class='border-3 border-bottom' />
+
+                <div class='chart_container' id='top_issue_submitters_container'>
+                    <h4>Top issue submitters</h4>
+                    <p class='metric_explanation'></p>
+                    <div class='chart-canvas-container'>
+                        <canvas
+                          class='svg-container chart-canvas'
+                          data-metric='Top issue submitters'
+                        ></canvas>
+                    </div>
+                    <div
+                      class='chart-statistics-container'
+                      data-metric='Top issue submitters'
+                    ></div>
+                </div>
+
             </div>
         </div>
     </div>
