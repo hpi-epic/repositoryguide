@@ -62,7 +62,9 @@ const team_based_timeline_event_types = [
     'ReviewRequestedEvent',
     'ReviewRequestRemovedEvent',
     'UnlabeledEvent',
-    'UnassignedEvent'
+    'UnassignedEvent',
+    'AddedToProjectEvent',
+    'RemovedFromProjectEvent'
 ]
 
 // ------------------- helper methods ------------------- //
@@ -317,9 +319,20 @@ function count_interactions_for_pull_requests(pull_requests, config) {
         interactions_count += pull_request.node.comments.nodes.length
         interactions_count += pull_request.node.reactions.nodes.length
         interactions_count += pull_request.node.reviews.nodes.length
-        interactions_count += count_team_based_timeline_events(
+
+        let review_comments_count = 0
+        if (pull_request.node.reviews.nodes.length !== 0) {
+            pull_request.node.reviews.nodes.forEach((review) => {
+                review_comments_count += review.comments.nodes.length
+            })
+        }
+
+        interactions_count += review_comments_count
+        const team_based_events_count = count_team_based_timeline_events(
             pull_request.node.timelineItems.nodes
         )
+        interactions_count += team_based_events_count
+        debugger
 
         newData.push({
             label: `#${pull_request.node.number} ${pull_request.node.title}`,
