@@ -1,6 +1,5 @@
 import Config from './config.js'
 import { get_parameters, remove_children } from './utils.js'
-import { add_header } from '../components/components.js'
 
 const parameters = get_parameters(window.location.href)
 const config = Config.from_storage()
@@ -30,10 +29,8 @@ function initialize_member_list() {
     })
 }
 
-async function initialize() {
-    await add_header()
-    document.getElementById('button_navigate_teams').classList.add('active')
-
+function initialize() {
+    // document.getElementById('button_navigate_teams').classList.add('active')
     initialize_member_list()
 }
 

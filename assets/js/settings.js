@@ -1,6 +1,5 @@
 import Config from './config.js'
 import { remove_children } from './utils.js'
-import { add_header } from '../components/components.js'
 
 let config = Config.from_storage()
 
@@ -64,8 +63,7 @@ window.onunload = () => {
 }
 
 async function initialize(config) {
-    await add_header()
-    document.getElementById('button_navigate_settings').classList.add('active')
+    // document.getElementById('button_navigate_settings').classList.add('active')
 
     inputs.input_organization.value = config.organization
     inputs.input_repository.value = config.repository

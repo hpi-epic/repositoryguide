@@ -1,5 +1,4 @@
 import Config from './config.js'
-import { add_header } from '../components/components.js'
 
 const container_sprints = document.getElementById('container_sprints')
 const config = Config.from_storage()
@@ -8,7 +7,7 @@ function getDateString(date) {
     return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`
 }
 
-async function append_table_row_for_sprint(sprint, index) {
+function append_table_row_for_sprint(sprint, index) {
     const row = document.getElementById('template_sprint_row').content.cloneNode(true)
     const startDate = new Date(sprint.from)
     const endDate = new Date(sprint.to)
@@ -20,10 +19,8 @@ async function append_table_row_for_sprint(sprint, index) {
     container_sprints.appendChild(row)
 }
 
-async function initialize() {
-    await add_header()
-    document.getElementById('button_navigate_sprint').classList.add('active')
-
+function initialize() {
+    // document.getElementById('button_navigate_sprint').classList.add('active')
     config.sprints.forEach((sprint, index) => {
         append_table_row_for_sprint(sprint, index)
     })
