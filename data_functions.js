@@ -332,7 +332,6 @@ function count_interactions_for_pull_requests(pull_requests, config) {
             pull_request.node.timelineItems.nodes
         )
         interactions_count += team_based_events_count
-        debugger
 
         newData.push({
             label: `#${pull_request.node.number} ${pull_request.node.title}`,
@@ -340,7 +339,9 @@ function count_interactions_for_pull_requests(pull_requests, config) {
             url: pull_request.node.url
         })
     })
-    return sort_descending_by_value(newData)
+    const data = sort_descending_by_value(newData)
+    debugger
+    return data
 }
 
 function count_team_based_timeline_events(timeline_items) {
@@ -458,12 +459,12 @@ async function get_pull_request_interactions(auth, owner, project) {
                           }
                         }
                       }
-                      reviews(first: 10) {
+                      reviews(first: 65) {
                         nodes {
                           state
                           createdAt
                           body
-                          comments(first: 100) {
+                          comments(first: 65) {
                             nodes {
                               body
                             }
