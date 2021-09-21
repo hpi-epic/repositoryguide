@@ -187,6 +187,17 @@ async function select_issues_for_team(issues, team, config) {
     ).then((results) => issues.filter((_, index) => results[index]))
 }
 
+async function select_issues_for_team_by_author(issues, team, config) {
+    const team_users = team.members.map((member) => member.name)
+    const filtered_issues = []
+    issues.forEach((issue) => {
+        if (team_users.includes(issue.node.author.login)) {
+            filtered_issues.push(issue)
+        }
+    })
+    return filtered_issues
+}
+
 async function get_commits(auth, owner, project) {
     return octokit(auth).paginate('GET /repos/{owner}/{repo}/commits', {
         owner: owner,
@@ -298,6 +309,30 @@ async function calculate_stats_for_commits(commits_separated_in_sprints, config)
     return newData
 }
 
+function select_top_issue_submitters(issues_of_sprint, config) {
+    const submitters = []
+
+    issues_of_sprint.forEach((issue) => {
+        const issue_author = issue.node.author.login
+        const index = submitters.findIndex((author) => author.name === issue_author)
+        const issue_number = issue.node.number
+
+        if (index === -1) {
+            submitters.push({
+                name: issue_author,
+                issue_numbers: [issue_number],
+                value: 1,
+                url: issue.node.author.url
+            })
+        } else {
+            submitters[index].issue_numbers.push(issue_number)
+            submitters[index].value += 1
+        }
+    })
+    submitters.sort((a, b) => b.value - a.value)
+    return submitters
+}
+
 async function get_detailed_commits(auth, owner, project) {
     let has_next_page = true
     const data = []
@@ -350,6 +385,56 @@ async function get_detailed_commits(auth, owner, project) {
 
         data.push(...response.repository.defaultBranchRef.target.history.edges)
         has_next_page = response.repository.defaultBranchRef.target.history.pageInfo.hasNextPage
+        const last_element = data[data.length - 1]
+        last_commit_cursor = `${last_element.cursor}`
+    }
+
+    return data
+}
+
+async function get_issue_submitters(auth, owner, project) {
+    let has_next_page = true
+    const data = []
+    let last_commit_cursor = null
+
+    while (has_next_page) {
+        const response = await graphql_with_auth(auth)(
+            `
+            query detailedCommits(
+              $owner: String!
+              $project: String!
+              $last_commit_cursor: String
+            ) {
+              repository(owner: $owner, name: $project) {
+                issues(first: 100, after: $last_commit_cursor) {
+                  pageInfo {
+                    hasNextPage
+                  }
+                  edges {
+                    cursor
+                    node {
+                      title
+                      number
+                      createdAt
+                      url
+                      author {
+                        login
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            `,
+            {
+                owner: owner,
+                project: project,
+                last_commit_cursor: last_commit_cursor
+            }
+        )
+        data.push(...response.repository.issues.edges)
+        has_next_page = response.repository.issues.pageInfo.hasNextPage
         const last_element = data[data.length - 1]
         last_commit_cursor = `${last_element.cursor}`
     }
@@ -713,4 +798,55 @@ export async function get_issue_submit_times(config, sprint_segmented) {
     }
 
     return [{ label: 'Sprint 0', value: construct_heatmap_of_issue_submit_times(issues) }]
+}
+
+export async function get_top_issue_submitters(config, sprint_segmented) {
+    let issues = await get_issue_submitters(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+
+    if (config.team_index) {
+        issues = await select_issues_for_team_by_author(
+            issues,
+            config.teams[config.team_index],
+            config
+        )
+    }
+
+    if (sprint_segmented) {
+        const issue_groups = {}
+        config.sprints.forEach((sprint, index) => {
+            issue_groups[index] = []
+        })
+        issue_groups['not within sprint'] = []
+
+        for (let issue_index = 0; issue_index < issues.length; issue_index++) {
+            const issue = issues[issue_index]
+            let found = false
+
+            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
+                const sprint = config.sprints[sprint_index]
+                const submit_date = Date.parse(issue.node.createdAt)
+
+                if (sprint.from <= submit_date && submit_date < sprint.to) {
+                    issue_groups[sprint_index].push(issue)
+                    found = true
+                    break
+                }
+            }
+
+            if (!found) {
+                issue_groups['not within sprint'].push(issue)
+            }
+        }
+
+        return Object.keys(issue_groups).map((sprint) => ({
+            label: `Sprint ${sprint}`,
+            value: select_top_issue_submitters(issue_groups[sprint])
+        }))
+    }
+
+    return [{ label: 'Sprint 0', value: select_top_issue_submitters(issues) }]
 }
