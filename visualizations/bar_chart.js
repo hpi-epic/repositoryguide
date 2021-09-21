@@ -59,7 +59,7 @@ export default class BarChart extends MetricChart {
                 x: {
                     stacked: false,
                     offset: true,
-                    display: true
+                    display: false
                 }
             }
         }

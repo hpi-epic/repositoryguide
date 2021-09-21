@@ -19,35 +19,51 @@ import { deepClone, get_max, get_min, sort_descending_by_value } from './utils.j
 
 const MyOctokit = Octokit.plugin(paginateRest, throttling)
 
-const octokit = (auth) => new MyOctokit({
-    userAgent: 'Agile Research',
-    auth: auth,
-    throttle: {
-        onRateLimit: (retryAfter, options, octo) => {
-            octo.log.warn(
-                `Request quota exhausted for request ${options.method} ${options.url}`
-            )
+const octokit = (auth) =>
+    new MyOctokit({
+        userAgent: 'Agile Research',
+        auth: auth,
+        throttle: {
+            onRateLimit: (retryAfter, options, octo) => {
+                octo.log.warn(
+                    `Request quota exhausted for request ${options.method} ${options.url}`
+                )
 
-            if (options.request.retryCount === 0) {
-                octo.log.info(`Retrying after ${retryAfter} seconds!`)
-                return true
+                if (options.request.retryCount === 0) {
+                    octo.log.info(`Retrying after ${retryAfter} seconds!`)
+                    return true
+                }
+
+                return false
+            },
+            onAbuseLimit: (retryAfter, options, octo) => {
+                octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
             }
-
-            return false
-        },
-        onAbuseLimit: (retryAfter, options, octo) => {
-            octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
         }
-    }
-})
+    })
 
-const graphql_with_auth = (auth) => graphql.defaults({
-    headers: {
-        authorization: `token ${auth}`
-    }
-})
+const graphql_with_auth = (auth) =>
+    graphql.defaults({
+        headers: {
+            authorization: `token ${auth}`
+        }
+    })
 
 const PER_PAGE = 50
+const team_based_timeline_event_types = [
+    'AssignedEvent',
+    'CrossReferencedEvent',
+    'LabeledEvent',
+    'MergedEvent',
+    'MovedColumnsInProjectEvent',
+    'MovedColumnsInProjectEvent',
+    'ReferencedEvent',
+    'RenamedTitleEvent',
+    'ReviewRequestedEvent',
+    'ReviewRequestRemovedEvent',
+    'UnlabeledEvent',
+    'UnassignedEvent'
+]
 
 // ------------------- helper methods ------------------- //
 
@@ -112,6 +128,11 @@ async function get_collaborators_for_repository(auth, owner, repo) {
 function pull_requests_filtered_by_team(pull_requests, team) {
     const team_ids = team.members.map((member) => member.id)
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.user.id))
+}
+
+function pull_requests_with_review_and_comments_filtered_by_team(pull_requests, team) {
+    const team_ids = team.members.map((member) => member.name)
+    return pull_requests.filter((pull_request) => team_ids.includes(pull_request.node.author.login))
 }
 
 function construct_pull_request_buckets(pull_requests) {
@@ -289,6 +310,36 @@ async function calculate_stats_for_commits(commits_separated_in_sprints, config)
     return newData
 }
 
+function count_interactions_for_pull_requests(pull_requests, config) {
+    const newData = []
+    pull_requests.forEach((pull_request) => {
+        let interactions_count = 0
+        interactions_count += pull_request.node.comments.nodes.length
+        interactions_count += pull_request.node.reactions.nodes.length
+        interactions_count += pull_request.node.reviews.nodes.length
+        interactions_count += count_team_based_timeline_events(
+            pull_request.node.timelineItems.nodes
+        )
+
+        newData.push({
+            label: `#${pull_request.node.number} ${pull_request.node.title}`,
+            value: interactions_count,
+            url: pull_request.node.url
+        })
+    })
+    return sort_descending_by_value(newData)
+}
+
+function count_team_based_timeline_events(timeline_items) {
+    let count = 0
+    timeline_items.forEach((item) => {
+        if (team_based_timeline_event_types.includes(item.__typename)) {
+            count += 1
+        }
+    })
+    return count
+}
+
 async function get_detailed_commits(auth, owner, project) {
     let has_next_page = true
     const data = []
@@ -345,6 +396,84 @@ async function get_detailed_commits(auth, owner, project) {
         last_commit_cursor = `${last_element.cursor}`
     }
 
+    return data
+}
+
+async function get_pull_request_interactions(auth, owner, project) {
+    let has_next_page = true
+    const data = []
+    let last_pull_request_cursor = null
+
+    while (has_next_page) {
+        const response = await graphql_with_auth(auth)(
+            `
+            query interactionsPullRequests(
+              $owner: String!
+              $project: String!
+              $last_pull_request_cursor: String
+            ) {
+              repository(owner: $owner, name: $project) {
+                pullRequests(first: 100, after: $last_pull_request_cursor) {
+                  pageInfo {
+                    hasNextPage
+                  }
+                  edges {
+                    cursor
+                    node {
+                      url
+                      title
+                      number
+                      author {
+                        login
+                      }
+                      reactions(first: 10) {
+                        nodes {
+                          id
+                        }
+                      }
+                      timelineItems(first: 100) {
+                        nodes {
+                          __typename
+                        }
+                      }
+                      comments(first: 30) {
+                        nodes {
+                          body
+                          createdAt
+                          author {
+                            login
+                          }
+                        }
+                      }
+                      reviews(first: 10) {
+                        nodes {
+                          state
+                          createdAt
+                          body
+                          comments(first: 100) {
+                            nodes {
+                              body
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            `,
+            {
+                owner: owner,
+                project: project,
+                last_pull_request_cursor: last_pull_request_cursor
+            }
+        )
+        data.push(...response.repository.pullRequests.edges)
+        has_next_page = response.repository.pullRequests.pageInfo.hasNextPage
+        const last_element = data[data.length - 1]
+        last_pull_request_cursor = `${last_element.cursor}`
+    }
     return data
 }
 
@@ -682,4 +811,24 @@ export async function get_issue_submit_times(config, sprint_segmented) {
     }
 
     return [{ label: 'Sprint 0', value: construct_heatmap_of_issue_submit_times(issues) }]
+}
+
+export async function get_total_pull_request_interactions(config, sprint_segmented) {
+    let pull_requests = await get_pull_request_interactions(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+
+    if (config.team_index) {
+        pull_requests = pull_requests_with_review_and_comments_filtered_by_team(
+            pull_requests,
+            config.teams[config.team_index]
+        )
+    }
+    if (sprint_segmented) {
+        // todo
+    }
+
+    return count_interactions_for_pull_requests(pull_requests, config)
 }

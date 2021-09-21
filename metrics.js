@@ -10,7 +10,8 @@ import {
     get_issue_sizes,
     get_issue_submit_times,
     get_pull_request_open_duration_buckets,
-    get_pull_request_open_durations
+    get_pull_request_open_durations,
+    get_total_pull_request_interactions
 } from './data_functions.js'
 
 export const metrics = {
@@ -53,6 +54,11 @@ export const metrics = {
         chart_class: MultipleLineChart,
         data_retrieval_function: get_commit_amounts,
         sprint_segmented: true
+    },
+    'Pull request total interactions': {
+        chart_class: BarChart,
+        data_retrieval_function: get_total_pull_request_interactions,
+        sprint_segmented: false
     }
 }
 
