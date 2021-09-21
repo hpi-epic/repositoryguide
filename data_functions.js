@@ -112,6 +112,13 @@ async function get_collaborators_for_repository(auth, owner, repo) {
     })
 }
 
+async function get_anonymous_contributors_for_repository(auth, owner, repo) {
+    return octokit(auth).paginate('GET /repos/{owner}/{repo}/contributors?anon=1', {
+        owner: owner,
+        repo: repo
+    })
+}
+
 function pull_requests_filtered_by_team(pull_requests, team) {
     const team_ids = team.members.map((member) => member.id)
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.user.id))
@@ -823,6 +830,28 @@ export async function get_unregistered_collaborators(config) {
     return collaborators.filter(
         (collaborator) => !registered_collaborator_ids.includes(collaborator.id)
     )
+}
+
+export async function get_anonymous_contributors(config) {
+    if (!config.organization || !config.repository) {
+        return []
+    }
+
+    const anonymous_contributors = await get_anonymous_contributors_for_repository(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    ).then((result) =>
+        result.filter((contributor) => {
+            if (contributor.type == 'Anonymous') {
+                return true
+            }
+            return false
+        })
+    )
+
+    debugger
+    return anonymous_contributors
 }
 
 export async function get_commit_times(config, sprint_segmented) {
