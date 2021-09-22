@@ -1,5 +1,4 @@
 import MultipleDatasetChart from './multiple_dataset_chart.js'
-import BarChart from './bar_chart.js'
 
 import '../external/chartjs-plugin-datalabels.js'
 
@@ -67,8 +66,7 @@ export default class HorizontalStackedBarChart extends MultipleDatasetChart {
                         },
                         label: (item) => {
                             const data_object = this._data[item.dataIndex][item.datasetIndex]
-                            const value_string = `${this._data_title}: ${data_object.value}`
-                            return value_string
+                            return `${this._data_title}: ${data_object.value}`
                         }
                     }
                 },

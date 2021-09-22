@@ -59,20 +59,20 @@ export default class Multiple_horizontal_bar_chart extends MultipleDatasetChart 
 
     _construct_chart_datasets() {
         const datasets = []
-        let dispayed_number = 0
+        let displayed_number = 0
         const max_displayed = 5
 
         this.data.forEach((sprint_dataset) => {
-            sprint_dataset.value.length > dispayed_number
-                ? (dispayed_number = sprint_dataset.value.length)
-                : null
+            if (sprint_dataset.value.length > displayed_number) {
+                displayed_number = sprint_dataset.value.length
+            }
         })
 
-        if (dispayed_number > max_displayed) {
-            dispayed_number = max_displayed
+        if (displayed_number > max_displayed) {
+            displayed_number = max_displayed
         }
 
-        for (let i = 0; i < dispayed_number; i++) {
+        for (let i = 0; i < displayed_number; i++) {
             const dataset = {
                 type: 'bar',
                 borderWidth: 2,
@@ -87,12 +87,13 @@ export default class Multiple_horizontal_bar_chart extends MultipleDatasetChart 
                 if (element.value[i]) {
                     return element.value[i].value
                 }
+                return null
             })
 
             const color_base =
                 `rgba(0,` +
-                `${(255 / dispayed_number) * (dispayed_number - i)},` +
-                `${(255 / dispayed_number) * i},`
+                `${(255 / displayed_number) * (displayed_number - i)},` +
+                `${(255 / displayed_number) * i},`
 
             dataset.borderColor = `${color_base}1)`
             dataset.backgroundColor = `${color_base}0.25)`
