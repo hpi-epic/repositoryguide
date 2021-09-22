@@ -216,22 +216,41 @@
 
                 <div
                   class='chart_container'
-                  id='pr_first_review_time'
+                  id='pr_first_review_or_comment_time'
                 >
                     <h4>Pull request time to first interaction per sprint</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'><!--// TODO Sandro--></p>
                     <div class='chart-canvas-container'>
                         <canvas
                           class='svg-container chart-canvas'
-                          data-metric='Pull request time to first interaction in hours'
+                          data-metric='Pull request time to first interaction of other team members in hours'
                         ></canvas>
                     </div>
                     <div
                       class='chart-statistics-container'
-                      data-metric='Pull request time to first interaction in hours'
+                      data-metric='Pull request time to first interaction of other team members in hours'
                     ></div>
                 </div>
 
+                <hr class='border-3 border-bottom' />
+
+                <div
+                  class='chart_container'
+                  id='pr_first_review_time'
+                >
+                    <h4>Pull request time to first review per sprint</h4>
+                    <p class='metric_explanation'><!--// TODO Sandro--></p>
+                    <div class='chart-canvas-container'>
+                        <canvas
+                          class='svg-container chart-canvas'
+                          data-metric='Pull request time to first review in hours'
+                        ></canvas>
+                    </div>
+                    <div
+                      class='chart-statistics-container'
+                      data-metric='Pull request time to first review in hours'
+                    ></div>
+                </div>
             </div>
             <div
                 class='tab-pane'
