@@ -124,7 +124,7 @@ function pull_requests_filtered_by_team(pull_requests, team) {
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.user.id))
 }
 
-function pull_requests_with_review_and_comments_filtered_by_team(pull_requests, team) {
+function pull_request_nodes_filtered_by_team(pull_requests, team) {
     const team_ids = team.members.map((member) => member.name)
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.node.author.login))
 }
@@ -147,10 +147,10 @@ function construct_pull_request_buckets(pull_requests) {
 
 function construct_pull_request_review_buckets(
     pull_requests,
-    maximum_amout_of_pull_requests_per_sprint
+    maximum_amount_of_pull_requests_per_sprint
 ) {
     const data = []
-    for (let i = 1; i <= maximum_amout_of_pull_requests_per_sprint; i++) {
+    for (let i = 1; i <= maximum_amount_of_pull_requests_per_sprint; i++) {
         const data_object = {
             label: `PR ${i}`,
             value: pull_requests[i - 1]
@@ -546,7 +546,6 @@ async function get_pull_requests_with_review_and_comments(auth, owner, project) 
     return data
 }
 
-// TODO Sandro
 async function get_pull_requests_reviews(auth, owner, project) {
     let has_next_page = true
     const data = []
@@ -582,16 +581,6 @@ async function get_pull_requests_reviews(auth, owner, project) {
                             state
                             createdAt
                             closedAt
-                            comments(first: 10) {
-                                nodes {
-                                    body
-                                    createdAt
-                                    author {
-                                        login
-                                    }
-                                }
-                            }
-
                             reviews(first: 1) {
                                 nodes {
                                     state
@@ -783,7 +772,7 @@ export async function get_pull_request_review_and_comment_times(config, sprint_s
     )
     pull_requests = filter_closed_and_unreviewed(pull_requests)
     if (config.team_index) {
-        pull_requests = pull_requests_with_review_and_comments_filtered_by_team(
+        pull_requests = pull_request_nodes_filtered_by_team(
             pull_requests,
             config.teams[config.team_index]
         )
@@ -820,14 +809,14 @@ export async function get_pull_request_review_and_comment_times(config, sprint_s
                 pull_request_groups['not within sprint'].push(pull_request)
             }
         }
-        const maximum_amout_of_pull_requests_per_sprint = Object.values(pull_request_groups).reduce(
-            (a, b) => (a.length < b.length ? b : a)
-        ).length
+        const maximum_amount_of_pull_requests_per_sprint = Object.values(
+            pull_request_groups
+        ).reduce((a, b) => (a.length < b.length ? b : a)).length
 
         data = Object.keys(pull_request_groups).map((key) =>
             construct_pull_request_review_buckets(
                 pull_request_groups[key],
-                maximum_amout_of_pull_requests_per_sprint
+                maximum_amount_of_pull_requests_per_sprint
             )
         )
     } else {
@@ -847,7 +836,7 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
     )
     pull_requests = filter_closed_and_unreviewed(pull_requests)
     if (config.team_index) {
-        pull_requests = pull_requests_with_review_and_comments_filtered_by_team(
+        pull_requests = pull_request_nodes_filtered_by_team(
             pull_requests,
             config.teams[config.team_index]
         )
@@ -884,14 +873,14 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
                 pull_request_groups['not within sprint'].push(pull_request)
             }
         }
-        const maximum_amout_of_pull_requests_per_sprint = Object.values(pull_request_groups).reduce(
-            (a, b) => (a.length < b.length ? b : a)
-        ).length
+        const maximum_amount_of_pull_requests_per_sprint = Object.values(
+            pull_request_groups
+        ).reduce((a, b) => (a.length < b.length ? b : a)).length
 
         data = Object.keys(pull_request_groups).map((key) =>
             construct_pull_request_review_buckets(
                 pull_request_groups[key],
-                maximum_amout_of_pull_requests_per_sprint
+                maximum_amount_of_pull_requests_per_sprint
             )
         )
     } else {
