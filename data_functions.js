@@ -638,6 +638,40 @@ function filter_closed_and_unreviewed(pull_requests) {
     return filtered_pull_requests
 }
 
+function sort_pull_requests_into_sprint_groups(pull_requests, sprints) {
+    const pull_request_groups = {}
+
+    sprints.forEach((sprint, index) => {
+        pull_request_groups[index] = []
+    })
+    pull_request_groups['not within sprint'] = []
+
+    for (
+        let pull_request_index = 0;
+        pull_request_index < pull_requests.length;
+        pull_request_index++
+    ) {
+        const pull_request = pull_requests[pull_request_index]
+        let found = false
+
+        for (let sprint_index = 0; sprint_index < sprints.length; sprint_index++) {
+            const sprint = sprints[sprint_index]
+            const open_date = Date.parse(pull_request.node.createdAt)
+
+            if (sprint.from <= open_date && open_date < sprint.to) {
+                pull_request_groups[sprint_index].push(pull_request)
+                found = true
+                break
+            }
+        }
+
+        if (!found) {
+            pull_request_groups['not within sprint'].push(pull_request)
+        }
+    }
+    return pull_request_groups
+}
+
 // ------------------- public interface ------------------- //
 
 export async function get_teams(config) {
@@ -780,35 +814,10 @@ export async function get_pull_request_review_and_comment_times(config, sprint_s
 
     let data
     if (sprint_segmented) {
-        const pull_request_groups = {}
-        config.sprints.forEach((sprint, index) => {
-            pull_request_groups[index] = []
-        })
-        pull_request_groups['not within sprint'] = []
-
-        for (
-            let pull_request_index = 0;
-            pull_request_index < pull_requests.length;
-            pull_request_index++
-        ) {
-            const pull_request = pull_requests[pull_request_index]
-            let found = false
-
-            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
-                const sprint = config.sprints[sprint_index]
-                const open_date = Date.parse(pull_request.node.createdAt)
-
-                if (sprint.from <= open_date && open_date < sprint.to) {
-                    pull_request_groups[sprint_index].push(pull_request)
-                    found = true
-                    break
-                }
-            }
-
-            if (!found) {
-                pull_request_groups['not within sprint'].push(pull_request)
-            }
-        }
+        const pull_request_groups = sort_pull_requests_into_sprint_groups(
+            pull_requests,
+            config.sprints
+        )
         const maximum_amount_of_pull_requests_per_sprint = Object.values(
             pull_request_groups
         ).reduce((a, b) => (a.length < b.length ? b : a)).length
@@ -827,7 +836,6 @@ export async function get_pull_request_review_and_comment_times(config, sprint_s
     return data
 }
 
-// TODO Sandro
 export async function get_pull_request_review_times(config, sprint_segmented) {
     let pull_requests = await get_pull_requests_reviews(
         config.github_access_token,
@@ -844,35 +852,10 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
 
     let data
     if (sprint_segmented) {
-        const pull_request_groups = {}
-        config.sprints.forEach((sprint, index) => {
-            pull_request_groups[index] = []
-        })
-        pull_request_groups['not within sprint'] = []
-
-        for (
-            let pull_request_index = 0;
-            pull_request_index < pull_requests.length;
-            pull_request_index++
-        ) {
-            const pull_request = pull_requests[pull_request_index]
-            let found = false
-
-            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
-                const sprint = config.sprints[sprint_index]
-                const open_date = Date.parse(pull_request.node.createdAt)
-
-                if (sprint.from <= open_date && open_date < sprint.to) {
-                    pull_request_groups[sprint_index].push(pull_request)
-                    found = true
-                    break
-                }
-            }
-
-            if (!found) {
-                pull_request_groups['not within sprint'].push(pull_request)
-            }
-        }
+        const pull_request_groups = sort_pull_requests_into_sprint_groups(
+            pull_requests,
+            config.sprints
+        )
         const maximum_amount_of_pull_requests_per_sprint = Object.values(
             pull_request_groups
         ).reduce((a, b) => (a.length < b.length ? b : a)).length
