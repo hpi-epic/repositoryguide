@@ -124,7 +124,7 @@ function pull_requests_filtered_by_team(pull_requests, team) {
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.user.id))
 }
 
-function pull_requests_with_review_and_comments_filtered_by_team(pull_requests, team) {
+function pull_request_nodes_filtered_by_team(pull_requests, team) {
     const team_ids = team.members.map((member) => member.name)
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.node.author.login))
 }
@@ -147,10 +147,10 @@ function construct_pull_request_buckets(pull_requests) {
 
 function construct_pull_request_review_buckets(
     pull_requests,
-    maximum_amout_of_pull_requests_per_sprint
+    maximum_amount_of_pull_requests_per_sprint
 ) {
     const data = []
-    for (let i = 1; i <= maximum_amout_of_pull_requests_per_sprint; i++) {
+    for (let i = 1; i <= maximum_amount_of_pull_requests_per_sprint; i++) {
         const data_object = {
             label: `PR ${i}`,
             value: pull_requests[i - 1]
@@ -546,6 +546,73 @@ async function get_pull_requests_with_review_and_comments(auth, owner, project) 
     return data
 }
 
+async function get_pull_requests_reviews(auth, owner, project) {
+    let has_next_page = true
+    const data = []
+    let last_commit_cursor = null
+
+    while (has_next_page) {
+        const graphql_with_auth = graphql.defaults({
+            headers: {
+                authorization: `token ${auth}`
+            }
+        })
+
+        const response = await graphql_with_auth(
+            `query detailedPullRequests(
+                  $owner: String!
+                  $project: String!
+                  $last_commit_cursor: String
+            ) {
+            repository(owner: $owner, name: $project) {
+                pullRequests(first: 100, after: $last_commit_cursor) {
+                    pageInfo {
+                        hasNextPage
+                    }
+                    edges {
+                        cursor
+                        node {
+                            url
+                            title
+                            body
+                            author {
+                                login
+                            }
+                            state
+                            createdAt
+                            closedAt
+                            reviews(first: 1) {
+                                nodes {
+                                    state
+                                    createdAt
+                                    comments(first: 1) {
+                                        nodes {
+                                            body
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }`,
+            {
+                owner: owner,
+                project: project,
+                last_commit_cursor: last_commit_cursor
+            }
+        )
+
+        data.push(...response.repository.pullRequests.edges)
+        has_next_page = response.repository.pullRequests.pageInfo.hasNextPage
+        const last_element = data[data.length - 1]
+        last_commit_cursor = `${last_element.cursor}`
+    }
+
+    return data
+}
+
 function filter_closed_and_unreviewed(pull_requests) {
     const filtered_pull_requests = pull_requests.filter((pull_request) => {
         let commented_by_other_users = false
@@ -569,6 +636,40 @@ function filter_closed_and_unreviewed(pull_requests) {
         return false
     })
     return filtered_pull_requests
+}
+
+function sort_pull_requests_into_sprint_groups(pull_requests, sprints) {
+    const pull_request_groups = {}
+
+    sprints.forEach((sprint, index) => {
+        pull_request_groups[index] = []
+    })
+    pull_request_groups['not within sprint'] = []
+
+    for (
+        let pull_request_index = 0;
+        pull_request_index < pull_requests.length;
+        pull_request_index++
+    ) {
+        const pull_request = pull_requests[pull_request_index]
+        let found = false
+
+        for (let sprint_index = 0; sprint_index < sprints.length; sprint_index++) {
+            const sprint = sprints[sprint_index]
+            const open_date = Date.parse(pull_request.node.createdAt)
+
+            if (sprint.from <= open_date && open_date < sprint.to) {
+                pull_request_groups[sprint_index].push(pull_request)
+                found = true
+                break
+            }
+        }
+
+        if (!found) {
+            pull_request_groups['not within sprint'].push(pull_request)
+        }
+    }
+    return pull_request_groups
 }
 
 // ------------------- public interface ------------------- //
@@ -697,7 +798,7 @@ export async function get_pull_request_open_duration_buckets(config, sprint_segm
     return data
 }
 
-export async function get_pull_request_review_times(config, sprint_segmented) {
+export async function get_pull_request_review_and_comment_times(config, sprint_segmented) {
     let pull_requests = await get_pull_requests_with_review_and_comments(
         config.github_access_token,
         config.organization,
@@ -705,7 +806,7 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
     )
     pull_requests = filter_closed_and_unreviewed(pull_requests)
     if (config.team_index) {
-        pull_requests = pull_requests_with_review_and_comments_filtered_by_team(
+        pull_requests = pull_request_nodes_filtered_by_team(
             pull_requests,
             config.teams[config.team_index]
         )
@@ -713,43 +814,56 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
 
     let data
     if (sprint_segmented) {
-        const pull_request_groups = {}
-        config.sprints.forEach((sprint, index) => {
-            pull_request_groups[index] = []
-        })
-        pull_request_groups['not within sprint'] = []
-
-        for (
-            let pull_request_index = 0;
-            pull_request_index < pull_requests.length;
-            pull_request_index++
-        ) {
-            const pull_request = pull_requests[pull_request_index]
-            let found = false
-
-            for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
-                const sprint = config.sprints[sprint_index]
-                const open_date = Date.parse(pull_request.node.createdAt)
-
-                if (sprint.from <= open_date && open_date < sprint.to) {
-                    pull_request_groups[sprint_index].push(pull_request)
-                    found = true
-                    break
-                }
-            }
-
-            if (!found) {
-                pull_request_groups['not within sprint'].push(pull_request)
-            }
-        }
-        const maximum_amout_of_pull_requests_per_sprint = Object.values(pull_request_groups).reduce(
-            (a, b) => (a.length < b.length ? b : a)
-        ).length
+        const pull_request_groups = sort_pull_requests_into_sprint_groups(
+            pull_requests,
+            config.sprints
+        )
+        const maximum_amount_of_pull_requests_per_sprint = Object.values(
+            pull_request_groups
+        ).reduce((a, b) => (a.length < b.length ? b : a)).length
 
         data = Object.keys(pull_request_groups).map((key) =>
             construct_pull_request_review_buckets(
                 pull_request_groups[key],
-                maximum_amout_of_pull_requests_per_sprint
+                maximum_amount_of_pull_requests_per_sprint
+            )
+        )
+    } else {
+        data = construct_pull_request_review_buckets(pull_requests)
+        sort_descending_by_value(data)
+    }
+
+    return data
+}
+
+export async function get_pull_request_review_times(config, sprint_segmented) {
+    let pull_requests = await get_pull_requests_reviews(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+    pull_requests = filter_closed_and_unreviewed(pull_requests)
+    if (config.team_index) {
+        pull_requests = pull_request_nodes_filtered_by_team(
+            pull_requests,
+            config.teams[config.team_index]
+        )
+    }
+
+    let data
+    if (sprint_segmented) {
+        const pull_request_groups = sort_pull_requests_into_sprint_groups(
+            pull_requests,
+            config.sprints
+        )
+        const maximum_amount_of_pull_requests_per_sprint = Object.values(
+            pull_request_groups
+        ).reduce((a, b) => (a.length < b.length ? b : a)).length
+
+        data = Object.keys(pull_request_groups).map((key) =>
+            construct_pull_request_review_buckets(
+                pull_request_groups[key],
+                maximum_amount_of_pull_requests_per_sprint
             )
         )
     } else {
