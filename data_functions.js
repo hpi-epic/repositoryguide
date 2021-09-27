@@ -403,9 +403,7 @@ function count_interactions_for_pull_requests(pull_requests, config) {
             url: pull_request.node.url
         })
     })
-    const data = sort_descending_by_value(newData)
-    debugger
-    return data
+    return sort_descending_by_value(newData)
 }
 
 function count_team_based_timeline_events(timeline_items) {
