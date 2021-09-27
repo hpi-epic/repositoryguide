@@ -2,10 +2,26 @@ import MultipleDatasetChart from './multiple_dataset_chart.js'
 import BarChart from './bar_chart.js'
 
 import '../external/chartjs-plugin-datalabels.js'
+import { deepClone, get_max, get_min, quantile, sum } from '../utils.js'
 
 export default class HorizontalStackedBarChart extends MultipleDatasetChart {
     constructor(parameters = { canvas: null, statistics_container: null }) {
         super(parameters)
+
+        this._statistics = {
+            average: 0,
+            median: 0,
+            min: 0,
+            max: 0
+        }
+    }
+
+    get statistics() {
+        return this._statistics
+    }
+
+    set statistics(statistics) {
+        this._statistics = statistics
     }
 
     _construct_chart_plugins() {
@@ -98,5 +114,52 @@ export default class HorizontalStackedBarChart extends MultipleDatasetChart {
                 window.open(object.url, '_blank').focus()
             }
         }
+    }
+
+    _update() {
+        this._calculate_statistics()
+        if (this.statistics_container) {
+            this._clear_statistics_container()
+            this._construct_statistic_displays()
+        }
+
+        super._update()
+    }
+
+    _calculate_statistics() {
+        if (this.data.length === 0) return
+
+        const data = deepClone(this.data)
+        const cleared_data = []
+        data.forEach((sprint_data) => {
+            let cleared_array = []
+            cleared_array = sprint_data.filter((element) => element.value !== 0)
+            if (cleared_array.length !== 0) {
+                cleared_data.push(cleared_array)
+            }
+        })
+
+        this.statistics = {
+            average: cleared_data.map((sprint_data) =>
+                (sum(sprint_data) / sprint_data.length).toFixed(2)
+            ),
+            median: cleared_data.map((sprint_data) => quantile(sprint_data, 0.5)),
+            min: cleared_data.map((sprint_data) => get_min(sprint_data)),
+            max: cleared_data.map((sprint_data) => get_max(sprint_data))
+        }
+    }
+
+    _clear_statistics_container() {
+        while (this.statistics_container.firstChild) {
+            this.statistics_container.removeChild(this.statistics_container.lastChild)
+        }
+    }
+
+    _construct_statistic_displays() {
+        Object.keys(this.statistics).forEach((key) => {
+            const element = document.createElement('p')
+            element.innerHTML = `${key}: ${this.statistics[key]}`
+            this.statistics_container.append(element)
+        })
     }
 }
