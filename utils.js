@@ -10,7 +10,7 @@ export const sort_descending_by_value = (array) => array.sort((a, b) => b.value 
 
 export const sum = (data) =>
     deepClone(data)
-        .map((element) => element.value)
+        .map((element) => parseFloat(element.value))
         .reduce((a, b) => a + b, 0)
 
 export const quantile = (array, percentage) => {
@@ -19,7 +19,10 @@ export const quantile = (array, percentage) => {
     const base = Math.floor(position)
     const rest = position - base
     if (sorted[base + 1] !== undefined) {
-        return sorted[base].value + rest * (sorted[base + 1].value - sorted[base].value)
+        return (
+            parseFloat(sorted[base].value) +
+            rest * (sorted[base + 1].value - sorted[base].value)
+        ).toFixed(2)
     }
     return sorted[base].value
 }
