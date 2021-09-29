@@ -1098,7 +1098,6 @@ export async function get_anonymous_contributors(config) {
         })
     )
 
-    debugger
     return anonymous_contributors
 }
 
