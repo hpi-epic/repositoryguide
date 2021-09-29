@@ -95,6 +95,7 @@
         <h3>Unregistered Collaborators</h3>
     </div>
     <div class='form-group card-body'>
+        <p>A unregistered collaborator is a Github user, that has not been assigned to a GitHub team of your organisation. When you select a team for your user it will be saved to your configuration file. We recommend you to change the team on GitHub. <a href="https://docs.github.com/en/organizations/organizing-members-into-teams/adding-organization-members-to-a-team">See this guide</a></p>
         <button
             class='form-control btn btn-outline-secondary'
             id='button_load_unregistered_collaborators_from_github'
@@ -122,6 +123,7 @@
         <h3>Anonymous Contributors</h3>
     </div>
     <div class='form-group card-body'>
+        <p>An anonymous contributor is a commit author in your repository that has no matched GitHub user. As the metrics are built mostly from GitHub Data, contributors with emails that have no matched GitHub user are not included in these metrics. To include an anonymous user in the metrics, inform the user to add the displayed email to his github account. Github then automatically recognizes the email and matches it to the user. <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-email-preferences/adding-an-email-address-to-your-github-account">See this guide</a></p>
         <button
           class='form-control btn btn-outline-secondary'
           id='button_load_anonymous_contributors_from_github'
@@ -148,6 +150,7 @@
         <h3>Teams</h3>
     </div>
     <div class='form-group card-body'>
+        <p>Here you have an overview of all the teams in your organization. By clicking <i>Details</i> you can see the individual members of the team.</p>
         <button class='form-control btn btn-outline-secondary' id='button_load_teams_from_github'>
             Load teams from GitHub
         </button>
