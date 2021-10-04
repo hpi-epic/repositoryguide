@@ -67,7 +67,7 @@
             <table class='table'>
                 <tbody>
                 <tr class='d-flex'>
-                    <td class='col-10'>
+                    <td class='col-6'>
                         <label for='input_config_file'>Load config file:</label>
                         <input
                             accept='.json'
@@ -76,9 +76,14 @@
                             type='file'
                         />
                     </td>
-                    <td class='col-2'>
-                        <button class='btn btn-outline-secondary' id='button_download_config' style='float: right'>
-                            Download config
+                    <td class='col-3'>
+                        <button class='btn btn-outline-secondary' id='button_download_current_config' style='float: right'>
+                            Download current config
+                        </button>
+                    </td>
+                    <td class='col-3'>
+                        <button class='btn btn-outline-secondary' id='button_download_clean_config' style='float: right'>
+                            Download clean config
                         </button>
                     </td>
                 </tr>
@@ -113,12 +118,14 @@
 <script type='module'>
     import Config from '../config.js'
     import { remove_children } from '../utils.js'
+    import clean_config  from '../clean_config.js'
 
     let config = Config.from_storage()
 
     const inputs = {
         input_config_file: document.getElementById('input_config_file'),
-        button_download_config: document.getElementById('button_download_config'),
+        button_download_current_config: document.getElementById('button_download_current_config'),
+        button_download_clean_config: document.getElementById('button_download_clean_config'),
         input_organization: document.getElementById('input_organization'),
         input_repository: document.getElementById('input_repository'),
         input_team: document.getElementById('input_team')
@@ -144,13 +151,32 @@
         })
     )
 
-    inputs.button_download_config.addEventListener('click', () => {
-        let content = config.toString()
+    inputs.button_download_current_config.addEventListener('click', () => {
+        let json = JSON.parse(config.toString())
+        let content = JSON.stringify(json, null, 2)
 
         let element = document.createElement('a')
         element.setAttribute(
             'href',
             'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
+        )
+        element.setAttribute('download', 'config.json')
+
+        element.style.display = 'none'
+        document.body.appendChild(element)
+
+        element.click()
+
+        document.body.removeChild(element)
+    })
+
+    inputs.button_download_clean_config.addEventListener('click', () => {
+        let content = JSON.stringify(clean_config, null, 2)
+
+        let element = document.createElement('a')
+        element.setAttribute(
+          'href',
+          'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
         )
         element.setAttribute('download', 'config.json')
 
