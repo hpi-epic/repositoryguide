@@ -8,7 +8,6 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
           integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
           crossorigin="anonymous"
-        rel='stylesheet'
     />
     <link
         href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
@@ -50,6 +49,18 @@
 
         .metric_explanation {
         }
+
+        .overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+        }
+
+        .loading_spinner {
+            width: 3rem; height: 3rem; margin-top: 25%;
+        }
     </style>
 </head>
 <body>
@@ -62,6 +73,14 @@
     </div>
     <br />
 </template>
+
+<div class="overlay" id="overlay">
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-light loading_spinner" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</div>
 
 <nav class='navbar navbar-expand-md navbar-dark bg-dark mb-4'>
     <div class='navbar-brand'>Agile Metrics</div>
@@ -410,6 +429,9 @@
         .getElementById('button_navigate_settings')
         .addEventListener('click', () => config.to_storage_storage())
 
+    const overlay = document
+      .getElementById('overlay')
+
     async function initializeChart(
         chartClass,
         canvas,
@@ -468,7 +490,9 @@
                 )
             )
         }
+
         await Promise.all(promises)
+        overlay.style.visibility = "hidden"
     }
 
     if (!config.github_access_token || !config.organization || !config.repository) {
