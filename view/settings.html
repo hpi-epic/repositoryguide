@@ -184,9 +184,11 @@
         inputs.input_repository.value = config.repository
         remove_children(inputs.input_team)
         inputs.input_team.options[0] = new Option('None', 'none', true)
-        config.teams.forEach((team, index) => {
-            inputs.input_team.options[inputs.input_team.options.length] = new Option(team.name, index.toString())
-        })
+        if(config.teams && config.teams.length !== 0) {
+            config.teams.forEach((team, index) => {
+                inputs.input_team.options[inputs.input_team.options.length] = new Option(team.name, index.toString());
+            });
+        }
         if (config.team_index) {
             inputs.input_team.selectedIndex = config.team_index
         }
