@@ -288,10 +288,12 @@
     }
 
     async function initialize_unregistered_collaborators() {
-        const collaborators = await get_unregistered_collaborators(config)
-        collaborators.forEach((collaborator) =>
-            append_table_row_for_unregistered_collaborator(collaborator)
-        )
+        if(config.teams && config.teams.length !== 0) {
+            const collaborators = await get_unregistered_collaborators(config)
+            collaborators.forEach((collaborator) =>
+              append_table_row_for_unregistered_collaborator(collaborator)
+            )
+        }
     }
 
     async function initialize_anonymous_contributors() {
@@ -302,11 +304,13 @@
     }
 
     async function initialize() {
-        config.teams.forEach((team, index) => {
-            append_table_row_for_team(team, index)
-        })
-        await initialize_unregistered_collaborators()
-        await initialize_anonymous_contributors()
+        if(config.teams && config.teams.length !== 0) {
+            config.teams.forEach((team, index) => {
+                append_table_row_for_team(team, index);
+            })
+        }
+        await initialize_unregistered_collaborators();
+        await initialize_anonymous_contributors();
     }
 
     ;(async () => await initialize())()
