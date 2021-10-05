@@ -1080,7 +1080,7 @@ export async function get_unregistered_collaborators(config) {
             (collaborator) => !registered_collaborator_ids.includes(collaborator.id)
         )
     }
-    console.error('No teams loaded')
+    alert('No teams loaded')
     return null
 }
 
