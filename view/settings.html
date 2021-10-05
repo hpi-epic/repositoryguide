@@ -225,9 +225,15 @@
                 text: 'Config successfully loaded',
                 duration: 3000,
                 gravity: 'top',
-                position: 'center',
+                position: 'right',
                 backgroundColor: 'MediumSeaGreen',
-                stopOnFocus: true
+                stopOnFocus: true,
+                style: {
+                    cursor: "default"
+                },
+                offset: {
+                    y: '3em'
+                },
             }).showToast()
         })
     )

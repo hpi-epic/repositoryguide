@@ -14,6 +14,7 @@
         rel='stylesheet'
         href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'
     />
+    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css'>
 </head>
 <body>
 <template id='template_unregistered_collaborator'>
@@ -172,6 +173,7 @@
 
 <a class='btn btn-outline-secondary' id='button_back' href='javascript:history.back()'>Back</a>
 
+<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/toastify-js'></script>
 <script type='module'>
     import Config from '../../config.js'
     import {
@@ -268,6 +270,36 @@
             config.teams[team_index].members.push(collaborator)
 
             config.to_storage_storage()
+
+            Toastify({
+                text: 'Updated config available to download',
+                duration: 3000,
+                gravity: 'top',
+                position: 'right',
+                backgroundColor: 'MediumSeaGreen',
+                stopOnFocus: true,
+                offset: {
+                    y: '3em'
+                },
+                onClick: function(){
+                    let json = JSON.parse(config.toString())
+                    let content = JSON.stringify(json, null, 2)
+
+                    let element = document.createElement('a')
+                    element.setAttribute(
+                      'href',
+                      'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
+                    )
+                    element.setAttribute('download', 'config.json')
+
+                    element.style.display = 'none'
+                    document.body.appendChild(element)
+
+                    element.click()
+
+                    document.body.removeChild(element)
+                }
+            }).showToast()
 
             remove_children(container_unregistered_collaborators)
             await initialize_unregistered_collaborators()
