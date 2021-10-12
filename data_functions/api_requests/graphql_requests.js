@@ -1,32 +1,4 @@
 import { graphql } from 'https://cdn.skypack.dev/@octokit/graphql'
-import { Octokit } from 'https://cdn.skypack.dev/octokit'
-import { paginateRest } from 'https://cdn.skypack.dev/@octokit/plugin-paginate-rest'
-import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
-
-/* const MyOctokit = Octokit.plugin(paginateRest, throttling)
-
-const octokit = (auth) =>
-    new MyOctokit({
-        userAgent: 'Agile Research',
-        auth: auth,
-        throttle: {
-            onRateLimit: (retryAfter, options, octo) => {
-                octo.log.warn(
-                    `Request quota exhausted for request ${options.method} ${options.url}`
-                )
-
-                if (options.request.retryCount === 0) {
-                    octo.log.info(`Retrying after ${retryAfter} seconds!`)
-                    return true
-                }
-
-                return false
-            },
-            onAbuseLimit: (retryAfter, options, octo) => {
-                octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
-            }
-        }
-    }) */
 
 const graphql_with_auth = (auth) =>
     graphql.defaults({
@@ -41,12 +13,6 @@ export async function get_pull_requests_with_review_and_comments(auth, owner, pr
     let last_commit_cursor = null
 
     while (has_next_page) {
-        const graphql_with_auth = graphql.defaults({
-            headers: {
-                authorization: `token ${auth}`
-            }
-        })
-
         const response = await graphql_with_auth(
             `query detailedPullRequests(
                   $owner: String!
@@ -118,12 +84,6 @@ export async function get_pull_requests_reviews(auth, owner, project) {
     let last_commit_cursor = null
 
     while (has_next_page) {
-        const graphql_with_auth = graphql.defaults({
-            headers: {
-                authorization: `token ${auth}`
-            }
-        })
-
         const response = await graphql_with_auth(
             `query detailedPullRequests(
                   $owner: String!
