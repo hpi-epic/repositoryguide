@@ -1069,15 +1069,19 @@ export async function get_unregistered_collaborators(config) {
     const collaborators = await get_collaborators(config)
 
     let registered_collaborator_ids = []
-    config.teams.forEach((team) => {
-        registered_collaborator_ids = registered_collaborator_ids.concat(
-            team.members.map((member) => member.id)
-        )
-    })
+    if (config.teams && config.teams.length !== 0) {
+        config.teams.forEach((team) => {
+            registered_collaborator_ids = registered_collaborator_ids.concat(
+                team.members.map((member) => member.id)
+            )
+        })
 
-    return collaborators.filter(
-        (collaborator) => !registered_collaborator_ids.includes(collaborator.id)
-    )
+        return collaborators.filter(
+            (collaborator) => !registered_collaborator_ids.includes(collaborator.id)
+        )
+    }
+    alert('No teams loaded')
+    return null
 }
 
 export async function get_anonymous_contributors(config) {
