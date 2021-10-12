@@ -18,7 +18,7 @@ import {
     get_top_issue_submitters,
     get_pull_request_review_times,
     get_total_pull_request_interactions
-} from './data_functions.js'
+} from './data_functions/metric_functions.js'
 
 export const metrics = {
     'Pull request open duration': {
