@@ -13,7 +13,7 @@ export async function get_pull_requests_with_review_and_comments(auth, owner, pr
     let last_commit_cursor = null
 
     while (has_next_page) {
-        const response = await graphql_with_auth(
+        const response = await graphql_with_auth(auth)(
             `query detailedPullRequests(
                   $owner: String!
                   $project: String!
@@ -68,7 +68,6 @@ export async function get_pull_requests_with_review_and_comments(auth, owner, pr
                 last_commit_cursor: last_commit_cursor
             }
         )
-
         data.push(...response.repository.pullRequests.edges)
         has_next_page = response.repository.pullRequests.pageInfo.hasNextPage
         const last_element = data[data.length - 1]
@@ -84,7 +83,7 @@ export async function get_pull_requests_reviews(auth, owner, project) {
     let last_commit_cursor = null
 
     while (has_next_page) {
-        const response = await graphql_with_auth(
+        const response = await graphql_with_auth(auth)(
             `query detailedPullRequests(
                   $owner: String!
                   $project: String!
