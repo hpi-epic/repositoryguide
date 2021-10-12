@@ -28,30 +28,14 @@ const team_based_timeline_event_types = [
     'RemovedFromProjectEvent'
 ]
 
-export function pull_requests_filtered_by_team(pull_requests, team) {
+export function filter_pull_requests_by_team(pull_requests, team) {
     const team_ids = team.members.map((member) => member.id)
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.user.id))
 }
 
-export function pull_request_nodes_filtered_by_team(pull_requests, team) {
+export function filter_pull_request_nodes_by_team(pull_requests, team) {
     const team_ids = team.members.map((member) => member.name)
     return pull_requests.filter((pull_request) => team_ids.includes(pull_request.node.author.login))
-}
-
-export function construct_pull_request_buckets(pull_requests) {
-    const bucket_count = {}
-    buckets.forEach((bucket) => {
-        bucket_count[bucket] = 0
-    })
-
-    pull_requests.forEach((pull_request) => {
-        bucket_count[allocate_pull_request_open_duration_to_bucket(pull_request)] += 1
-    })
-
-    return Object.keys(bucket_count).map((bucket) => ({
-        label: bucket,
-        value: bucket_count[bucket]
-    }))
 }
 
 export function filter_closed_and_unreviewed_pull_requests(pull_requests) {
@@ -77,6 +61,69 @@ export function filter_closed_and_unreviewed_pull_requests(pull_requests) {
         return false
     })
     return filtered_pull_requests
+}
+
+export function construct_pull_request_buckets(pull_requests) {
+    const bucket_count = {}
+    buckets.forEach((bucket) => {
+        bucket_count[bucket] = 0
+    })
+
+    pull_requests.forEach((pull_request) => {
+        bucket_count[allocate_pull_request_open_duration_to_bucket(pull_request)] += 1
+    })
+
+    return Object.keys(bucket_count).map((bucket) => ({
+        label: bucket,
+        value: bucket_count[bucket]
+    }))
+}
+
+export function construct_heatmap_of_commit_times(commits) {
+    const time_slots = deepClone(time_slots_blueprint)
+
+    commits.forEach((commit) => {
+        const commit_date = new Date(commit.commit.committer.date)
+        const day = (commit_date.getDay() + 6) % 7
+        const hour = commit_date.getHours()
+        time_slots[day][hour] += 1
+    })
+
+    return map_timeslots_to_data(time_slots)
+}
+
+export function construct_heatmap_of_issue_submit_times(issues) {
+    const time_slots = deepClone(time_slots_blueprint)
+
+    issues.forEach((issue) => {
+        const submit_date = new Date(issue.created_at)
+        const day = (submit_date.getDay() + 6) % 7
+        const hour = submit_date.getHours()
+        time_slots[day][hour] += 1
+    })
+
+    return map_timeslots_to_data(time_slots)
+}
+
+export function construct_pull_request_review_buckets(
+    pull_requests,
+    maximum_amount_of_pull_requests_per_sprint
+) {
+    const data = []
+    for (let i = 1; i <= maximum_amount_of_pull_requests_per_sprint; i++) {
+        const data_object = {
+            label: `PR ${i}`,
+            value: pull_requests[i - 1]
+                ? calculate_first_review_for_pull_request(pull_requests[i - 1])
+                : 0,
+            url: pull_requests[i - 1] ? pull_requests[i - 1].node.url : '',
+            title: pull_requests[i - 1] ? pull_requests[i - 1].node.title : '',
+            body: pull_requests[i - 1] ? pull_requests[i - 1].node.body : ''
+        }
+        data.push(data_object)
+    }
+
+    return data
 }
 
 export function sort_pull_requests_into_sprint_groups(pull_requests, sprints) {
@@ -111,48 +158,6 @@ export function sort_pull_requests_into_sprint_groups(pull_requests, sprints) {
         }
     }
     return pull_request_groups
-}
-
-function allocate_pull_request_open_duration_to_bucket(pull_request) {
-    const open_duration = calculate_pull_request_open_duration(pull_request)
-
-    switch (true) {
-        case open_duration < 1000 * 60 * 60:
-            return '<1h'
-        case open_duration < 1000 * 60 * 60 * 12:
-            return '<12h'
-        case open_duration < 1000 * 60 * 60 * 24:
-            return '<24h'
-        case open_duration < 1000 * 60 * 60 * 24 * 3:
-            return '<3d'
-        case open_duration < 1000 * 60 * 60 * 24 * 7:
-            return '<1w'
-        case open_duration < 1000 * 60 * 60 * 24 * 14:
-            return '<2w'
-        default:
-            return '>=2w'
-    }
-}
-
-export function construct_pull_request_review_buckets(
-    pull_requests,
-    maximum_amount_of_pull_requests_per_sprint
-) {
-    const data = []
-    for (let i = 1; i <= maximum_amount_of_pull_requests_per_sprint; i++) {
-        const data_object = {
-            label: `PR ${i}`,
-            value: pull_requests[i - 1]
-                ? calculate_first_review_for_pull_request(pull_requests[i - 1])
-                : 0,
-            url: pull_requests[i - 1] ? pull_requests[i - 1].node.url : '',
-            title: pull_requests[i - 1] ? pull_requests[i - 1].node.title : '',
-            body: pull_requests[i - 1] ? pull_requests[i - 1].node.body : ''
-        }
-        data.push(data_object)
-    }
-
-    return data
 }
 
 export async function select_issues_for_team(issues, team, config) {
@@ -213,34 +218,6 @@ export function select_commits_for_team(commits, team) {
     })
 }
 
-function map_timeslots_to_data(time_slots) {
-    const data = []
-    for (let day = 0; day < 7; day += 1) {
-        for (let hour = 0; hour < 24; hour++) {
-            const myObj = {
-                x: hour,
-                y: day,
-                v: time_slots[day][hour]
-            }
-            data.push(myObj)
-        }
-    }
-    return data
-}
-
-export function construct_heatmap_of_commit_times(commits) {
-    const time_slots = deepClone(time_slots_blueprint)
-
-    commits.forEach((commit) => {
-        const commit_date = new Date(commit.commit.committer.date)
-        const day = (commit_date.getDay() + 6) % 7
-        const hour = commit_date.getHours()
-        time_slots[day][hour] += 1
-    })
-
-    return map_timeslots_to_data(time_slots)
-}
-
 export function select_graph_commits_for_team(commits, team) {
     const team_ids = team.members.map((member) => member.id)
     return commits.filter((commit) => {
@@ -249,50 +226,6 @@ export function select_graph_commits_for_team(commits, team) {
         }
         return false
     })
-}
-
-export async function calculate_stats_for_commits(commits_separated_in_sprints, config) {
-    const newData = []
-    for (const commits_in_single_sprint of commits_separated_in_sprints) {
-        let commit_sum = 0
-        let changes_sum = 0
-        const team_members = [] // how to get team members that have not contributed???
-        commits_in_single_sprint.forEach((commit) => {
-            if (commit.node.author.user) {
-                commit_sum += 1
-                changes_sum += commit.node.additions + commit.node.deletions
-                if (
-                    team_members.findIndex(
-                        (member) => member === commit.node.author.user.databaseId
-                    ) === -1
-                ) {
-                    team_members.push(commit.node.author.user.databaseId)
-                }
-            }
-        })
-
-        newData.push([
-            { label: 'Average Commits', value: commit_sum / team_members.length },
-            {
-                label: 'Average Changes',
-                value: changes_sum / team_members.length / commit_sum
-            }
-        ])
-    }
-    return newData
-}
-
-export function construct_heatmap_of_issue_submit_times(issues) {
-    const time_slots = deepClone(time_slots_blueprint)
-
-    issues.forEach((issue) => {
-        const submit_date = new Date(issue.created_at)
-        const day = (submit_date.getDay() + 6) % 7
-        const hour = submit_date.getHours()
-        time_slots[day][hour] += 1
-    })
-
-    return map_timeslots_to_data(time_slots)
 }
 
 export async function select_issues_for_team_by_author(issues, team, config) {
@@ -423,6 +356,37 @@ export function calculate_issue_size(issue) {
     return issue.body.length
 }
 
+export async function calculate_stats_for_commits(commits_separated_in_sprints, config) {
+    const newData = []
+    for (const commits_in_single_sprint of commits_separated_in_sprints) {
+        let commit_sum = 0
+        let changes_sum = 0
+        const team_members = [] // how to get team members that have not contributed???
+        commits_in_single_sprint.forEach((commit) => {
+            if (commit.node.author.user) {
+                commit_sum += 1
+                changes_sum += commit.node.additions + commit.node.deletions
+                if (
+                    team_members.findIndex(
+                        (member) => member === commit.node.author.user.databaseId
+                    ) === -1
+                ) {
+                    team_members.push(commit.node.author.user.databaseId)
+                }
+            }
+        })
+
+        newData.push([
+            { label: 'Average Commits', value: commit_sum / team_members.length },
+            {
+                label: 'Average Changes',
+                value: changes_sum / team_members.length / commit_sum
+            }
+        ])
+    }
+    return newData
+}
+
 export function issue_size_bucket(size, min, max, nr_of_buckets) {
     const bucket_size = (max - min) / nr_of_buckets
     const factor = Math.floor(size / bucket_size)
@@ -433,4 +397,40 @@ export function issue_size_bucket(size, min, max, nr_of_buckets) {
         `${Math.floor(min + bucket_size * (factor + 1))}` +
         `]`
     )
+}
+
+function allocate_pull_request_open_duration_to_bucket(pull_request) {
+    const open_duration = calculate_pull_request_open_duration(pull_request)
+
+    switch (true) {
+        case open_duration < 1000 * 60 * 60:
+            return '<1h'
+        case open_duration < 1000 * 60 * 60 * 12:
+            return '<12h'
+        case open_duration < 1000 * 60 * 60 * 24:
+            return '<24h'
+        case open_duration < 1000 * 60 * 60 * 24 * 3:
+            return '<3d'
+        case open_duration < 1000 * 60 * 60 * 24 * 7:
+            return '<1w'
+        case open_duration < 1000 * 60 * 60 * 24 * 14:
+            return '<2w'
+        default:
+            return '>=2w'
+    }
+}
+
+function map_timeslots_to_data(time_slots) {
+    const data = []
+    for (let day = 0; day < 7; day += 1) {
+        for (let hour = 0; hour < 24; hour++) {
+            const myObj = {
+                x: hour,
+                y: day,
+                v: time_slots[day][hour]
+            }
+            data.push(myObj)
+        }
+    }
+    return data
 }

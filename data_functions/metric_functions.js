@@ -1,9 +1,9 @@
 import { get_max, get_min, sort_descending_by_value } from '../utils.js'
 import {
-    pull_requests_filtered_by_team,
+    filter_pull_requests_by_team,
     construct_pull_request_buckets,
     filter_closed_and_unreviewed_pull_requests,
-    pull_request_nodes_filtered_by_team,
+    filter_pull_request_nodes_by_team,
     sort_pull_requests_into_sprint_groups,
     construct_pull_request_review_buckets,
     select_issues_for_team,
@@ -35,10 +35,7 @@ export async function get_pull_request_open_durations(config, sprint_segmented) 
         config.repository
     )
     if (config.team_index) {
-        pull_requests = pull_requests_filtered_by_team(
-            pull_requests,
-            config.teams[config.team_index]
-        )
+        pull_requests = filter_pull_requests_by_team(pull_requests, config.teams[config.team_index])
     }
 
     let data = []
@@ -64,10 +61,7 @@ export async function get_pull_request_open_duration_buckets(config, sprint_segm
         config.repository
     )
     if (config.team_index) {
-        pull_requests = pull_requests_filtered_by_team(
-            pull_requests,
-            config.teams[config.team_index]
-        )
+        pull_requests = filter_pull_requests_by_team(pull_requests, config.teams[config.team_index])
     }
 
     let data
@@ -120,7 +114,7 @@ export async function get_pull_request_review_and_comment_times(config, sprint_s
     )
     pull_requests = filter_closed_and_unreviewed_pull_requests(pull_requests)
     if (config.team_index) {
-        pull_requests = pull_request_nodes_filtered_by_team(
+        pull_requests = filter_pull_request_nodes_by_team(
             pull_requests,
             config.teams[config.team_index]
         )
@@ -158,7 +152,7 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
     )
     pull_requests = filter_closed_and_unreviewed_pull_requests(pull_requests)
     if (config.team_index) {
-        pull_requests = pull_request_nodes_filtered_by_team(
+        pull_requests = filter_pull_request_nodes_by_team(
             pull_requests,
             config.teams[config.team_index]
         )
@@ -443,7 +437,7 @@ export async function get_total_pull_request_interactions(config, sprint_segment
     )
 
     if (config.team_index) {
-        pull_requests = pull_request_nodes_filtered_by_team(
+        pull_requests = filter_pull_request_nodes_by_team(
             pull_requests,
             config.teams[config.team_index]
         )
