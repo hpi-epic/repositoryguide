@@ -59,8 +59,20 @@
         }
 
         .loading_spinner {
-            width: 3rem; height: 3rem; margin-top: 25%;
+            width: 3rem;
+            height: 3rem;
+            margin-top: 25%;
         }
+
+        .loading_button {
+            width:14rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 1rem;
+        }
+
+
     </style>
 </head>
 <body>
@@ -80,6 +92,7 @@
             <span class="sr-only">Loading...</span>
         </div>
     </div>
+    <a class='btn btn-outline-light loading_button' id="error_loading_button" href='/repositoryguide/view/settings.html'>Loading taking too long? Check your settings</a>
 </div>
 
 <nav class='navbar navbar-expand-md navbar-dark bg-dark mb-4'>
@@ -428,6 +441,9 @@
     document
         .getElementById('button_navigate_settings')
         .addEventListener('click', () => config.to_storage_storage())
+
+    const error_button = document
+      .getElementById('error_loading_button')
 
     const overlay = document
       .getElementById('overlay')
