@@ -1,13 +1,8 @@
-import {
-    closed_pull_request_open_duration_in_hours,
-    issue_size,
-    issue_size_bucket
-} from '../metrics.js'
 import { get_max, get_min, sort_descending_by_value } from '../utils.js'
 import {
     pull_requests_filtered_by_team,
     construct_pull_request_buckets,
-    filter_closed_and_unreviewed, // TODO RENAME
+    filter_closed_and_unreviewed_pull_requests,
     pull_request_nodes_filtered_by_team,
     sort_pull_requests_into_sprint_groups,
     construct_pull_request_review_buckets,
@@ -19,7 +14,10 @@ import {
     construct_heatmap_of_issue_submit_times,
     select_issues_for_team_by_author,
     select_top_issue_submitters,
-    count_interactions_for_pull_requests
+    count_interactions_for_pull_requests,
+    calculate_open_duration_in_hours_of_closed_pull_requests,
+    calculate_issue_size,
+    issue_size_bucket
 } from './data_manipulation.js'
 import { get_pull_requests, get_issues, get_commits } from './api_requests/rest_requests.js'
 import {
@@ -49,7 +47,7 @@ export async function get_pull_request_open_durations(config, sprint_segmented) 
     } else {
         data = pull_requests.map((pull_request) => ({
             label: pull_request.title,
-            value: closed_pull_request_open_duration_in_hours(pull_request),
+            value: calculate_open_duration_in_hours_of_closed_pull_requests(pull_request),
             url: pull_request.html_url
         }))
         data = data.filter((pullRequest) => pullRequest.value !== null)
@@ -120,7 +118,7 @@ export async function get_pull_request_review_and_comment_times(config, sprint_s
         config.organization,
         config.repository
     )
-    pull_requests = filter_closed_and_unreviewed(pull_requests)
+    pull_requests = filter_closed_and_unreviewed_pull_requests(pull_requests)
     if (config.team_index) {
         pull_requests = pull_request_nodes_filtered_by_team(
             pull_requests,
@@ -158,7 +156,7 @@ export async function get_pull_request_review_times(config, sprint_segmented) {
         config.organization,
         config.repository
     )
-    pull_requests = filter_closed_and_unreviewed(pull_requests)
+    pull_requests = filter_closed_and_unreviewed_pull_requests(pull_requests)
     if (config.team_index) {
         pull_requests = pull_request_nodes_filtered_by_team(
             pull_requests,
@@ -206,7 +204,7 @@ export async function get_issue_sizes(config, sprint_segmented) {
     } else {
         data = issues.map((issue) => ({
             label: issue.title,
-            value: issue_size(issue),
+            value: calculate_issue_size(issue),
             url: issue.html_url
         }))
         sort_descending_by_value(data)
@@ -218,7 +216,6 @@ export async function get_issue_sizes(config, sprint_segmented) {
 export async function get_issue_buckets_fixed_interval(config, sprint_segmented) {
     // does the filtering too
     const issues = await get_issue_sizes(config, sprint_segmented)
-
     let data = []
     if (sprint_segmented) {
         // todo
@@ -226,10 +223,10 @@ export async function get_issue_buckets_fixed_interval(config, sprint_segmented)
         const nr_of_buckets = 5
         const max = get_max(issues)
         const min = get_min(issues)
-
         const bucket_count = {}
         issues.forEach((issue) => {
             const bucket = issue_size_bucket(issue.value, min, max, nr_of_buckets)
+
             if (!Object.keys(bucket_count).includes(bucket)) {
                 bucket_count[bucket] = 0
             }

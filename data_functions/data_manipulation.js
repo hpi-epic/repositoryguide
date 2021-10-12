@@ -1,8 +1,3 @@
-import {
-    buckets,
-    calculate_first_review_for_pull_request,
-    pull_request_open_duration_bucket
-} from '../metrics.js'
 import { deepClone, sort_descending_by_value } from '../utils.js'
 import { get_labels_for_issue, get_comments_for_issue } from './api_requests/rest_requests.js'
 
@@ -15,7 +10,7 @@ const time_slots_blueprint = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
-
+const buckets = ['<1h', '<12h', '<24h', '<3d', '<1w', '<2w', '>=2w']
 const team_based_timeline_event_types = [
     'AssignedEvent',
     'CrossReferencedEvent',
@@ -50,7 +45,7 @@ export function construct_pull_request_buckets(pull_requests) {
     })
 
     pull_requests.forEach((pull_request) => {
-        bucket_count[pull_request_open_duration_bucket(pull_request)] += 1
+        bucket_count[allocate_pull_request_open_duration_to_bucket(pull_request)] += 1
     })
 
     return Object.keys(bucket_count).map((bucket) => ({
@@ -59,7 +54,7 @@ export function construct_pull_request_buckets(pull_requests) {
     }))
 }
 
-export function filter_closed_and_unreviewed(pull_requests) {
+export function filter_closed_and_unreviewed_pull_requests(pull_requests) {
     const filtered_pull_requests = pull_requests.filter((pull_request) => {
         let commented_by_other_users = false
         let reviewed_by_other_users = false
@@ -116,6 +111,27 @@ export function sort_pull_requests_into_sprint_groups(pull_requests, sprints) {
         }
     }
     return pull_request_groups
+}
+
+function allocate_pull_request_open_duration_to_bucket(pull_request) {
+    const open_duration = calculate_pull_request_open_duration(pull_request)
+
+    switch (true) {
+        case open_duration < 1000 * 60 * 60:
+            return '<1h'
+        case open_duration < 1000 * 60 * 60 * 12:
+            return '<12h'
+        case open_duration < 1000 * 60 * 60 * 24:
+            return '<24h'
+        case open_duration < 1000 * 60 * 60 * 24 * 3:
+            return '<3d'
+        case open_duration < 1000 * 60 * 60 * 24 * 7:
+            return '<1w'
+        case open_duration < 1000 * 60 * 60 * 24 * 14:
+            return '<2w'
+        default:
+            return '>=2w'
+    }
 }
 
 export function construct_pull_request_review_buckets(
@@ -352,4 +368,69 @@ function count_team_based_timeline_events(timeline_items) {
         }
     })
     return count
+}
+
+function calculate_first_review_for_pull_request(pull_request) {
+    const creation_time = Date.parse(pull_request.node.createdAt)
+    let first_review_time
+    pull_request.node.reviews.nodes.length !== 0
+        ? (first_review_time = Date.parse(pull_request.node.reviews.nodes[0].createdAt))
+        : (first_review_time = Date.now())
+    let first_comment_time = Date.now()
+    if (pull_request.node.comments) {
+        pull_request.node.comments.nodes.every((comment) => {
+            if (comment.author.login !== pull_request.node.author.login) {
+                first_comment_time = Date.parse(comment.createdAt)
+                return false
+            }
+            return true
+        })
+    }
+
+    if (first_comment_time < first_review_time) {
+        return ((first_comment_time - creation_time) / (1000 * 60 * 60)).toFixed(2)
+    }
+    return ((first_review_time - creation_time) / (1000 * 60 * 60)).toFixed(2)
+}
+
+export function calculate_open_duration_in_hours_of_closed_pull_requests(pull_request) {
+    const creation_date = Date.parse(pull_request.created_at)
+    const closing_date = Date.parse(pull_request.closed_at)
+    let diffHours
+    if (isNaN(closing_date)) {
+        diffHours = null
+        return diffHours
+    }
+    const date = new Date(0)
+    date.setSeconds(closing_date - creation_date)
+    diffHours = (closing_date - creation_date) / (1000 * 60 * 60)
+    diffHours = diffHours.toFixed(2)
+    return diffHours
+}
+
+function calculate_pull_request_open_duration(pull_request) {
+    const creation_date = Date.parse(pull_request.created_at)
+    const closing_date = Date.parse(pull_request.closed_at)
+    return closing_date - creation_date
+}
+
+export function calculate_issue_size(issue) {
+    /*
+     * estimate?
+     * nr of checkboxes?
+     * body size?
+     * */
+    return issue.body.length
+}
+
+export function issue_size_bucket(size, min, max, nr_of_buckets) {
+    const bucket_size = (max - min) / nr_of_buckets
+    const factor = Math.floor(size / bucket_size)
+
+    return (
+        `[` +
+        `${Math.floor(min + bucket_size * factor)}, ` +
+        `${Math.floor(min + bucket_size * (factor + 1))}` +
+        `]`
+    )
 }
