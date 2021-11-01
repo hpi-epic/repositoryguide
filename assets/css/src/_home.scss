@@ -23,3 +23,23 @@
 .sidebar {
     height: 100%;
 }
+
+.sidebar .nav {
+    padding-top: 12px;
+}
+
+.sidebar .nav button:not(:first-child):not(:last-child) {
+    margin: 6px 0 6px 0;
+}
+
+.sidebar .nav button:first-child {
+    margin: 0 0 6px 0;
+}
+
+.sidebar .nav button:last-child {
+    margin: 6px 0 0 0;
+}
+
+.tab-content {
+    padding-top: 12px;
+}
