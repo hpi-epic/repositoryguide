@@ -1,14 +1,16 @@
 import Config from '../config.js'
 import { remove_children } from '../utils.js'
-import { get_teams, get_unregistered_collaborators, get_anonymous_contributors } from '../data_functions/data_utils.js'
+import {
+    get_teams,
+    get_unregistered_collaborators,
+    get_anonymous_contributors
+} from '../data_functions/data_utils.js'
 
 const container_teams = document.getElementById('container_teams')
 const container_unregistered_collaborators = document.getElementById(
     'container_unregistered_collaborators'
 )
-const container_anonymous_contributors = document.getElementById(
-    'container_anonymous_contributors'
-)
+const container_anonymous_contributors = document.getElementById('container_anonymous_contributors')
 
 const config = Config.from_storage()
 
@@ -59,14 +61,14 @@ function append_table_row_for_unregistered_collaborator(collaborator) {
             offset: {
                 y: '3em'
             },
-            onClick: function(){
+            onClick: function () {
                 let json = JSON.parse(config.toString())
                 let content = JSON.stringify(json, null, 2)
 
                 let element = document.createElement('a')
                 element.setAttribute(
-                  'href',
-                  'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
+                    'href',
+                    'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
                 )
                 element.setAttribute('download', 'config.json')
 
@@ -87,9 +89,7 @@ function append_table_row_for_unregistered_collaborator(collaborator) {
 }
 
 function append_table_row_for_anonymous_contributor(contributor) {
-    const row = document
-      .getElementById('template_anonymous_contributor')
-      .content.cloneNode(true)
+    const row = document.getElementById('template_anonymous_contributor').content.cloneNode(true)
 
     row.getElementById('text_contributor_name').innerHTML = contributor.name
     row.getElementById('text_contributor_email').innerHTML = contributor.email
@@ -106,9 +106,7 @@ async function initialize_unregistered_collaborators() {
 
 async function initialize_anonymous_contributors() {
     const contributors = await get_anonymous_contributors(config)
-    contributors.forEach((contributor) =>
-      append_table_row_for_anonymous_contributor(contributor)
-    )
+    contributors.forEach((contributor) => append_table_row_for_anonymous_contributor(contributor))
 }
 
 async function initialize() {

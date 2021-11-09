@@ -61,14 +61,12 @@ async function initialize() {
         )
     }
     await Promise.all(promises)
-    overlay.style.visibility = "hidden"
+    overlay.style.visibility = 'hidden'
 }
 
-const error_button = document
-    .getElementById('error_loading_button')
+const error_button = document.getElementById('error_loading_button')
 
-const overlay = document
-    .getElementById('overlay')
+const overlay = document.getElementById('overlay')
 
 if (!config.github_access_token || !config.organization || !config.repository) {
     Toastify({

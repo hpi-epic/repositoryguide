@@ -1,6 +1,6 @@
 import Config from '../config.js'
 import { remove_children } from '../utils.js'
-import clean_config  from '../clean_config.js'
+import clean_config from '../clean_config.js'
 
 let config = Config.from_storage()
 
@@ -25,11 +25,11 @@ inputs.input_config_file.addEventListener('change', (event) =>
             backgroundColor: 'MediumSeaGreen',
             stopOnFocus: true,
             style: {
-                cursor: "default"
+                cursor: 'default'
             },
             offset: {
                 y: '3em'
-            },
+            }
         }).showToast()
     })
 )
@@ -39,10 +39,7 @@ inputs.button_download_current_config.addEventListener('click', () => {
     let content = JSON.stringify(json, null, 2)
 
     let element = document.createElement('a')
-    element.setAttribute(
-        'href',
-        'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
-    )
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content))
     element.setAttribute('download', 'config.json')
 
     element.style.display = 'none'
@@ -57,10 +54,7 @@ inputs.button_download_clean_config.addEventListener('click', () => {
     let content = JSON.stringify(clean_config, null, 2)
 
     let element = document.createElement('a')
-    element.setAttribute(
-      'href',
-      'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
-    )
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content))
     element.setAttribute('download', 'config.json')
 
     element.style.display = 'none'
@@ -97,13 +91,16 @@ function initialize(config) {
     inputs.input_repository.value = config.repository
     remove_children(inputs.input_team)
     inputs.input_team.options[0] = new Option('None', 'none', true)
-    
-    if(config.teams && config.teams.length !== 0) {
+
+    if (config.teams && config.teams.length !== 0) {
         config.teams.forEach((team, index) => {
-            inputs.input_team.options[inputs.input_team.options.length] = new Option(team.name, index.toString());
-        });
+            inputs.input_team.options[inputs.input_team.options.length] = new Option(
+                team.name,
+                index.toString()
+            )
+        })
     }
-    
+
     if (config.team_index) {
         inputs.input_team.selectedIndex = config.team_index
     }
