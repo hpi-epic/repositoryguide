@@ -13,8 +13,9 @@ import {
     get_issue_sizes,
     get_issue_submit_times,
     get_pull_request_open_duration_buckets,
-    get_pull_request_open_durations,
-    get_top_issue_submitters
+    get_pull_request_review_and_comment_times,
+    get_top_issue_submitters,
+    get_pull_request_review_times
 } from './data_functions.js'
 
 export const metrics = {
@@ -33,7 +34,12 @@ export const metrics = {
         data_retrieval_function: get_pull_request_open_duration_buckets,
         sprint_segmented: true
     },
-    'Pull request time to first interaction in hours': {
+    'Pull request time to first interaction of other team members in hours': {
+        chart_class: HorizontalStackedBarChart,
+        data_retrieval_function: get_pull_request_review_and_comment_times,
+        sprint_segmented: true
+    },
+    'Pull request time to first review in hours': {
         chart_class: HorizontalStackedBarChart,
         data_retrieval_function: get_pull_request_review_times,
         sprint_segmented: true
