@@ -1300,7 +1300,7 @@ export async function get_total_pull_request_interactions(config, sprint_segment
     )
 
     if (config.team_index) {
-        pull_requests = pull_requests_with_review_and_comments_filtered_by_team(
+        pull_requests = pull_request_nodes_filtered_by_team(
             pull_requests,
             config.teams[config.team_index]
         )
