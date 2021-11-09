@@ -1,12 +1,29 @@
 import Config from './config.js'
 import { remove_children } from './utils.js'
-import { get_teams, get_unregistered_collaborators } from './data_functions.js'
+import {
+    get_teams,
+    get_unregistered_collaborators,
+    get_anonymous_contributors
+} from './data_functions.js'
 
 const container_teams = document.getElementById('container_teams')
 const container_unregistered_collaborators = document.getElementById(
     'container_unregistered_collaborators'
 )
+const container_anonymous_contributors = document.getElementById('container_anonymous_contributors')
 const config = Config.from_storage()
+
+document
+    .getElementById('button_load_anonymous_contributors_from_github')
+    .addEventListener('click', async () => {
+        if (!config.organization || !config.repository) {
+            alert('This action requires an organization and a repository to be set')
+            return
+        }
+
+        remove_children(container_anonymous_contributors)
+        await initialize_anonymous_contributors()
+    })
 
 function append_table_row_for_team(team, index) {
     const row = document.getElementById('template_team_row').content.cloneNode(true)
@@ -52,11 +69,25 @@ function append_table_row_for_unregistered_collaborator(collaborator) {
     container_unregistered_collaborators.appendChild(row)
 }
 
+function append_table_row_for_anonymous_contributor(contributor) {
+    const row = document.getElementById('template_anonymous_contributor').content.cloneNode(true)
+
+    row.getElementById('text_contributor_name').innerHTML = contributor.name
+    row.getElementById('text_contributor_email').innerHTML = contributor.email
+
+    container_anonymous_contributors.appendChild(row)
+}
+
 async function initialize_unregistered_collaborators() {
     const collaborators = await get_unregistered_collaborators(config)
     collaborators.forEach((collaborator) =>
         append_table_row_for_unregistered_collaborator(collaborator)
     )
+}
+
+async function initialize_anonymous_contributors() {
+    const contributors = await get_anonymous_contributors(config)
+    contributors.forEach((contributor) => append_table_row_for_anonymous_contributor(contributor))
 }
 
 async function initialize() {
@@ -66,6 +97,7 @@ async function initialize() {
         append_table_row_for_team(team, index)
     })
     await initialize_unregistered_collaborators()
+    await initialize_anonymous_contributors()
 }
 
 document.getElementById('button_load_teams_from_github').addEventListener('click', async () => {
