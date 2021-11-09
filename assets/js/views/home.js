@@ -1,5 +1,5 @@
-import Config from './config.js'
-import { metrics } from './metrics.js'
+import Config from '../config.js'
+import { metrics } from '../metrics.js'
 
 const config = Config.from_storage()
 
@@ -61,7 +61,14 @@ async function initialize() {
         )
     }
     await Promise.all(promises)
+    overlay.style.visibility = "hidden"
 }
+
+const error_button = document
+    .getElementById('error_loading_button')
+
+const overlay = document
+    .getElementById('overlay')
 
 if (!config.github_access_token || !config.organization || !config.repository) {
     Toastify({

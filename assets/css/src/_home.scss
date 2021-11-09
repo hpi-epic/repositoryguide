@@ -3,6 +3,12 @@
     height: 400px;
 }
 
+.chart-container-with-extra-space {
+    width: 90%;
+    height: 400px;
+    margin-bottom: 70px;
+}
+
 .chart-canvas-container {
     display: inline-block;
     float: left;
@@ -18,6 +24,28 @@
 }
 
 .metric-explanation {
+}
+
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+}
+
+.loading_spinner {
+    width: 3rem;
+    height: 3rem;
+    margin-top: 25%;
+}
+
+.loading_button {
+    width:14rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
 }
 
 .sidebar {

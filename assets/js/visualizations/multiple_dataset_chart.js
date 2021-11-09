@@ -26,7 +26,7 @@ export default class MultipleDatasetChart extends MetricChart {
     _construct_chart_dataset(dataset, index, nr_of_datasets) {
         return {
             label: dataset[0].label,
-            data: dataset.map((element) => element.value)
+            data: dataset.map((element) => (element ? element.value : null))
         }
     }
 }

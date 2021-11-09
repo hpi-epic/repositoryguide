@@ -1,11 +1,15 @@
-import Config from './config.js'
-import { remove_children } from './utils.js'
-import { get_teams, get_unregistered_collaborators } from './data_functions.js'
+import Config from '../config.js'
+import { remove_children } from '../utils.js'
+import { get_teams, get_unregistered_collaborators, get_anonymous_contributors } from '../data_functions/data_utils.js'
 
 const container_teams = document.getElementById('container_teams')
 const container_unregistered_collaborators = document.getElementById(
     'container_unregistered_collaborators'
 )
+const container_anonymous_contributors = document.getElementById(
+    'container_anonymous_contributors'
+)
+
 const config = Config.from_storage()
 
 function append_table_row_for_team(team, index) {
@@ -45,6 +49,36 @@ function append_table_row_for_unregistered_collaborator(collaborator) {
 
         config.to_storage()
 
+        Toastify({
+            text: 'Updated config available to download',
+            duration: 3000,
+            gravity: 'top',
+            position: 'right',
+            backgroundColor: 'MediumSeaGreen',
+            stopOnFocus: true,
+            offset: {
+                y: '3em'
+            },
+            onClick: function(){
+                let json = JSON.parse(config.toString())
+                let content = JSON.stringify(json, null, 2)
+
+                let element = document.createElement('a')
+                element.setAttribute(
+                  'href',
+                  'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
+                )
+                element.setAttribute('download', 'config.json')
+
+                element.style.display = 'none'
+                document.body.appendChild(element)
+
+                element.click()
+
+                document.body.removeChild(element)
+            }
+        }).showToast()
+
         remove_children(container_unregistered_collaborators)
         await initialize_unregistered_collaborators()
     })
@@ -52,10 +86,28 @@ function append_table_row_for_unregistered_collaborator(collaborator) {
     container_unregistered_collaborators.appendChild(row)
 }
 
+function append_table_row_for_anonymous_contributor(contributor) {
+    const row = document
+      .getElementById('template_anonymous_contributor')
+      .content.cloneNode(true)
+
+    row.getElementById('text_contributor_name').innerHTML = contributor.name
+    row.getElementById('text_contributor_email').innerHTML = contributor.email
+
+    container_anonymous_contributors.appendChild(row)
+}
+
 async function initialize_unregistered_collaborators() {
     const collaborators = await get_unregistered_collaborators(config)
     collaborators.forEach((collaborator) =>
         append_table_row_for_unregistered_collaborator(collaborator)
+    )
+}
+
+async function initialize_anonymous_contributors() {
+    const contributors = await get_anonymous_contributors(config)
+    contributors.forEach((contributor) =>
+      append_table_row_for_anonymous_contributor(contributor)
     )
 }
 
@@ -66,6 +118,7 @@ async function initialize() {
         append_table_row_for_team(team, index)
     })
     await initialize_unregistered_collaborators()
+    await initialize_anonymous_contributors()
 }
 
 document.getElementById('button_load_teams_from_github').addEventListener('click', async () => {
@@ -91,6 +144,18 @@ document
 
         remove_children(container_unregistered_collaborators)
         await initialize_unregistered_collaborators()
+    })
+
+document
+    .getElementById('button_load_anonymous_contributors_from_github')
+    .addEventListener('click', async () => {
+        if (!config.organization || !config.repository) {
+            alert('This action requires an organization and a repository to be set')
+            return
+        }
+
+        remove_children(container_anonymous_contributors)
+        await initialize_anonymous_contributors()
     })
 
 initialize()

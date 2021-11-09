@@ -1,4 +1,4 @@
-import Config from './config.js'
+import Config from '../config.js'
 
 const container_sprints = document.getElementById('container_sprints')
 const config = Config.from_storage()

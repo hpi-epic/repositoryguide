@@ -1,5 +1,5 @@
-import Config from './config.js'
-import { get_parameters, remove_children } from './utils.js'
+import Config from '../config.js'
+import { get_parameters, remove_children } from '../utils.js'
 
 const parameters = get_parameters(window.location.href)
 const config = Config.from_storage()

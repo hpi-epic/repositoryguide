@@ -20,7 +20,7 @@
                     <table class="table">
                         <tbody>
                             <tr class="d-flex">
-                                <td class="col-10">
+                                <td class="col-6">
                                     <label for="input_config_file">Load config file:</label>
                                     <input
                                         accept=".json"
@@ -29,13 +29,14 @@
                                         type="file"
                                     />
                                 </td>
-                                <td class="col-2">
-                                    <button
-                                        class="btn btn-outline-secondary"
-                                        id="button_download_config"
-                                        style="float: right"
-                                    >
-                                        Download config
+                                <td class='col-3'>
+                                    <button class='btn btn-outline-secondary' id='button_download_current_config' style='float: right'>
+                                        Download current config
+                                    </button>
+                                </td>
+                                <td class='col-3'>
+                                    <button class='btn btn-outline-secondary' id='button_download_clean_config' style='float: right'>
+                                        Download new config
                                     </button>
                                 </td>
                             </tr>
@@ -48,7 +49,7 @@
                 <div class="input-group">
                     <table class="table table-borderless">
                         <tbody>
-                            <tr class="d-flex">
+                            <tr class="d-fflex">
                                 <td class="col-3">
                                     <label for="input_organization">Organization:</label>
                                 </td>
@@ -60,7 +61,7 @@
                                     />
                                 </td>
                             </tr>
-                            <tr class="d-flex">
+                            <tr class="d-fflex">
                                 <td class="col-3">
                                     <label for="input_repository">Repository:</label>
                                 </td>
@@ -79,6 +80,87 @@
                         </tbody>
                     </table>
                 </div>
+
+                <br />
+                <br />
+
+                <h4>How to setup your config</h4>
+        <p>If you want to setup your clean config to work with your repository, fill out the following fields.</p>
+        <table class='table'>
+            <thead>
+            <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+                <th>Hints</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>github_access_token</td>
+                <td>String</td>
+                <td>yes</td>
+                <td>Your Github Access Token</td>
+                <td>See below on how to setup your access token</td>
+            </tr>
+            <tr>
+                <td>organization</td>
+                <td>String</td>
+                <td>yes</td>
+                <td>Your Github Organization</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>repository</td>
+                <td>String</td>
+                <td>yes</td>
+                <td>Your Repository in your organization</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>sprints</td>
+                <td>Array</td>
+                <td></td>
+                <td>Objects having the fields from and to which describe ISO 8601 timestamps as string of your sprint durations</td>
+                <td>Use <a href="https://www.timestamp-converter.com/ ">this website</a> to convert your times</td>
+            </tr>
+            <tr>
+                <td>teams</td>
+                <td>Array</td>
+                <td></td>
+                <td>Objects describing your teams</td>
+                <td>You can set this up on the team page</td>
+            </tr>
+            <tr>
+                <td>team_index</td>
+                <td>Integer</td>
+                <td></td>
+                <td>The Index in the team selection which you want to have preselected</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <h4>How to setup your Github personal access token</h4>
+        <p>Follow <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token">this guide</a>  and check the following lower level attributes:</p>
+        <ul>
+            <li>repo</li>
+            <li>repo:status</li>
+            <li>repo_deployment</li>
+            <li>public_repo</li>
+            <li>repo:invite</li>
+            <li>read:packages</li>
+            <li>read:org</li>
+            <li>read:public_key</li>
+            <li>read:repo_hook</li>
+            <li>read:user</li>
+            <li>user:email</li>
+            <li>read:discussion</li>
+            <li>read:gpg_key </li>
+        </ul>
             </div>
         </div>
 
@@ -90,6 +172,6 @@
         ></script>
 
         <script type="module" src="/assets/components/components.js"></script>
-        <script type="module" src="/assets/js/settings.js"></script>
+        <script type="module" src="/assets/js/views/settings.js"></script>
     </body>
 </html>

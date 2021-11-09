@@ -26,6 +26,13 @@
             </tr>
         </template>
 
+        <template id='template_anonymous_contributor'>
+            <tr class='d-flex'>
+                <td class='col-6' id='text_contributor_name'></td>
+                <td class='col-6' id='text_contributor_email'></td>
+            </tr>
+        </template>
+
         <template id="template_team_row">
             <tr class="d-flex">
                 <td class="col-5" id="text_name"></td>
@@ -65,6 +72,33 @@
 
         <br />
 
+        <div class='card container'>
+            <div class='card-header'>
+                <h3>Anonymous Contributors</h3>
+            </div>
+            <div class='form-group card-body'>
+                <p>An anonymous contributor is a commit author in your repository that has no matched GitHub user. As the metrics are built mostly from GitHub Data, contributors with emails that have no matched GitHub user are not included in these metrics. To include an anonymous user in the metrics, inform the user to add the displayed email to his github account. Github then automatically recognizes the email and matches it to the user. <a href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-email-preferences/adding-an-email-address-to-your-github-account">See this guide</a></p>
+                <button
+                  class='form-control btn btn-outline-secondary'
+                  id='button_load_anonymous_contributors_from_github'
+                >
+                    Load anonymous contributors from GitHub
+                </button>
+                <br />
+                <table class='table'>
+                    <thead>
+                    <tr class='d-flex'>
+                        <th class='col-6' scope='col'>Name</th>
+                        <th class='col-6' scope='col'>Email</th>
+                    </tr>
+                    </thead>
+                    <tbody id='container_anonymous_contributors'></tbody>
+                </table>
+            </div>
+        </div>
+
+        <br />
+
         <div class="container">
             <h4>Teams</h4>
             <div class="form-group">
@@ -95,6 +129,6 @@
         ></script>
 
         <script type="module" src="/assets/components/components.js"></script>
-        <script type="module" src="/assets/js/team_overview.js"></script>
+        <script type="module" src="/assets/js/views/team_overview.js"></script>
     </body>
 </html>
