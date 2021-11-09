@@ -126,10 +126,30 @@
                             <hr class='border-3 border-bottom' />
 
                             <div
+                              class='chart_container_with_extra_space'
+                              id="pr_total_interactions_container"
+                            >
+                                <h4>Pull request total interactions</h4>
+                                <p class='metric_explanation'>Is the team using pull requests extensively? See how many Pull request reviews, the comments to these reviews, reactions, comments on the Pull Requests and team relevant timeline events your pull requests receive.</p>
+                                <div class='chart-canvas-container'>
+                                    <canvas
+                                      class='svg-container chart-canvas'
+                                      data-metric='Pull request total interactions'
+                                    ></canvas>
+                                </div>
+                                <div
+                                  class='chart-statistics-container'
+                                  data-metric='Pull request total interactions'
+                                ></div>
+                            </div>
+
+                            <hr class='border-3 border-bottom' />
+
+                            <div
                               class='chart_container'
                               id='pr_first_review_or_comment_time'
                             >
-                                <h4>Pull request time to first interaction per sprint</h4>
+                                <h4>Pull request time to first team mate interaction per sprint</h4>
                                 <p class='metric_explanation'>How long does it take until somebody other than the author comments on or reviews a pull request?</p>
                                 <div class='chart-canvas-container'>
                                     <canvas

@@ -15,7 +15,8 @@ import {
     get_pull_request_open_duration_buckets,
     get_pull_request_review_and_comment_times,
     get_top_issue_submitters,
-    get_pull_request_review_times
+    get_pull_request_review_times,
+    get_total_pull_request_interactions
 } from './data_functions.js'
 
 export const metrics = {
@@ -73,6 +74,11 @@ export const metrics = {
         chart_class: Multiple_horizontal_bar_chart,
         data_retrieval_function: get_top_issue_submitters,
         sprint_segmented: true
+    },
+    'Pull request total interactions': {
+        chart_class: BarChart,
+        data_retrieval_function: get_total_pull_request_interactions,
+        sprint_segmented: false
     }
 }
 

@@ -51,6 +51,22 @@ const graphql_with_auth = (auth) =>
     })
 
 const PER_PAGE = 50
+const team_based_timeline_event_types = [
+    'AssignedEvent',
+    'CrossReferencedEvent',
+    'LabeledEvent',
+    'MergedEvent',
+    'MovedColumnsInProjectEvent',
+    'MovedColumnsInProjectEvent',
+    'ReferencedEvent',
+    'RenamedTitleEvent',
+    'ReviewRequestedEvent',
+    'ReviewRequestRemovedEvent',
+    'UnlabeledEvent',
+    'UnassignedEvent',
+    'AddedToProjectEvent',
+    'RemovedFromProjectEvent'
+]
 
 // ------------------- helper methods ------------------- //
 
@@ -358,6 +374,46 @@ function select_top_issue_submitters(issues_of_sprint, config) {
     })
     submitters.sort((a, b) => b.value - a.value)
     return submitters
+}
+
+function count_interactions_for_pull_requests(pull_requests, config) {
+    const newData = []
+    pull_requests.forEach((pull_request) => {
+        let interactions_count = 0
+        interactions_count += pull_request.node.comments.nodes.length
+        interactions_count += pull_request.node.reactions.nodes.length
+        interactions_count += pull_request.node.reviews.nodes.length
+
+        let review_comments_count = 0
+        if (pull_request.node.reviews.nodes.length !== 0) {
+            pull_request.node.reviews.nodes.forEach((review) => {
+                review_comments_count += review.comments.nodes.length
+            })
+        }
+
+        interactions_count += review_comments_count
+        const team_based_events_count = count_team_based_timeline_events(
+            pull_request.node.timelineItems.nodes
+        )
+        interactions_count += team_based_events_count
+
+        newData.push({
+            label: `#${pull_request.node.number} ${pull_request.node.title}`,
+            value: interactions_count,
+            url: pull_request.node.url
+        })
+    })
+    return sort_descending_by_value(newData)
+}
+
+function count_team_based_timeline_events(timeline_items) {
+    let count = 0
+    timeline_items.forEach((item) => {
+        if (team_based_timeline_event_types.includes(item.__typename)) {
+            count += 1
+        }
+    })
+    return count
 }
 
 async function get_detailed_commits(auth, owner, project) {
@@ -672,6 +728,84 @@ function sort_pull_requests_into_sprint_groups(pull_requests, sprints) {
     return pull_request_groups
 }
 
+async function get_pull_request_interactions(auth, owner, project) {
+    let has_next_page = true
+    const data = []
+    let last_pull_request_cursor = null
+
+    while (has_next_page) {
+        const response = await graphql_with_auth(auth)(
+            `
+            query interactionsPullRequests(
+              $owner: String!
+              $project: String!
+              $last_pull_request_cursor: String
+            ) {
+              repository(owner: $owner, name: $project) {
+                pullRequests(first: 100, after: $last_pull_request_cursor) {
+                  pageInfo {
+                    hasNextPage
+                  }
+                  edges {
+                    cursor
+                    node {
+                      url
+                      title
+                      number
+                      author {
+                        login
+                      }
+                      reactions(first: 10) {
+                        nodes {
+                          id
+                        }
+                      }
+                      timelineItems(first: 100) {
+                        nodes {
+                          __typename
+                        }
+                      }
+                      comments(first: 30) {
+                        nodes {
+                          body
+                          createdAt
+                          author {
+                            login
+                          }
+                        }
+                      }
+                      reviews(first: 65) {
+                        nodes {
+                          state
+                          createdAt
+                          body
+                          comments(first: 65) {
+                            nodes {
+                              body
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            `,
+            {
+                owner: owner,
+                project: project,
+                last_pull_request_cursor: last_pull_request_cursor
+            }
+        )
+        data.push(...response.repository.pullRequests.edges)
+        has_next_page = response.repository.pullRequests.pageInfo.hasNextPage
+        const last_element = data[data.length - 1]
+        last_pull_request_cursor = `${last_element.cursor}`
+    }
+    return data
+}
+
 // ------------------- public interface ------------------- //
 
 export async function get_teams(config) {
@@ -964,7 +1098,6 @@ export async function get_anonymous_contributors(config) {
         })
     )
 
-    debugger
     return anonymous_contributors
 }
 
@@ -1157,4 +1290,24 @@ export async function get_top_issue_submitters(config, sprint_segmented) {
     }
 
     return [{ label: 'Sprint 0', value: select_top_issue_submitters(issues) }]
+}
+
+export async function get_total_pull_request_interactions(config, sprint_segmented) {
+    let pull_requests = await get_pull_request_interactions(
+        config.github_access_token,
+        config.organization,
+        config.repository
+    )
+
+    if (config.team_index) {
+        pull_requests = pull_requests_with_review_and_comments_filtered_by_team(
+            pull_requests,
+            config.teams[config.team_index]
+        )
+    }
+    if (sprint_segmented) {
+        // todo
+    }
+
+    return count_interactions_for_pull_requests(pull_requests, config)
 }
