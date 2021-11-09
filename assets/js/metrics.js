@@ -4,6 +4,7 @@ import BarChart from './visualizations/bar_chart.js'
 import MultipleLineChart from './visualizations/multiple_line_chart.js'
 import Multiple_horizontal_bar_chart from './visualizations/multiple_horizontal_bar_chart.js'
 import HorizontalStackedBarChart from './visualizations/horizontal_stacked_bar_chart.js'
+import LineBarChart from './visualizations/line_bar_chart.js'
 
 import {
     get_commit_amounts,
@@ -58,7 +59,7 @@ export const metrics = {
         sprint_segmented: false
     },
     'Commit amounts per sprint': {
-        chart_class: MultipleLineChart,
+        chart_class: LineBarChart,
         data_retrieval_function: get_commit_amounts,
         sprint_segmented: true
     },
