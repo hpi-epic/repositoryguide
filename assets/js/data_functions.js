@@ -625,7 +625,8 @@ export async function get_pull_request_open_durations(config, sprint_segmented) 
     } else {
         data = pull_requests.map((pull_request) => ({
             label: pull_request.title,
-            value: closed_pull_request_open_duration_in_hours(pull_request)
+            value: closed_pull_request_open_duration_in_hours(pull_request),
+            url: pull_request.html_url
         }))
         data = data.filter((pullRequest) => pullRequest.value !== null)
         sort_descending_by_value(data)
@@ -768,7 +769,8 @@ export async function get_issue_sizes(config, sprint_segmented) {
     } else {
         data = issues.map((issue) => ({
             label: issue.title,
-            value: issue_size(issue)
+            value: issue_size(issue),
+            url: issue.html_url
         }))
         sort_descending_by_value(data)
     }
