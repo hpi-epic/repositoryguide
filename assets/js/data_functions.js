@@ -1,8 +1,9 @@
 // ------------------- Octokit ------------------- //
 
 import { Octokit } from 'https://cdn.skypack.dev/octokit'
-import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
 import { paginateRest } from 'https://cdn.skypack.dev/@octokit/plugin-paginate-rest'
+import { throttling } from 'https://cdn.skypack.dev/@octokit/plugin-throttling'
+import { graphql } from 'https://cdn.skypack.dev/@octokit/graphql'
 
 // ------------------- Metrices ------------------- //
 import {
@@ -38,6 +39,13 @@ const octokit = (auth) =>
             onAbuseLimit: (retryAfter, options, octo) => {
                 octo.log.warn(`Abuse detected for request ${options.method} ${options.url}`)
             }
+        }
+    })
+
+const graphql_with_auth = (auth) =>
+    graphql.defaults({
+        headers: {
+            authorization: `token ${auth}`
         }
     })
 
@@ -181,11 +189,13 @@ async function get_commits(auth, owner, project) {
     })
 }
 
-async function get_detailed_commit(auth, owner, project, ref) {
-    return octokit(auth).paginate('GET /repos/{owner}/{repo}/commits/{ref}', {
-        owner: owner,
-        repo: project,
-        ref: ref
+function select_graph_commits_for_team(commits, team) {
+    const team_ids = team.members.map((member) => member.id)
+    return commits.filter((commit) => {
+        if (commit.node.author.user) {
+            return team_ids.includes(commit.node.author.user.databaseId)
+        }
+        return false
     })
 }
 
@@ -250,38 +260,26 @@ function construct_heatmap_of_issue_submit_times(issues) {
     return map_timeslots_to_data(time_slots)
 }
 
-async function calculate_stats_for_commits(commit_in_sprints, config) {
+async function calculate_stats_for_commits(commits_separated_in_sprints, config) {
     const newData = []
-    const arrayOfCommitPromises = []
-    for (const sprint of commit_in_sprints) {
+    for (const commits_in_single_sprint of commits_separated_in_sprints) {
         let commit_sum = 0
         let changes_sum = 0
         const team_members = [] // how to get team members that have not contributed???
-        for (const commit of sprint) {
-            if (commit.committer) {
-                arrayOfCommitPromises.push(
-                    get_detailed_commit(
-                        config.github_access_token,
-                        config.organization,
-                        config.repository,
-                        commit.sha
-                    )
-                )
-            }
-        }
-        await Promise.all(arrayOfCommitPromises).then((resolvedPromises) => {
-            resolvedPromises.forEach((detailedCommit) => {
+        commits_in_single_sprint.forEach((commit) => {
+            if (commit.node.author.user) {
                 commit_sum += 1
-                changes_sum += detailedCommit[0].stats.total
+                changes_sum += commit.node.additions + commit.node.deletions
                 if (
                     team_members.findIndex(
-                        (member) => member === detailedCommit[0].committer.id
+                        (member) => member === commit.node.author.user.databaseId
                     ) === -1
                 ) {
-                    team_members.push(detailedCommit[0].committer.id)
+                    team_members.push(commit.node.author.user.databaseId)
                 }
-            })
+            }
         })
+
         newData.push([
             { label: 'Average Commits', value: commit_sum / team_members.length },
             {
@@ -291,6 +289,65 @@ async function calculate_stats_for_commits(commit_in_sprints, config) {
         ])
     }
     return newData
+}
+
+async function get_detailed_commits(auth, owner, project) {
+    let has_next_page = true
+    const data = []
+    let last_commit_cursor = null
+
+    while (has_next_page) {
+        const response = await graphql_with_auth(auth)(
+            `
+            query detailedCommits($owner: String!, $project: String!, $last_commit_cursor: String)
+                {
+                    repository(owner: $owner, name: $project) {
+                        defaultBranchRef {
+                            name
+                            target {
+                                ... on Commit {
+                                    history(first: 100, after: $last_commit_cursor) {
+                                        edges {
+                                            cursor
+                                            node {
+                                                id
+                                                author {
+                                                    user {
+                                                        databaseId
+                                                    }
+                                                    email
+                                                    name
+                                                }
+                                                committedDate
+                                                additions
+                                                deletions
+                                            }
+                                        }
+
+                                        pageInfo {
+                                            hasNextPage
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            `,
+            {
+                owner: owner,
+                project: project,
+                last_commit_cursor: last_commit_cursor
+            }
+        )
+
+        data.push(...response.repository.defaultBranchRef.target.history.edges)
+        has_next_page = response.repository.defaultBranchRef.target.history.pageInfo.hasNextPage
+        const last_element = data[data.length - 1]
+        last_commit_cursor = `${last_element.cursor}`
+    }
+
+    return data
 }
 
 // ------------------- public interface ------------------- //
@@ -537,13 +594,13 @@ export async function get_commit_times(config, sprint_segmented) {
 }
 
 export async function get_commit_amounts(config, sprint_segmented) {
-    let commits = await get_commits(
+    let commits = await get_detailed_commits(
         config.github_access_token,
         config.organization,
         config.repository
     )
     if (config.team_index) {
-        commits = select_commits_for_team(commits, config.teams[config.team_index])
+        commits = select_graph_commits_for_team(commits, config.teams[config.team_index])
     }
 
     if (sprint_segmented) {
@@ -559,9 +616,11 @@ export async function get_commit_amounts(config, sprint_segmented) {
 
             for (let sprint_index = 0; sprint_index < config.sprints.length; sprint_index++) {
                 const sprint = config.sprints[sprint_index]
-                const closed_date = Date.parse(commit.commit.author.date)
+                const commited_date = Date.parse(commit.node.committedDate)
+                const sprint_start = Date.parse(sprint.from)
+                const sprint_end = Date.parse(sprint.to)
 
-                if (sprint.from <= closed_date && closed_date < sprint.to) {
+                if (sprint_start <= commited_date && commited_date < sprint_end) {
                     commit_groups[sprint_index].push(commit)
                     found = true
                     break
