@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Teams</title>
+
+        <link rel="stylesheet" type="text/css" href="/assets/css/dist/main.css" />
+    </head>
+    <body>
+        <template id="template_unregistered_collaborator_row">
+            <tr class="d-flex">
+                <td class="col-4" id="text_collaborator_name"></td>
+                <td class="col-6">
+                    <label style="display: none" for="select_team">
+                        Selected team for the unregistered collaborator
+                    </label>
+                    <select id="select_team" class="form-select">
+                        <option selected disabled value="none">-- Select a team --</option>
+                    </select>
+                </td>
+                <td class="col-2">
+                    <button id="button_assign" class="btn btn-outline-secondary" disabled>
+                        Assign
+                    </button>
+                </td>
+            </tr>
+        </template>
+
+        <template id="template_anonymous_contributor">
+            <tr class="d-flex">
+                <td class="col-6" id="text_contributor_name"></td>
+                <td class="col-6" id="text_contributor_email"></td>
+            </tr>
+        </template>
+
+        <template id="template_team_row">
+            <tr class="d-flex">
+                <td class="col-5" id="text_name"></td>
+                <td class="col-5" id="text_label"></td>
+                <td class="col-2">
+                    <a id="link_detail_page" class="btn btn-outline-secondary" href="detail.html"
+                        >Details</a
+                    >
+                </td>
+            </tr>
+        </template>
+
+        <header data-header></header>
+
+        <div class="container">
+            <h4>Unregistered Collaborators</h4>
+            <div class="form-group">
+                <button
+                    class="form-control btn btn-outline-secondary"
+                    id="button_load_unregistered_collaborators_from_github"
+                >
+                    Load unregistered collaborators from GitHub
+                </button>
+                <br />
+                <table class="table">
+                    <thead>
+                        <tr class="d-flex">
+                            <th class="col-4" scope="col">Name</th>
+                            <th class="col-6" scope="col">Team</th>
+                            <th class="col-2" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="container_unregistered_collaborators"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="card container">
+            <div class="card-header">
+                <h3>Anonymous Contributors</h3>
+            </div>
+            <div class="form-group card-body">
+                <p>
+                    An anonymous contributor is a commit author in your repository that has no
+                    matched GitHub user. As the metrics are built mostly from GitHub Data,
+                    contributors with emails that have no matched GitHub user are not included in
+                    these metrics. To include an anonymous user in the metrics, inform the user to
+                    add the displayed email to his github account. Github then automatically
+                    recognizes the email and matches it to the user.
+                    <a
+                        href="https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-github-user-account/managing-email-preferences/adding-an-email-address-to-your-github-account"
+                        >See this guide</a
+                    >
+                </p>
+                <button
+                    class="form-control btn btn-outline-secondary"
+                    id="button_load_anonymous_contributors_from_github"
+                >
+                    Load anonymous contributors from GitHub
+                </button>
+                <br />
+                <table class="table">
+                    <thead>
+                        <tr class="d-flex">
+                            <th class="col-6" scope="col">Name</th>
+                            <th class="col-6" scope="col">Email</th>
+                        </tr>
+                    </thead>
+                    <tbody id="container_anonymous_contributors"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="container">
+            <h4>Teams</h4>
+            <div class="form-group">
+                <button
+                    class="form-control btn btn-outline-secondary"
+                    id="button_load_teams_from_github"
+                >
+                    Load teams from GitHub
+                </button>
+                <br />
+                <table class="table">
+                    <thead>
+                        <tr class="d-flex">
+                            <th class="col-5" scope="col">Name</th>
+                            <th class="col-5" scope="col">Label</th>
+                            <th class="col-2" scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="container_teams"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+            crossorigin="anonymous"
+        ></script>
+
+        <script type="module" src="/assets/components/components.js"></script>
+        <script type="module" src="/assets/js/views/team_overview.js"></script>
+    </body>
+</html>
