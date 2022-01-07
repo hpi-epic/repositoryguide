@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+
+        <link rel="stylesheet" type="text/css" href="/assets/css/dist/main.css" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+        />
+    </head>
+    <body>
+        <header data-header></header>
+        <div class="container" id="settings_container">
+            <h4>Settings</h4>
+            <div class="form-group">
+                <div class="input-group">
+                    <table class="table">
+                        <tbody>
+                            <tr class="d-flex">
+                                <td class="col-6">
+                                    <label for="input_config_file">Load config file:</label>
+                                    <input
+                                        accept=".json"
+                                        class="form-control-inline"
+                                        id="input_config_file"
+                                        type="file"
+                                    />
+                                </td>
+                                <td class="col-3">
+                                    <button
+                                        class="btn btn-outline-secondary"
+                                        id="button_download_current_config"
+                                        style="float: right"
+                                    >
+                                        Download current config
+                                    </button>
+                                </td>
+                                <td class="col-3">
+                                    <button
+                                        class="btn btn-outline-secondary"
+                                        id="button_download_clean_config"
+                                        style="float: right"
+                                    >
+                                        Download new config
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br />
+
+                <div class="input-group">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr class="d-fflex">
+                                <td class="col-3">
+                                    <label for="input_organization">Organization:</label>
+                                </td>
+                                <td class="col-9">
+                                    <input
+                                        class="form-control"
+                                        id="input_organization"
+                                        type="text"
+                                    />
+                                </td>
+                            </tr>
+                            <tr class="d-fflex">
+                                <td class="col-3">
+                                    <label for="input_repository">Repository:</label>
+                                </td>
+                                <td class="col-9">
+                                    <input class="form-control" id="input_repository" type="text" />
+                                </td>
+                            </tr>
+                            <tr class="d-fflex">
+                                <td class="col-3">
+                                    <label for="input_team">Team:</label>
+                                </td>
+                                <td class="col-9">
+                                    <select id="input_team" class="form-select"></select>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br />
+                <br />
+
+                <h4>How to setup your config</h4>
+                <p>
+                    If you want to setup your clean config to work with your repository, fill out
+                    the following fields.
+                </p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                            <th>Hints</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>github_access_token</td>
+                            <td>String</td>
+                            <td>yes</td>
+                            <td>Your Github Access Token</td>
+                            <td>See below on how to setup your access token</td>
+                        </tr>
+                        <tr>
+                            <td>organization</td>
+                            <td>String</td>
+                            <td>yes</td>
+                            <td>Your Github Organization</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>repository</td>
+                            <td>String</td>
+                            <td>yes</td>
+                            <td>Your Repository in your organization</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>sprints</td>
+                            <td>Array</td>
+                            <td></td>
+                            <td>
+                                Objects having the fields from and to which describe ISO 8601
+                                timestamps as string of your sprint durations
+                            </td>
+                            <td>
+                                Use
+                                <a href="https://www.timestamp-converter.com/ ">this website</a> to
+                                convert your times
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>teams</td>
+                            <td>Array</td>
+                            <td></td>
+                            <td>Objects describing your teams</td>
+                            <td>You can set this up on the team page</td>
+                        </tr>
+                        <tr>
+                            <td>team_index</td>
+                            <td>Integer</td>
+                            <td></td>
+                            <td>
+                                The Index in the team selection which you want to have preselected
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <br />
+
+                <h4>How to setup your Github personal access token</h4>
+                <p>
+                    Follow
+                    <a
+                        href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token"
+                        >this guide</a
+                    >
+                    and check the following lower level attributes:
+                </p>
+                <ul>
+                    <li>repo</li>
+                    <li>repo:status</li>
+                    <li>repo_deployment</li>
+                    <li>public_repo</li>
+                    <li>repo:invite</li>
+                    <li>read:packages</li>
+                    <li>read:org</li>
+                    <li>read:public_key</li>
+                    <li>read:repo_hook</li>
+                    <li>read:user</li>
+                    <li>user:email</li>
+                    <li>read:discussion</li>
+                    <li>read:gpg_key</li>
+                </ul>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+            crossorigin="anonymous"
+        ></script>
+
+        <script type="module" src="/assets/components/components.js"></script>
+        <script type="module" src="/assets/js/views/settings.js"></script>
+    </body>
+</html>

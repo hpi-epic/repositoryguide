@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+
+        <link rel="stylesheet" type="text/css" href="/assets/css/dist/main.css" />
+    </head>
+    <body>
+        <template id="template_team_member_row">
+            <tr class="d-flex">
+                <td class="col-10" id="text_member_name"></td>
+                <td class="col-2">
+                    <button id="button_remove_member" class="btn btn-outline-secondary">
+                        Remove
+                    </button>
+                </td>
+            </tr>
+        </template>
+
+        <header data-header></header>
+
+        <div class="container">
+            <h4>General Information:</h4>
+            <div class="form-group">
+                <table class="table">
+                    <tbody>
+                        <tr class="d-flex">
+                            <th class="col-6" scope="row">Team name:</th>
+                            <td class="col-6" id="text_team_name"></td>
+                        </tr>
+                        <tr class="d-flex">
+                            <th class="col-6" scope="row">Team label:</th>
+                            <td class="col-6" id="text_team_label"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="container">
+            <h3>Members:</h3>
+            <table class="table">
+                <tbody id="container_members"></tbody>
+            </table>
+        </div>
+
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+            crossorigin="anonymous"
+        ></script>
+
+        <script type="module" src="/assets/components/components.js"></script>
+        <script type="module" src="/assets/js/views/team_detail.js"></script>
+    </body>
+</html>
