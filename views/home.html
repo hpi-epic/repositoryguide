@@ -1,274 +1,331 @@
 <!DOCTYPE html>
-<html lang='en'>
-<head>
-    <meta charset='UTF-8' />
-    <title>Title</title>
-    <link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css'>
-    <link rel='stylesheet' type='text/css' href='/assets/css/dist/main.css'>
-</head>
-<body>
-<template id='template_input_sprint'>
-    <div class='input_sprint'>
-        <label for='sprint_begin'>From: </label>
-        <input class='form-control' id='sprint_begin' type='date' />
-        <label for='sprint_end'>to: </label>
-        <input class='form-control' id='sprint_end' type='date' />
-    </div>
-    <br />
-</template>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
 
-<nav class='navbar navbar-expand-md navbar-dark bg-dark mb-4'>
-    <div class='navbar-brand'>Agile Metrics</div>
-    <div class='collapse navbar-collapse'>
-        <ul class='navbar-nav mr-auto'>
-            <li class='nav-item active'>
-                <a
-                    class='nav-link'
-                    href='/views/home.html'
-                    id='button_navigate_home'
-                >
-                    <i class='bi bi-house-fill' aria-hidden='true'></i>
-                    Home
-                </a>
-            </li>
-            <li class='nav-item'>
-                <a
-                    class='nav-link'
-                    href='/views/team/overview.html'
-                    id='button_navigate_teams'
-                >
-                    Teams
-                </a>
-            </li>
-            <li class='nav-item'>
-                <a
-                    class='nav-link'
-                    href='/views/sprint/overview.html'
-                    id='button_navigate_sprint'
-                >
-                    Sprints
-                </a>
-            </li>
-            <li class='nav-item'>
-                <a
-                    class='nav-link'
-                    href='/views/settings.html'
-                    id='button_navigate_settings'
-                >
-                    <i class='bi bi-gear-fill' aria-hidden='true'></i>
-                    Settings
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
+        <link rel="stylesheet" type="text/css" href="/assets/css/dist/main.css" />
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+        />
+    </head>
 
-<div class='card container' id='settings_container'>
-    <div class='card-header'>
-        <h3>Home</h3>
-    </div>
-    <div class='form-group card-body'>
-        <ul class='nav nav-tabs' id='myTab' role='tablist'>
-            <li class='nav-item' role='presentation'>
-                <button
-                    class='nav-link active'
-                    id='nav-pull-request-tab'
-                    data-bs-toggle='tab'
-                    data-bs-target='#pull-requests'
-                    type='button'
-                    role='tab'
-                    aria-controls='nav-pull-requests'
-                    aria-selected='true'
-                >
-                    Pull Requests
-                </button>
-            </li>
-            <li class='nav-item' role='presentation'>
-                <button
-                    class='nav-link'
-                    id='nav-commits-tab'
-                    data-bs-toggle='tab'
-                    data-bs-target='#commits'
-                    type='button'
-                    role='tab'
-                    aria-controls='nav-commits'
-                    aria-selected='false'
-                >
-                    Commits
-                </button>
-            </li>
-            <li class='nav-item' role='presentation'>
-                <button
-                    class='nav-link'
-                    id='nav-issues-tab'
-                    data-bs-toggle='tab'
-                    data-bs-target='#issues'
-                    type='button'
-                    role='tab'
-                    aria-controls='issues'
-                    aria-selected='false'
-                >
-                    Issues
-                </button>
-            </li>
-        </ul>
-        <br />
-        <div class='tab-content'>
-            <div
-                class='tab-pane active show'
-                id='pull-requests'
-                role='tabpanel'
-                aria-labelledby='nav-pull-request-tab'
-            >
-                <div class='chart-container' id='pr_closing_times_container'>
-                    <h4>Pull request closing times</h4>
-                    <p class='metric-explanation'></p>
-                    <div class='chart-canvas-container'>
-                        <canvas
-                            class='svg-container chart-canvas'
-                            data-metric='Pull request closing times'
-                        ></canvas>
-                    </div>
-                    <div
-                        class='chart-statistics-container'
-                        data-metric='Pull request closing times'
-                    ></div>
-                </div>
+    <body>
+        <header data-header></header>
 
-                <hr class='border-3 border-bottom' />
-
-                <div class='chart-container' id='pr_closing_times_in_buckets_container'>
-                    <h4>Pull request closing times in buckets overall</h4>
-                    <p class='metric-explanation'></p>
-                    <div class='chart-canvas-container'>
-                        <canvas
-                            class='svg-container chart-canvas'
-                            data-metric='Pull request closing times in buckets overall'
-                        ></canvas>
-                    </div>
-                    <div
-                        class='chart-statistics-container'
-                        data-metric='Pull request closing times in buckets overall'
-                    ></div>
-                </div>
-
-                <hr class='border-3 border-bottom' />
-
-                <div
-                    class='chart-container'
-                    id='pr_closing_times_in_buckets_sprint_segmented_container'
-                >
-                    <h4>Pull request closing times in buckets per sprint</h4>
-                    <p class='metric-explanation'></p>
-                    <div class='chart-canvas-container'>
-                        <canvas
-                            class='svg-container chart-canvas'
-                            data-metric='Pull request closing times in buckets per sprint'
-                        ></canvas>
-                    </div>
-                    <div
-                        class='chart-statistics-container'
-                        data-metric='Pull request closing times in buckets per sprint'
-                    ></div>
+        <div class="overlay" id="overlay">
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-light loading_spinner" role="status">
+                    <span class="sr-only">Loading...</span>
                 </div>
             </div>
-            <div
-                class='tab-pane'
-                id='commits'
-                role='tabpanel'
-                aria-labelledby='nav-commits-tab'
+            <a
+                class="btn btn-outline-light loading_button"
+                id="error_loading_button"
+                href="/views/settings.html"
+                >Loading taking too long? Check your settings</a
             >
-                <div class='chart-container' id='commit_times_container'>
-                    <h4>Commit times</h4>
-                    <p class='metric-explanation'></p>
-                    <div class='chart-canvas-container'>
-                        <canvas
-                            class='svg-container chart-canvas'
-                            data-metric='Commit times'
-                        ></canvas>
-                    </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar position-fixed">
                     <div
-                        class='chart-statistics-container'
-                        data-metric='Commit times'
-                    ></div>
-                </div>
-
-                <hr class='border-3 border-bottom' />
-
-                <div class='chart-container' id='commit_amounts_container'>
-                    <h4>Commit amounts per sprint</h4>
-                    <p class='metric-explanation'></p>
-                    <div class='chart-canvas-container'>
-                        <canvas
-                            class='svg-container chart-canvas'
-                            data-metric='Commit amounts per sprint'
-                        ></canvas>
+                        class="nav flex-column nav-pills"
+                        role="tablist"
+                        aria-orientation="vertical"
+                    >
+                        <button
+                            class="nav-link active"
+                            id="pull-requests-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#pull-requests"
+                            type="button"
+                            role="tab"
+                            aria-controls="pull-requests"
+                            aria-selected="true"
+                        >
+                            Pull Requests
+                        </button>
+                        <button
+                            class="nav-link"
+                            id="commits-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#commits"
+                            type="button"
+                            role="tab"
+                            aria-controls="commits"
+                            aria-selected="false"
+                        >
+                            Commits
+                        </button>
+                        <button
+                            class="nav-link"
+                            id="issues-tab"
+                            data-bs-toggle="pill"
+                            data-bs-target="#issues"
+                            type="button"
+                            role="tab"
+                            aria-controls="issues"
+                            aria-selected="false"
+                        >
+                            Issues
+                        </button>
                     </div>
-                    <div
-                        class='chart-statistics-container'
-                        data-metric='Commit amounts per sprint'
-                    ></div>
-                </div>
-            </div>
-            <div
-                class='tab-pane'
-                id='issues'
-                role='tabpanel'
-                aria-labelledby='nav-issues-tab'
-            >
-                <div class='chart-container' id='issues_sizes_in_buckets_container'>
-                    <h4>Issue sizes</h4>
-                    <p class='metric-explanation'></p>
-                    <div class='chart-canvas-container'>
-                        <canvas
-                            class='svg-container chart-canvas'
-                            data-metric='Issue sizes'
-                        ></canvas>
+                </nav>
+                <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <div class="tab-content">
+                        <div
+                            class="tab-pane show active"
+                            id="pull-requests"
+                            role="tabpanel"
+                            aria-labelledby="pull-requests-tab"
+                        >
+                            <div class="chart-container" id="pr_open_durations_container">
+                                <h4>Pull request open duration in hours</h4>
+                                <p class="metric-explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Pull request open duration"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Pull request open duration"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div
+                                class="chart-container"
+                                id="pr_open_durations_in_buckets_container"
+                            >
+                                <h4>Pull request open durations in buckets overall</h4>
+                                <p class="metric-explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Pull request open durations in buckets overall"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Pull request open durations in buckets overall"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div
+                                class="chart-container"
+                                id="pr_open_durations_in_buckets_sprint_segmented_container"
+                            >
+                                <h4>Pull request open durations in buckets per sprint</h4>
+                                <p class="metric-explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Pull request open durations in buckets per sprint"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Pull request open durations in buckets per sprint"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div
+                                class="chart-container-with-extra-space"
+                                id="pr_total_interactions_container"
+                            >
+                                <h4>Pull request total interactions</h4>
+                                <p class="metric_explanation">
+                                    Is the team using pull requests extensively? See how many Pull
+                                    request reviews, the comments to these reviews, reactions,
+                                    comments on the Pull Requests and team relevant timeline events
+                                    your pull requests receive.
+                                </p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Pull request total interactions"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Pull request total interactions"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div class="chart_container" id="pr_first_review_or_comment_time">
+                                <h4>Pull request time to first team mate interaction per sprint</h4>
+                                <p class="metric_explanation">
+                                    How long does it take until somebody other than the author
+                                    comments on or reviews a pull request?
+                                </p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Pull request time to first interaction of other team members in hours"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Pull request time to first interaction of other team members in hours"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div class="chart_container" id="pr_first_review_time">
+                                <h4>Pull request time to first review per sprint</h4>
+                                <p class="metric_explanation">
+                                    How long does it take, until somebody other than the author
+                                    reviews a new pull request?
+                                </p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Pull request time to first review in hours"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Pull request time to first review in hours"
+                                ></div>
+                            </div>
+                        </div>
+                        <div
+                            class="tab-pane"
+                            id="commits"
+                            role="tabpanel"
+                            aria-labelledby="commits-tab"
+                        >
+                            <div class="chart-container" id="commit_times_container">
+                                <h4>Commit times</h4>
+                                <p class="metric-explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Commit times"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Commit times"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div class="chart-container" id="commit_amounts_container">
+                                <h4>Commit amounts per sprint</h4>
+                                <p class="metric-explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Commit amounts per sprint"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Commit amounts per sprint"
+                                ></div>
+                            </div>
+                        </div>
+                        <div
+                            class="tab-pane"
+                            id="issues"
+                            role="tabpanel"
+                            aria-labelledby="issues-tab"
+                        >
+                            <div class="chart-container" id="issues_sizes_in_buckets_container">
+                                <h4>Issue sizes</h4>
+                                <p class="metric-explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Issue sizes"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Issue sizes"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div class="chart-container" id="issues_sizes_container">
+                                <h4>Issue sizes in buckets</h4>
+                                <p class="metric-explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Issue sizes in buckets"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Issue sizes in buckets"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div class="chart-container" id="issues_submit_times_container">
+                                <h4>Issue submit times</h4>
+                                <p class="metric-explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Issue submit times"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Issue submit times"
+                                ></div>
+                            </div>
+
+                            <hr class="border-3 border-bottom" />
+
+                            <div class="chart_container" id="top_issue_submitters_container">
+                                <h4>Top issue submitters</h4>
+                                <p class="metric_explanation"></p>
+                                <div class="chart-canvas-container">
+                                    <canvas
+                                        class="svg-container chart-canvas"
+                                        data-metric="Top issue submitters"
+                                    ></canvas>
+                                </div>
+                                <div
+                                    class="chart-statistics-container"
+                                    data-metric="Top issue submitters"
+                                ></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class='chart-statistics-container' data-metric='Issue sizes'></div>
-                </div>
-
-                <hr class='border-3 border-bottom' />
-
-                <div class='chart-container' id='issues_sizes_container'>
-                    <h4>Issue sizes in buckets</h4>
-                    <p class='metric-explanation'></p>
-                    <div class='chart-canvas-container'>
-                        <canvas
-                            class='svg-container chart-canvas'
-                            data-metric='Issue sizes in buckets'
-                        ></canvas>
-                    </div>
-                    <div
-                        class='chart-statistics-container'
-                        data-metric='Issue sizes in buckets'
-                    ></div>
-                </div>
-
-                <hr class='border-3 border-bottom' />
-
-                <div class='chart-container' id='issues_submit_times_container'>
-                    <h4>Issue submit times</h4>
-                    <p class='metric-explanation'></p>
-                    <div class='chart-canvas-container'>
-                        <canvas
-                            class='svg-container chart-canvas'
-                            data-metric='Issue submit times'
-                        ></canvas>
-                    </div>
-                    <div
-                        class='chart-statistics-container'
-                        data-metric='Issue submit times'
-                    ></div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-<script type='text/javascript' src='https://cdn.jsdelivr.net/npm/toastify-js'></script>
-<script type='module' src='/assets/js/home.js'></script>
-<script type='module' src='/assets/js/home.js'></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+            crossorigin="anonymous"
+        ></script>
 
-</body>
+        <script type="module" src="/assets/components/components.js"></script>
+        <script type="module" src="/assets/js/views/home.js"></script>
+    </body>
 </html>

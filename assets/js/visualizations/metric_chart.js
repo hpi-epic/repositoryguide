@@ -1,4 +1,4 @@
-import Chart from 'chart.js/auto'
+import 'https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js'
 
 // This class provides some common functionality for all charts
 // It should not be used as actual diagram. Please use the corresponding subclasses.

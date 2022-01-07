@@ -41,19 +41,21 @@ export default class Config {
         instance.team_index = json.team_index
         instance.github_access_token = json.github_access_token
 
-        json.sprints.forEach((sprint) => {
-            const from = new Date(Date.parse(sprint.from))
-            const to = new Date(Date.parse(sprint.to))
-            instance.sprints.push({
-                from: from,
-                to: to
+        if (json.sprints && json.sprints.length !== 0) {
+            json.sprints.forEach((sprint) => {
+                const from = new Date(Date.parse(sprint.from))
+                const to = new Date(Date.parse(sprint.to))
+                instance.sprints.push({
+                    from: from,
+                    to: to
+                })
             })
-        })
+        }
 
         return instance
     }
 
-    to_storage_storage() {
+    to_storage() {
         localStorage.setItem('config', this.toString())
     }
 
