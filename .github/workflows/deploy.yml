@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 42-major-refactoring
+  # Allow manual triggering
+  workflow_dispatch:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
