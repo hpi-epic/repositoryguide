@@ -1,8 +1,6 @@
 name: Build and Deploy
 on:
   push:
-    branches:
-      - 42-major-refactoring
   # Allow manual triggering
   workflow_dispatch:
 jobs:
@@ -22,3 +20,4 @@ jobs:
         with:
           branch: gh-pages
           folder: .
+        if: github.ref == 'refs/heads/main'
