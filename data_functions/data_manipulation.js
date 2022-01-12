@@ -353,7 +353,6 @@ export function calculate_issue_size(issue) {
      * nr of checkboxes?
      * body size?
      * */
-    debugger
     return issue.body ? issue.body.length : 0
 }
 
