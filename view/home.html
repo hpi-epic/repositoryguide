@@ -200,7 +200,9 @@
             >
                 <div class='chart_container' id="pr_open_durations_container">
                     <h4>Pull request open duration in hours</h4>
-                    <p class='metric_explanation'>The longer a Pull Request remains open and unmerged, the further the code of the base branch can diverge (with other contributors making changes to it in the meantime). Therefore, Pull Requests that are open for long periods of time can become more difficult to merge into the base branch. When this is the case with multiple simultaneous long-running Pull Requests, you might encounter <a href="https://www.atlassian.com/git/articles/trust-the-merge-and-branch-simplification-musings" target="_blank" rel="noopener noreferrer">"Merge Hell"</a>.</p>
+                    <p class='metric_explanation'>
+                        The longer a Pull Request (PR) remains open and unmerged, the further the code of the base branch can diverge (with other contributors making changes to it in the meantime). Therefore, PRs that are open for long periods of time can lead to more complex and time-consuming merges into the base branch. Smaller PRs might be easier to review and merge quickly and have been <a href="https://octoverse.github.com/static/github-octoverse-2020-productivity-report.pdf" target="_blank" rel="noopener noreferrer">linked to increased productivity</a>.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -217,7 +219,9 @@
 
                 <div class='chart_container' id="pr_open_durations_in_buckets_container">
                     <h4>Pull request open durations in buckets overall</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        In cases where there are multiple simultaneous long-running Pull Requests (PRs), the challenge of merging the code within them is multiplied. There might be dependencies between the individual features in the PRs and each merge of a PR leads to changes that again need to be considered in all other open PRs, see also <a href="https://www.atlassian.com/git/articles/trust-the-merge-and-branch-simplification-musings" target="_blank" rel="noopener noreferrer">"Merge Hell"</a>.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -237,7 +241,9 @@
                     id="pr_open_durations_in_buckets_sprint_segmented_container"
                 >
                     <h4>Pull request open durations in buckets per sprint</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        The more Pull Requests (PRs) are open at the same time in a Sprint, the fewer contributors might be available to get a single PR ready for merging. Depending on the team setup and the context, additional PRs with smaller scope that can be finished (e.g. tested and reviewed) more quickly could ease merging.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -257,7 +263,10 @@
                   id="pr_total_interactions_container"
                 >
                     <h4>Pull request total interactions</h4>
-                    <p class='metric_explanation'>Is the team using pull requests extensively? See how many Pull request reviews, the comments to these reviews, reactions, comments on the Pull Requests and team relevant timeline events your pull requests receive.</p>
+                    <p class='metric_explanation'>
+                        Pull Requests (PRs) can facilitate discussions and reviews of proposed code changes. Interactions with the PR by contributors drive development progress. However, long-running discussions with many comments can also indicate potential problems and confusion related to the PR that may slow down the development process.<br>
+                        This visualization shows the overall amount of reviews, review responses, reactions, PR comments and other team-related timeline events.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                           class='svg-container chart-canvas'
@@ -277,7 +286,9 @@
                   id='pr_first_review_or_comment_time'
                 >
                     <h4>Pull request time to first team mate interaction per sprint</h4>
-                    <p class='metric_explanation'>How long does it take until somebody other than the author comments on or reviews a pull request?</p>
+                    <p class='metric_explanation'>
+                        The faster a Pull Request receives feedback, the faster it can be improved and eventually merged. This visualization shows how long it took for PRs to receive an inital interaction by somebody other than the author. It's can also be very motivating to receive an intial comment celebrating the creation of a new PR with exciting changes!
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                           class='svg-container chart-canvas'
@@ -297,7 +308,9 @@
                   id='pr_first_review_time'
                 >
                     <h4>Pull request time to first review per sprint</h4>
-                    <p class='metric_explanation'>How long does it take, until somebody other than the author reviews a new pull request?</p>
+                    <p class='metric_explanation'>
+                        Improvement suggestions related to specific code areas may be best handled by a structured Pull Request review, which can be accepted, rejected and discussed. This visualization shows how long it took for a contributor (other than the PR author) to provide a first review after a new PR was opened.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                           class='svg-container chart-canvas'
