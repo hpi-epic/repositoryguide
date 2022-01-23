@@ -331,7 +331,11 @@
             >
                 <div class='chart_container' id='commit_times_container'>
                     <h4>Commit times</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        The point in time when code changes are committed shows when contributors were active. The work times of contributors can influence how others can interact with new code, comments or questions. Shared work times in teams may be beneficial for responsive communication and collaboration. Work times that are spread out evenly may contribute to continuous development.
+                        <br>
+                        Be aware that the commit times visualized here are not equivalent to the time when these commits where shared with others, i.e. pushed to a shared branch. 
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -348,7 +352,10 @@
 
                 <div class='chart_container' id='commit_amounts_container'>
                     <h4>Commit amounts per sprint</h4>
-                    <p class='metric_explanation'>On average, how many commits do you push and how many changes (additions+deletions) do they contain?</p>
+                    <p class='metric_explanation'>
+                        The guiding principle of <a href="https://blog.codinghorror.com/check-in-early-check-in-often/" target="_blank" rel="noopener noreferrer">"Check In Early, Check In Often"</a> should ideally motivate contributors to have frequent checkpoints in case of errors, to document their work, to allow feedback and to integrate with other code.<br>
+                        This visualization shows how many commits were contributed on average and how many changes (sum of additions and deletions) these contained.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
