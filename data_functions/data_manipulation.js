@@ -353,7 +353,7 @@ export function calculate_issue_size(issue) {
      * nr of checkboxes?
      * body size?
      * */
-    return issue.body.length
+    return issue.body ? issue.body.length : 0
 }
 
 export async function calculate_stats_for_commits(commits_separated_in_sprints, config) {

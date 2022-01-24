@@ -200,7 +200,9 @@
             >
                 <div class='chart_container' id="pr_open_durations_container">
                     <h4>Pull request open duration in hours</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        The longer a Pull Request (PR) remains open and unmerged, the further the code of the base branch can diverge (with other contributors making changes to it in the meantime). Therefore, PRs that are open for long periods of time can lead to more complex and time-consuming merges into the base branch. Smaller PRs might be easier to review and merge quickly and have been <a href="https://octoverse.github.com/static/github-octoverse-2020-productivity-report.pdf" target="_blank" rel="noopener noreferrer">linked to increased productivity</a>.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -217,7 +219,9 @@
 
                 <div class='chart_container' id="pr_open_durations_in_buckets_container">
                     <h4>Pull request open durations in buckets overall</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        In cases where there are multiple simultaneous long-running Pull Requests (PRs), the challenge of merging the code within them is multiplied. There might be dependencies between the individual features in the PRs and each merge of a PR leads to changes that again need to be considered in all other open PRs, see also <a href="https://www.atlassian.com/git/articles/trust-the-merge-and-branch-simplification-musings" target="_blank" rel="noopener noreferrer">"Merge Hell"</a>.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -237,7 +241,9 @@
                     id="pr_open_durations_in_buckets_sprint_segmented_container"
                 >
                     <h4>Pull request open durations in buckets per sprint</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        The more Pull Requests (PRs) are open at the same time in a Sprint, the fewer contributors might be available to get a single PR ready for merging. Depending on the team setup and the context, additional PRs with smaller scope that can be finished (e.g. tested and reviewed) more quickly could ease merging.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -257,7 +263,10 @@
                   id="pr_total_interactions_container"
                 >
                     <h4>Pull request total interactions</h4>
-                    <p class='metric_explanation'>Is the team using pull requests extensively? See how many Pull request reviews, the comments to these reviews, reactions, comments on the Pull Requests and team relevant timeline events your pull requests receive.</p>
+                    <p class='metric_explanation'>
+                        Pull Requests (PRs) can facilitate discussions and reviews of proposed code changes. Interactions with the PR by contributors drive development progress. However, long-running discussions with many comments can also indicate potential problems and confusion related to the PR that may slow down the development process.<br>
+                        This visualization shows the overall amount of reviews, review responses, reactions, PR comments and other team-related timeline events.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                           class='svg-container chart-canvas'
@@ -277,7 +286,9 @@
                   id='pr_first_review_or_comment_time'
                 >
                     <h4>Pull request time to first team mate interaction per sprint</h4>
-                    <p class='metric_explanation'>How long does it take until somebody other than the author comments on or reviews a pull request?</p>
+                    <p class='metric_explanation'>
+                        The faster a Pull Request receives feedback, the faster it can be improved and eventually merged. This visualization shows how long it took for PRs to receive an inital interaction by somebody other than the author. It's can also be very motivating to receive an intial comment celebrating the creation of a new PR with exciting changes!
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                           class='svg-container chart-canvas'
@@ -297,7 +308,9 @@
                   id='pr_first_review_time'
                 >
                     <h4>Pull request time to first review per sprint</h4>
-                    <p class='metric_explanation'>How long does it take, until somebody other than the author reviews a new pull request?</p>
+                    <p class='metric_explanation'>
+                        Improvement suggestions related to specific code areas may be best handled by a structured Pull Request review, which can be accepted, rejected and discussed. This visualization shows how long it took for a contributor (other than the PR author) to provide a first review after a new PR was opened.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                           class='svg-container chart-canvas'
@@ -318,7 +331,11 @@
             >
                 <div class='chart_container' id='commit_times_container'>
                     <h4>Commit times</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        The point in time when code changes are committed shows when contributors were active. The work times of contributors can influence how others can interact with new code, comments or questions. Shared work times in teams may be beneficial for responsive communication and collaboration. Work times that are spread out evenly may contribute to continuous development.
+                        <br>
+                        Be aware that the commit times visualized here are not equivalent to the time when these commits where shared with others, i.e. pushed to a shared branch. 
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -335,7 +352,10 @@
 
                 <div class='chart_container' id='commit_amounts_container'>
                     <h4>Commit amounts per sprint</h4>
-                    <p class='metric_explanation'>On average, how many commits do you push and how many changes (additions+deletions) do they contain?</p>
+                    <p class='metric_explanation'>
+                        The guiding principle of <a href="https://blog.codinghorror.com/check-in-early-check-in-often/" target="_blank" rel="noopener noreferrer">"Check In Early, Check In Often"</a> should ideally motivate contributors to have frequent checkpoints in case of errors, to document their work, to allow feedback and to integrate with other code.<br>
+                        This visualization shows how many commits were contributed on average and how many changes (sum of additions and deletions) these contained.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -356,7 +376,11 @@
             >
                 <div class='chart_container' id='issues_sizes_in_buckets_container'>
                     <h4>Issue sizes</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        Issues represent the open work items to be completed. The clearer the work to be done or the feature to be developed is described the easier it is to implement it to an agreed standard. Extremely long or short issues might both not be ideal for contributors to work on, either requiring a split into multiple smaller issues or additional details.
+                        <br>
+                        This visualization shows the size of issues as measured by amount of characters in the issue body.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -370,7 +394,9 @@
 
                 <div class='chart_container' id='issues_sizes_container'>
                     <h4>Issue sizes in buckets</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        The size of an issue description can influence how likely it is that an issue will be worked on. Both very detailed descriptions (that might take a lot of mental energy to understand) as well as very brief ones (which might lack critical details) can be demotivating. The abstracts that summarize complex scientific papers are usually about 250 words long (about 1200 characters). Concerning Agile software development processes, there has been the idea that a User Story expressing a requirement in an issue should fit on <a href="http://" target="_blank" rel="noopener noreferrer">an index card</a>.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -387,7 +413,9 @@
 
                 <div class='chart_container' id='issues_submit_times_container'>
                     <h4>Issue submit times</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        Issues often represent the primary work items, describing the work to be accomplished in a team. The time that new issues are submitted can influence how the team works. If issues are submitted in shared team work hours, they may receive faster feedback or can be immediately worked on if they are urgent.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                             class='svg-container chart-canvas'
@@ -404,7 +432,9 @@
 
                 <div class='chart_container' id='top_issue_submitters_container'>
                     <h4>Top issue submitters</h4>
-                    <p class='metric_explanation'></p>
+                    <p class='metric_explanation'>
+                        Different roles in software development teams will interact with issues in different ways. Roles tasked with synthesizing customer requirements into work items might contribute the most issues in a team. However, other team members might also contribute issues in the form of bugs, questions or refactoring opportunities. Regardless of the team's organization pattern, the way that work items are created is vital to collaboration.
+                    </p>
                     <div class='chart-canvas-container'>
                         <canvas
                           class='svg-container chart-canvas'
