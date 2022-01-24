@@ -1,13 +1,13 @@
 # RepositoryGuide
 
-An application that helps with analyzing your team's GitHub repository
+An application that helps with analyzing your team's GitHub repository. Visiting http://repositorygui.de/ you can use the metrics displayed there to improve your retrospective meetings based on data that can be retrieved from the [Github API](https://docs.github.com/en/rest). The focus is on improving your team and not on comparing individuals. To set up the config for your team open the [settings tab](https://hpi-epic.github.io/repositoryguide/view/settings.html) on the webpage and see the instructions there. Then you can [edit your teams](https://hpi-epic.github.io/repositoryguide/view/team/overview.html) (stored in your own config), select your team and view your metrics. 
 
-## Installation
+## Executing the tool on your own machine
 
 1. Clone the repository: ```git@github.com:hpi-epic/repositoryguide.git``` and go into the repository folder
 2. Make sure you've installed node. If not download and install it from [here](https://nodejs.org/en/download/)
 3. Run `npm install` in the root of the repository
-4. generate a personal access token for GitHub using [these instructions](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+4. Generate a personal access token for GitHub using [these instructions](https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 5. Host the project on a local server, opening `index.html` directly won't work. The WebStorm IDE offers a local development server, or run one using `python3 -m http.server`. 
 6. Download the config to have an empty version of a `config.json file`. Replace ```"github_access_token": ""``` with ```"github_access_token": "<your token>"```
 7. Load the edited config into the application.
