@@ -1,4 +1,2 @@
 .idea/
 node_modules
-assets/css/dist/*
-!assets/css/dist/.gitkeep 
