@@ -1,54 +1,13 @@
 {
     "name": "repositoryguide",
     "version": "1.0.0",
-    "private": true,
-    "description": "An application that helps with analyzing your team's GitHub repository.",
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/hpi-epic/repositoryguide.git"
-    },
-    "bugs": {
-        "url": "https://github.com/hpi-epic/repositoryguide/issues"
-    },
-    "homepage": "https://github.com/hpi-epic/repositoryguide#readme",
-    "config": {
-        "port": "3000",
-        "scss_src": "assets/css/src"
-    },
-    "scripts": {
-        "build": "npm run css",
-        "css-compile": "node-sass --include-path node_modules --output-style compressed --source-map true --source-map-contents true --precision 6 $npm_package_config_scss_src -o assets/css/dist",
-        "css-compile:about": "echo 'Compile SCSS files from the src folder to the dist folder'",
-        "css-lint": "stylelint $npm_package_config_scss_src",
-        "css-prefix": "postcss --replace assets/css/dist/main.css --use autoprefixer --map",
-        "css": "npm-run-all css-compile css-prefix",
-        "eslint-check": "eslint --config ./.eslintrc.json .",
-        "eslint-autofix": "eslint --config ./.eslintrc.json --fix .",
-        "prettier-check": "prettier --check --config ./.prettierrc.json .",
-        "prettier-autofix": "prettier --write --config ./.prettierrc.json .",
-        "server": "serve --listen $npm_package_config_port",
-        "start": "npm-run-all --parallel watch server",
-        "watch": "nodemon -e html,scss -x \"npm run css\"",
-        "test": "npm run eslint-check && npm run prettier-check && npm run css-lint && npm run css"
-    },
+    "dependencies": {},
     "devDependencies": {
-        "@fortawesome/fontawesome-free": "^5.15.4",
-        "autoprefixer": "^10.3.1",
-        "bootstrap": "^5.1.0",
         "eslint": "^7.30.0",
         "eslint-config-airbnb-base": "^14.2.1",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-import": "^2.23.4",
         "eslint-plugin-only-warn": "^1.0.2",
-        "node-sass": "^7.0.1",
-        "nodemon": "^2.0.12",
-        "npm-run-all": "^4.1.5",
-        "postcss": "^8.3.6",
-        "postcss-cli": "^8.3.1",
-        "prettier": "2.3.2",
-        "serve": "^13.0.2",
-        "stylelint": "^13.13.1",
-        "stylelint-config-twbs-bootstrap": "^2.2.3"
+        "prettier": "2.3.2"
     }
 }
