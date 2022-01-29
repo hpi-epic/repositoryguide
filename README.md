@@ -1,6 +1,13 @@
 # RepositoryGuide
+## https://repositorygui.de/
 
-An application that helps with analyzing your team's GitHub repository
+The RepositoryGuide application aims at helping development teams gain insights into their teamwork based on the produced GitHub project data.
+
+RepositoryGuide uses the public [Github API](https://docs.github.com/en/rest) to extract a set of key team measures for a GitHub repository.
+We envision the produced visualizations to be helpful in  Retrospective meetings, where teams can analyze and interpret their projet data of an iteration.
+The focus of the included visualizations is on facilitating discussions in teams that can lead to collaborative software process improvement.
+
+To set up a configuration for your team open the [settings tab](https://hpi-epic.github.io/repositoryguide/view/settings.html) and follow the instructions there. Then you can [edit your teams](https://hpi-epic.github.io/repositoryguide/view/team/overview.html) (stored in your own config), select your team and view the visualizations.
 
 ## Installation
 
